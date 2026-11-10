@@ -1,0 +1,12 @@
+[
+  {
+    "title": "Graph Guesser",
+    "description": "Read the shape of real-world data, draw what comes next, and see how close you get.",
+    "category": "DATA \u00b7 LOGIC",
+    "status": "PLAY NOW",
+    "href": "games/graph-guesser/",
+    "featured": true,
+    "number": "01",
+    "art": "graph"
+  }
+]

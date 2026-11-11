@@ -559,98 +559,104 @@
       }
 
       /* ---------- Border Guesser ---------- */
-      .gstack { width: min(780px, 100%); }
-      .gstack .game-body { margin-top: 6px; }
-      .gstack .diff { margin-bottom: 14px; }
-      .top-row { gap: 10px; }
-      .top-row .back { flex: none; }
-      .region-btn { display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 14px; margin: 0 auto 0 12px; background: #070b09; border: 1px solid var(--line); border-radius: 999px; color: #cfd8d1; font-weight: 700; font-size: 13px; }
-      .region-btn svg { width: 15px; height: 15px; color: var(--accent); }
-      .region-btn:hover { background: #0e2418; border-color: #1d4a30; color: #b9f3d1; }
-      .bg-panel { margin-bottom: 12px; }
-      .bg-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 10px; margin: 0 4px 6px; }
-      .bg-head small { display: block; font-size: 10px; font-weight: 800; letter-spacing: 1.6px; color: #7f8b83; margin-bottom: 4px; }
-      .bg-side b.nm { display: flex; align-items: center; gap: 8px; font: 700 clamp(15px, 3.8vw, 21px) / 1.1 "Outfit", sans-serif; min-width: 0; }
+      .mode-grid.two { grid-template-columns: repeat(2, 1fr); max-width: 680px; margin: 0 auto; }
+      @media (max-width: 640px) { .mode-grid.two { grid-template-columns: 1fr; } }
+      .view.active { animation-fill-mode: backwards !important; }
+      .gstack { width: min(440px, 100%); }
+      .gstack > * { animation-fill-mode: backwards !important; }   /* no leftover transform, so full screen can cover the page */
+      .gstack .game-body { margin-top: 4px; }
+      .gstack .diff { margin-bottom: 12px; }
+      /* region wheel row: back button and score chip sit at the ends, the wheel is exactly in the middle */
+      .reg-row { position: relative; height: 40px; margin-bottom: 10px; }
+      .reg-row .back, .reg-row .score-chip { position: absolute; top: 3px; z-index: 3; }
+      .reg-row .back { left: 0; }
+      .reg-row .score-chip { right: 0; }
+      .wheel-h { position: relative; height: 40px; overflow: hidden; cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; outline: none;
+        -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 14%, #000 86%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 14%, #000 86%, transparent 100%); }
+      .reg-row .wheel-h { position: absolute; inset: 0; }
+      .wheel-h.drag { cursor: grabbing; }
+      .wheel-h .wheel-items { position: absolute; left: 0; right: 0; top: 14px; bottom: 0; }
+      .wheel-h .wheel-item { position: absolute; left: 50%; top: 50%; margin: -11px 0 0 0; height: 22px; line-height: 22px; white-space: nowrap; font: 700 14px "Outfit", sans-serif; color: #8f9c94; will-change: transform, opacity; pointer-events: none; translate: -50% 0; }
+      .wheel-h .wheel-item.sel { text-shadow: 0 0 12px #19d77b33; }
+      .wheel-arrow { position: absolute; left: 50%; top: 2px; width: 0; height: 0; margin-left: -5px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid var(--accent); opacity: 0; transform: translateY(-4px); transition: opacity 0.18s, transform 0.18s; filter: drop-shadow(0 0 6px #19d77b99); pointer-events: none; z-index: 2; }
+      .wheel-arrow.on { opacity: 1; transform: none; }
+      .field .wheel-h { height: 46px; background: #080c0a; border: 1px solid var(--line); border-radius: 12px; -webkit-mask-image: none; mask-image: none; }
+      .field .wheel-h .wheel-items { top: 10px; }
+      .field .wheel-h::before, .field .wheel-h::after { content: ""; position: absolute; top: 0; bottom: 0; width: 18%; z-index: 1; pointer-events: none; }
+      .field .wheel-h::before { left: 0; background: linear-gradient(90deg, #080c0a, transparent); }
+      .field .wheel-h::after { right: 0; background: linear-gradient(270deg, #080c0a, transparent); }
+      .field .wheel-arrow { top: 3px; }
+
+      .bg-card { padding: 11px 11px 11px; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(160deg, #0c120f, #080c0a); }
+      .bg-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 8px; margin: 0 2px 2px; }
+      .bg-head small { display: block; font-size: 9px; font-weight: 800; letter-spacing: 1.4px; color: #7f8b83; margin-bottom: 2px; }
+      .bg-side b.nm { display: flex; align-items: center; gap: 6px; font: 700 clamp(13px, 3.6vw, 16px) / 1.15 "Outfit", sans-serif; min-width: 0; }
       .bg-side b.nm span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
       .bg-side.to { text-align: right; }
       .bg-side.to b.nm { justify-content: flex-end; }
       .bg-mid { text-align: center; }
-      .bg-mid b { display: block; font: 800 32px / 1 "Outfit", sans-serif; color: var(--accent); text-shadow: 0 0 24px #19d77b55; }
-      .bg-flag { height: 19px; width: auto; max-width: 30px; object-fit: contain; border-radius: 3px; box-shadow: 0 0 0 1px #ffffff26; flex: none; }
-      .bg-flag.sm { height: 13px; width: auto; max-width: 20px; }
-      .bg-stage { position: relative; height: clamp(300px, 54vh, 520px); border-radius: 18px; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; background: radial-gradient(ellipse at 50% 45%, #0a1a14 0%, #060b09 70%); border: 1px solid #12201a; }
+      .bg-mid b { display: block; font: 800 22px / 1 "Outfit", sans-serif; color: var(--accent); }
+      .bg-flag { height: 14px; width: auto; max-width: 22px; object-fit: contain; border-radius: 2px; box-shadow: 0 0 0 1px #ffffff26; flex: none; }
+      .bg-flag.sm { height: 11px; max-width: 17px; }
+      .bg-stage { position: relative; height: clamp(220px, calc(100dvh - 450px), 400px); margin: 12px -4px 8px; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }
       .bg-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; cursor: grab; touch-action: none; outline: none; }
       .bg-stage.drag canvas { cursor: grabbing; }
-      .bg-stage.full { position: fixed; inset: 0; z-index: 90; height: auto; border-radius: 0; border: 0; background: radial-gradient(ellipse at 50% 45%, #0c1f18 0%, #050806 75%); }
+      .bg-stage.full { margin: 0; position: fixed; inset: 0; z-index: 300; height: auto; margin: 0; border-radius: 0; background: radial-gradient(ellipse at 50% 45%, #0a1410 0%, #040605 75%); }
       body.noscroll { overflow: hidden; }
-      .bg-load { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; gap: 10px; color: #9fb3a7; font-size: 13px; font-weight: 700; z-index: 3; background: #060b09; }
+      .bg-load { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; gap: 10px; color: #9fb3a7; font-size: 12px; font-weight: 700; z-index: 3; }
       .bg-load.show { display: flex; }
-      .bg-load i { width: 16px; height: 16px; border: 2px solid #19d77b30; border-top-color: var(--accent); border-radius: 50%; animation: spinr 0.7s linear infinite; }
-      .bg-chips { position: absolute; left: 10px; right: 56px; top: 10px; display: flex; flex-wrap: wrap; gap: 6px; z-index: 2; pointer-events: none; }
-      .bg-chip { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px 5px 8px; border-radius: 999px; font-size: 12px; font-weight: 800; background: #0b120ee6; border: 1px solid; animation: pop 0.35s var(--ease) both; }
-      .bg-chip svg { width: 12px; height: 12px; }
+      .bg-load i { width: 14px; height: 14px; border: 2px solid #19d77b30; border-top-color: var(--accent); border-radius: 50%; animation: spinr 0.7s linear infinite; }
+      .bg-chips { position: absolute; left: 2px; right: 38px; top: 2px; display: flex; flex-wrap: wrap; gap: 4px; z-index: 2; pointer-events: none; }
+      .bg-chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px 3px 6px; border-radius: 999px; font-size: 10.5px; font-weight: 800; background: #0b120ee6; border: 1px solid; animation: pop 0.35s var(--ease) both; }
+      .bg-chip svg { width: 10px; height: 10px; }
       .bg-chip.green { color: #2fe08a; border-color: #2fe08a66; }
       .bg-chip.yellow { color: #e8b84a; border-color: #e8b84a66; }
       .bg-chip.red { color: #ef4d4d; border-color: #ef4d4d66; }
-      .bg-ctl { width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--line); background: #0b120ee6; color: #cfd8d1; font: 700 20px / 1 "Outfit", sans-serif; display: grid; place-items: center; padding: 0; backdrop-filter: blur(6px); }
-      .bg-ctl svg { width: 16px; height: 16px; }
+      .bg-ctl { width: 30px; height: 30px; border-radius: 9px; border: 1px solid #1c2a22; background: #0d1410d9; color: #b7c4bc; font: 600 17px / 1 "Outfit", sans-serif; display: grid; place-items: center; padding: 0; }
+      .bg-ctl svg { width: 14px; height: 14px; }
       .bg-ctl:hover { background: #0e2418; border-color: #1d4a30; color: #b9f3d1; }
-      .bg-ctl.info { position: absolute; left: 10px; bottom: 10px; z-index: 3; font-size: 15px; font-style: italic; border-radius: 999px; }
-      .bg-zoom { position: absolute; right: 10px; top: 10px; z-index: 3; display: flex; flex-direction: column; gap: 6px; }
-      .bg-legend { position: absolute; left: 10px; bottom: 54px; z-index: 3; display: none; flex-direction: column; gap: 6px; padding: 11px 13px; border-radius: 12px; background: #0b120ef2; border: 1px solid var(--line); font-size: 12px; color: #cfd8d1; }
+      .bg-ctl.info { position: absolute; left: 2px; bottom: 2px; z-index: 3; }
+      .bg-zoom { position: absolute; right: 2px; bottom: 2px; z-index: 3; display: flex; flex-direction: column; gap: 5px; }
+      .bg-legend { position: absolute; left: 2px; bottom: 38px; z-index: 3; display: none; flex-direction: column; gap: 5px; padding: 9px 11px; border-radius: 11px; background: #0b120ef2; border: 1px solid var(--line); font-size: 11px; color: #cfd8d1; }
       .bg-legend.open { display: flex; animation: rise 0.25s var(--ease) both; }
-      .bg-legend div { display: flex; align-items: center; gap: 8px; }
-      .bg-legend i { width: 11px; height: 11px; border-radius: 3px; flex: none; }
+      .bg-legend div { display: flex; align-items: center; gap: 7px; }
+      .bg-legend i { width: 10px; height: 10px; border-radius: 3px; flex: none; }
       .bg-legend b { color: #fff; }
-      .bg-crumb { position: absolute; left: 56px; right: 56px; bottom: 10px; z-index: 2; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 6px; font-size: 12px; color: #9fb3a7; pointer-events: none; text-shadow: 0 1px 6px #000; }
+      .bg-crumb { position: absolute; left: 40px; right: 40px; bottom: 2px; z-index: 2; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 2px 5px; font-size: 10.5px; color: #9fb3a7; pointer-events: none; text-shadow: 0 1px 6px #000; }
       .bg-crumb b { font-weight: 700; color: #e8efe9; }
       .bg-crumb b.g { color: #2fe08a; }
-      .bg-crumb i.gap { color: #5a6b60; letter-spacing: 2px; font-style: normal; }
+      .bg-crumb i.gap { color: #5a6b60; letter-spacing: 1px; font-style: normal; }
       .bg-crumb i.arr { color: #5a6b60; font-style: normal; }
-      .bg-stage.full ~ * { display: none; }
-      .search .hearts-in { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 5px; padding: 4px 9px; border-radius: 999px; background: #0c1510; font: 800 14px "Outfit", sans-serif; color: #fff; pointer-events: none; }
+      .bg-card .answer-row { gap: 6px; }
+      .search .hearts-in { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 5px; font: 800 13px "Outfit", sans-serif; color: #fff; pointer-events: none; }
       .search .hearts-in svg { width: 15px; height: 15px; color: #ff5a78; }
       .search .hearts-in.hit { animation: hitIn 0.55s; }
-      @keyframes hitIn { 0% { transform: translateY(-50%) scale(1); background: #3a1420; } 30% { transform: translateY(-50%) scale(1.28); background: #3a1420; } 100% { transform: translateY(-50%) scale(1); } }
-      .search input { padding-right: 82px; }
-      .search .xm { right: 84px; }
+      @keyframes hitIn { 0% { transform: translateY(-50%) scale(1); } 30% { transform: translateY(-50%) scale(1.3); } 100% { transform: translateY(-50%) scale(1); } }
+      .search input { padding-right: 60px; }
+      .search .xm { right: 62px; }
       .sugg-row .sg-flag { height: 19px; width: auto; max-width: 30px; object-fit: contain; border-radius: 3px; flex: none; margin-left: 2px; box-shadow: 0 0 0 1px #ffffff22; }
       .msg .y { color: #e8b84a; font-weight: 700; }
       .msg .bad { font-weight: 700; }
-      .res.strip { padding-top: 6px; margin-top: 4px; }
-      .res.strip .res-badges { margin-top: 10px; }
-      .route-line { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 8px; margin-top: 14px; font-size: 13px; font-weight: 700; }
-      .route-line .rl-c { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: #0c1510; border: 1px solid #1d4a30; color: #dff5e8; }
-      .route-line .arr, .arr { color: #5a6b60; font-style: normal; font-size: 16px; }
-      .reveal.route { display: block; text-align: center; margin: 10px 0 4px; }
+      .res.strip { padding-top: 4px; margin-top: 12px; }
+      .res.strip .res-badges { margin-top: 4px; gap: 8px; }
+      .res.strip .stamp { font-size: 12px; padding: 6px 13px; }
+      .res.strip .streak { font-size: 12px; padding: 6px 11px; }
+      .route-line { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 5px 6px; margin-top: 12px; font-size: 12px; font-weight: 700; }
+      .route-line .rl-c { display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; border-radius: 999px; background: #0c1510; border: 1px solid #1d4a30; color: #dff5e8; }
+      .route-line .arr, .arr { color: #5a6b60; font-style: normal; font-size: 15px; }
+      .reveal.route { display: block; text-align: center; margin: 8px 0 4px; }
       .reveal.route small { display: block; color: #7f8b83; font-size: 10px; letter-spacing: 1.5px; font-weight: 800; margin-bottom: 2px; }
-      .res.strip .res-eyebrow { margin-top: 12px; }
+      .res.strip .res-eyebrow { margin-top: 10px; }
+      .res.strip .res-actions { margin-top: 14px; }
       .lb-inner .route-line { margin: 8px 0 10px; }
       .lb-inner .route-line .rl-c { padding: 3px 8px; font-size: 12px; }
-      /* region wheel */
-      .wheel { position: relative; width: 100%; align-self: stretch; height: 200px; overflow: hidden; border-radius: 16px; background: #060a08; border: 1px solid var(--line); cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; outline: none; perspective: 700px; }
-      .wheel:focus-visible { border-color: #19d77b88; }
-      .wheel-band { position: absolute; left: 8px; right: 8px; top: 50%; height: 40px; margin-top: -20px; border-radius: 11px; background: #0e2418; border: 1px solid #1d4a30; box-shadow: 0 0 24px #19d77b1a; pointer-events: none; }
-      .wheel-items { position: absolute; inset: 0; }
-      .wheel-item { position: absolute; left: 0; right: 0; top: 50%; height: 40px; margin-top: -20px; border: 0; background: none; color: #8a978e; font: 700 16px "Outfit", sans-serif; display: grid; place-items: center; padding: 0; will-change: transform, opacity; transition: color 0.2s; pointer-events: none; }
-      .wheel-item.sel { color: #fff; }
-      .wheel-item:active { transform: none; }
-      .wheel-fade { position: absolute; left: 0; right: 0; height: 56px; pointer-events: none; z-index: 2; }
-      .wheel-fade.top { top: 0; background: linear-gradient(#060a08, transparent); }
-      .wheel-fade.bottom { bottom: 0; background: linear-gradient(transparent, #060a08); }
-      .wheel-sub { text-align: center; color: #7f8b83; font-size: 12px; margin-top: 10px; min-height: 16px; }
-      .mode-card.region { cursor: default; }
-      .mode-card.region:hover { transform: none; }
-      .mode-card.region .wheel { margin-bottom: 4px; height: 172px; }
-      .modal-wheel .wheel { height: 230px; }
-      body.lost .bg-stage { border-color: #3a1816; }
       @media (max-width: 520px) {
-        .bg-stage { height: clamp(280px, 50vh, 420px); }
-        .bg-chips { right: 52px; }
-        .bg-mid b { font-size: 26px; }
-        .bg-crumb { font-size: 11px; left: 52px; right: 52px; }
-        .region-btn { padding: 0 11px; margin-left: 8px; font-size: 12px; }
+        .bg-stage { height: clamp(220px, calc(100dvh - 400px), 380px); }
+        .bg-crumb { font-size: 10px; }
       }
+      .wheel-h.calm .wheel-arrow { transform: none; transition: opacity 0.3s; filter: none; }
+      .wheel-h.calm .wheel-arrow.on { opacity: 0.5; }
+      .wheel-h.calm { cursor: grab; }
     </style>
   <body>
     <div class="spot"><i class="tint"></i></div>
@@ -687,18 +693,13 @@
           <div class="eyebrow">BORDER GUESSER</div>
           <h1>Connect the countries.</h1>
         </div>
-        <div class="mode-grid">
+        <div class="mode-grid two">
           <button class="mode-card" onclick="startSolo()">
             <span class="mode-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18" /></svg></span>
             <h2>Solo</h2>
-            <p>Two countries, one shortest route. Name every country in between before your hearts run out.</p>
+            <p>Two countries, one shortest route. Name every country in between before your hearts run out. Pick a continent, or go Continental.</p>
             <span class="card-bottom">PLAY SOLO <span>→</span></span>
           </button>
-          <div class="mode-card region">
-            <h2>Where in the world?</h2>
-            <div class="wheel" id="homeWheel"></div>
-            <div class="wheel-sub" id="homeWheelSub"></div>
-          </div>
           <button class="mode-card" onclick="showView('multiplayerView')">
             <span class="mode-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></svg></span>
             <h2>Multiplayer</h2>
@@ -733,8 +734,7 @@
               <div class="switch-row"><span>Random difficulty<small>Every round picks its own difficulty.</small></span><label class="switch"><input type="checkbox" id="duelRandom" onchange="setDuelRandom(this.checked)" /><i></i></label></div>
               <div class="field">
                 <label class="field-label">REGION</label>
-                <div class="wheel" id="duelWheel"></div>
-                <div class="wheel-sub" id="duelWheelSub"></div>
+                <div class="wheel-h" id="duelWheel"></div>
               </div>
               <div class="field">
                 <label class="field-label" for="duelRounds">ROUNDS</label>
@@ -847,15 +847,6 @@
           <button class="primary full" onclick="wcDone()">Continue</button>
         </div>
         <div class="auth-msg" id="wcMsg"></div>
-      </div>
-    </div>
-
-    <div class="modal-back" id="regionModal" onclick="if (event.target === this) closeRegion()">
-      <div class="sheet small modal-wheel">
-        <div class="sheet-head"><h2>Choose a region</h2><button class="x" onclick="closeRegion()" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18" /></svg></button></div>
-        <div class="wheel" id="modalWheel"></div>
-        <div class="wheel-sub" id="modalWheelSub"></div>
-        <button class="primary full" style="margin-top:14px" onclick="closeRegion()">Done</button>
       </div>
     </div>
 
@@ -1117,8 +1108,44 @@
         return ATLAS_STATE.promise;
       }
 
+      /* ---------- orientation maths (quaternions, so the globe turns on every axis without getting stuck at the poles) ---------- */
+      const D2R = Math.PI / 180;
+      const qEuler = (e) => {
+        const l = e[0] / 2 * D2R, p = e[1] / 2 * D2R, g = e[2] / 2 * D2R, sl = Math.sin(l), cl = Math.cos(l), sp = Math.sin(p), cp = Math.cos(p), sg = Math.sin(g), cg = Math.cos(g);
+        return [cl * cp * cg + sl * sp * sg, sl * cp * cg - cl * sp * sg, cl * sp * cg + sl * cp * sg, cl * cp * sg - sl * sp * cg];
+      };
+      const qCart = (e) => { const l = e[0] * D2R, p = e[1] * D2R, cp = Math.cos(p); return [cp * Math.cos(l), cp * Math.sin(l), Math.sin(p)]; };
+      const qToEuler = (q) => [
+        Math.atan2(2 * (q[0] * q[1] + q[2] * q[3]), 1 - 2 * (q[1] * q[1] + q[2] * q[2])) / D2R,
+        Math.asin(Math.max(-1, Math.min(1, 2 * (q[0] * q[2] - q[3] * q[1])))) / D2R,
+        Math.atan2(2 * (q[0] * q[3] + q[1] * q[2]), 1 - 2 * (q[2] * q[2] + q[3] * q[3])) / D2R,
+      ];
+      const qMul = (a, b) => [a[0] * b[0] - a[1] * b[1] - a[2] * b[2] - a[3] * b[3], a[0] * b[1] + a[1] * b[0] + a[2] * b[3] - a[3] * b[2], a[0] * b[2] - a[1] * b[3] + a[2] * b[0] + a[3] * b[1], a[0] * b[3] + a[1] * b[2] - a[2] * b[1] + a[3] * b[0]];
+      const qConj = (q) => [q[0], -q[1], -q[2], -q[3]];
+      const qNorm = (q) => { const n = Math.hypot(q[0], q[1], q[2], q[3]) || 1; return [q[0] / n, q[1] / n, q[2] / n, q[3] / n]; };
+      function qDelta(v0, v1) {
+        const w = [v0[1] * v1[2] - v0[2] * v1[1], v0[2] * v1[0] - v0[0] * v1[2], v0[0] * v1[1] - v0[1] * v1[0]], l = Math.hypot(w[0], w[1], w[2]);
+        if (!l) return [1, 0, 0, 0];
+        const t = Math.acos(Math.max(-1, Math.min(1, v0[0] * v1[0] + v0[1] * v1[1] + v0[2] * v1[2]))) / 2, s = Math.sin(t);
+        return [Math.cos(t), w[2] / l * s, -w[1] / l * s, w[0] / l * s];
+      }
+      function qPow(q, f) {
+        if (q[0] < 0) q = [-q[0], -q[1], -q[2], -q[3]];
+        const th = Math.acos(Math.min(1, q[0])), s = Math.sin(th);
+        if (s < 1e-7) return [1, 0, 0, 0];
+        const k = Math.sin(th * f) / s;
+        return [Math.cos(th * f), q[1] * k, q[2] * k, q[3] * k];
+      }
+      function qSlerp(a, b, t) {
+        let d = a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
+        if (d < 0) { b = [-b[0], -b[1], -b[2], -b[3]]; d = -d; }
+        if (d > 0.9995) return qNorm(a.map((x, i) => x + (b[i] - x) * t));
+        const th = Math.acos(d), s = Math.sin(th), w1 = Math.sin((1 - t) * th) / s, w2 = Math.sin(t * th) / s;
+        return a.map((x, i) => x * w1 + b[i] * w2);
+      }
+
       /* ---------- the globe ---------- */
-      const STATE_COL = { start: "#f3f6f4", green: "#2fe08a", yellow: "#e8b84a", red: "#ef4d4d", reveal: "#1f9d5f" };
+      const STATE_COL = { start: "#f1ecd8", green: "#2fe08a", yellow: "#e8b84a", red: "#ef4d4d", reveal: "#1f9d5f" };
       const LABEL_AT = {};   /* code -> [lon, lat] of the middle of its biggest piece of land */
       function labelPoint(code, feat) {
         if (LABEL_AT[code]) return LABEL_AT[code];
@@ -1135,13 +1162,12 @@
         cv.setAttribute("aria-label", "Interactive globe. Drag to rotate."); cv.tabIndex = 0;
         host.insertBefore(cv, host.firstChild);
         const c2 = cv.getContext("2d");
-        const proj = d3.geoOrthographic().clipAngle(90).precision(0.7);
+        const proj = d3.geoOrthographic().clipAngle(90).precision(0.6);
         const path = d3.geoPath(proj, c2);
-        const grat = d3.geoGraticule10();
         const sphere = { type: "Sphere" };
-        const G = { rot: [-10, -20], zoom: 1, w: 0, h: 0, dpr: 1, raf: 0, moving: 0, states: new Map(), vel: [0, 0], drag: false, anim: 0, labels: true, hiT: 0, ready: false, feats: new Map(), fc: null, fcLow: null, spin: 0 };
-        const pts = new Map();
-        const radius = () => Math.min(G.w, G.h) * 0.46 * G.zoom;
+        const G = { q: qEuler([-12, -28, 0]), rot: [-12, -28, 0], zoom: 1, zoomT: 1, w: 0, h: 0, dpr: 1, raf: 0, moving: 0, states: new Map(), drag: false, anim: 0, zanim: 0, labels: true, hiT: 0, ready: false, feats: new Map(), fc: null };
+        const setQ = (q) => { G.q = qNorm(q); G.rot = qToEuler(G.q); };
+        const radius = () => Math.min(G.w, G.h) * 0.47 * G.zoom;
         function resize() {
           const r = host.getBoundingClientRect();
           G.dpr = Math.min(2.5, window.devicePixelRatio || 1);
@@ -1159,56 +1185,57 @@
           G.raf = 0;
           if (!G.w) return;
           const R = radius(), cx = G.w / 2, cy = G.h / 2;
-          proj.translate([cx, cy]).scale(R).rotate([G.rot[0], G.rot[1], 0]);
+          proj.translate([cx, cy]).scale(R).rotate(G.rot);
           c2.setTransform(G.dpr, 0, 0, G.dpr, 0, 0);
           c2.clearRect(0, 0, G.w, G.h);
-          /* glow */
-          let g = c2.createRadialGradient(cx, cy, R * 0.96, cx, cy, R * 1.22);
-          g.addColorStop(0, "rgba(70,140,255,0.28)"); g.addColorStop(1, "rgba(70,140,255,0)");
-          c2.fillStyle = g; c2.beginPath(); c2.arc(cx, cy, R * 1.22, 0, 6.2832); c2.fill();
-          /* sea */
-          g = c2.createRadialGradient(cx - R * 0.35, cy - R * 0.4, R * 0.1, cx, cy, R * 1.02);
-          g.addColorStop(0, "#123a66"); g.addColorStop(0.55, "#0a2347"); g.addColorStop(1, "#040f22");
+          /* soft green glow around the globe */
+          let g = c2.createRadialGradient(cx, cy, R * 0.97, cx, cy, R * 1.2);
+          g.addColorStop(0, "rgba(25,215,123,0.2)"); g.addColorStop(0.35, "rgba(25,215,123,0.07)"); g.addColorStop(1, "rgba(25,215,123,0)");
+          c2.fillStyle = g; c2.beginPath(); c2.arc(cx, cy, R * 1.2, 0, 6.2832); c2.fill();
+          /* sea: very dark navy, a touch lighter where the light hits */
+          g = c2.createRadialGradient(cx - R * 0.35, cy - R * 0.4, R * 0.05, cx, cy, R * 1.05);
+          g.addColorStop(0, "#16202c"); g.addColorStop(0.5, "#0e1520"); g.addColorStop(1, "#070b12");
           c2.beginPath(); path(sphere); c2.fillStyle = g; c2.fill();
-          c2.beginPath(); path(grat); c2.strokeStyle = "rgba(140,190,255,0.07)"; c2.lineWidth = 0.6; c2.stroke();
-          /* land */
+          /* land: slate green with fine light borders */
           const fc = G.moving && lowFC() ? lowFC() : G.fc;
           if (fc) {
             c2.beginPath(); path(fc);
-            c2.fillStyle = "#33504a"; c2.fill();
-            c2.strokeStyle = "#16241f"; c2.lineWidth = Math.max(0.35, Math.min(1, R / 420)); c2.stroke();
+            c2.fillStyle = "#2c3933"; c2.fill();
+            c2.strokeStyle = "rgba(178,196,186,0.42)"; c2.lineWidth = Math.max(0.4, Math.min(0.9, R / 380)); c2.lineJoin = "round"; c2.stroke();
           }
           /* picked countries */
           G.states.forEach((st, code) => {
             const f = G.feats.get(code); if (!f) return;
             c2.beginPath(); path(f);
             c2.fillStyle = STATE_COL[st.kind] || "#fff"; c2.globalAlpha = st.kind === "reveal" ? 0.8 : 1; c2.fill(); c2.globalAlpha = 1;
-            c2.strokeStyle = "rgba(6,12,9,0.75)"; c2.lineWidth = 0.8; c2.stroke();
+            c2.strokeStyle = "rgba(8,12,10,0.6)"; c2.lineWidth = 0.7; c2.stroke();
           });
-          /* shading + rim */
-          g = c2.createRadialGradient(cx - R * 0.3, cy - R * 0.35, R * 0.35, cx, cy, R);
-          g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(0.75, "rgba(0,0,0,0.18)"); g.addColorStop(1, "rgba(0,0,0,0.6)");
+          /* shading toward the edge + a faint rim light */
+          g = c2.createRadialGradient(cx - R * 0.32, cy - R * 0.36, R * 0.3, cx, cy, R);
+          g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(0.7, "rgba(2,5,9,0.22)"); g.addColorStop(1, "rgba(2,5,9,0.72)");
           c2.beginPath(); path(sphere); c2.fillStyle = g; c2.fill();
-          c2.beginPath(); path(sphere); c2.strokeStyle = "rgba(150,195,255,0.28)"; c2.lineWidth = 1.2; c2.stroke();
+          c2.beginPath(); path(sphere); c2.strokeStyle = "rgba(190,225,205,0.16)"; c2.lineWidth = 1; c2.stroke();
           if (G.labels) drawLabels(R);
         }
         function drawLabels(R) {
-          const centre = [-G.rot[0], -G.rot[1]], placed = [];
-          c2.font = '700 11.5px "DM Sans", sans-serif'; c2.textBaseline = "middle"; c2.textAlign = "center";
+          const centre = proj.invert([G.w / 2, G.h / 2]), placed = [];
+          if (!centre) return;
+          const fs = Math.max(10, Math.min(12, G.w / 36));
+          c2.font = `700 ${fs}px "DM Sans", sans-serif`; c2.textBaseline = "middle"; c2.textAlign = "center";
           const items = [];
           G.states.forEach((st, code) => {
             if (!st.label) return;
             const f = G.feats.get(code); if (!f) return;
             const ll = labelPoint(code, f);
-            if (d3.geoDistance(ll, centre) > 1.5) return;
+            if (d3.geoDistance(ll, centre) > 1.42) return;   /* gone round the back: hide the card */
             const p = proj(ll); if (!p) return;
-            items.push({ code, st, x: p[0], y: p[1] });
+            items.push({ code, st, x: p[0], y: p[1], d: d3.geoDistance(ll, centre) });
           });
           items.sort((a, b) => b.y - a.y);
           items.forEach((it) => {
             const name = CT[it.code] ? CT[it.code].name : it.code;
-            const w = c2.measureText(name).width + 18, h = 21;
-            let x = it.x, y = it.y - 17;
+            const w = c2.measureText(name).width + 16, h = fs + 8;
+            const x = it.x; let y = it.y - h / 2 - 6;
             for (let k = 0; k < 6; k++) {
               const hit = placed.find((r) => Math.abs(r.x - x) < (r.w + w) / 2 && Math.abs(r.y - y) < h + 1);
               if (!hit) break; y = hit.y - h - 3;
@@ -1216,30 +1243,31 @@
             placed.push({ x, y, w });
             const light = it.st.kind === "start";
             c2.save();
-            c2.shadowColor = "rgba(0,0,0,0.45)"; c2.shadowBlur = 8; c2.shadowOffsetY = 2;
-            c2.beginPath(); c2.roundRect ? c2.roundRect(x - w / 2, y - h / 2, w, h, 10.5) : c2.rect(x - w / 2, y - h / 2, w, h);
-            c2.fillStyle = light ? "#f3f6f4" : "rgba(8,12,10,0.92)"; c2.fill();
+            c2.globalAlpha = Math.max(0, Math.min(1, (1.42 - it.d) / 0.25));   /* fades out as it turns away */
+            c2.shadowColor = "rgba(0,0,0,0.5)"; c2.shadowBlur = 7; c2.shadowOffsetY = 2;
+            c2.beginPath(); c2.roundRect ? c2.roundRect(x - w / 2, y - h / 2, w, h, h / 2) : c2.rect(x - w / 2, y - h / 2, w, h);
+            c2.fillStyle = light ? "#f1ecd8" : "rgba(9,14,11,0.94)"; c2.fill();
             c2.restore();
-            if (!light) { c2.lineWidth = 1; c2.strokeStyle = STATE_COL[it.st.kind] || "#fff"; c2.globalAlpha = 0.55; c2.stroke(); c2.globalAlpha = 1; }
-            c2.beginPath(); c2.moveTo(x - 4, y + h / 2 - 0.5); c2.lineTo(x + 4, y + h / 2 - 0.5); c2.lineTo(x, y + h / 2 + 4.5); c2.closePath();
-            c2.fillStyle = light ? "#f3f6f4" : "rgba(8,12,10,0.92)"; c2.fill();
-            c2.fillStyle = light ? "#0b120e" : "#f1f6f2"; c2.fillText(name, x, y + 0.5);
+            c2.save(); c2.globalAlpha = Math.max(0, Math.min(1, (1.42 - it.d) / 0.25));
+            if (!light) { c2.beginPath(); c2.roundRect ? c2.roundRect(x - w / 2, y - h / 2, w, h, h / 2) : c2.rect(x - w / 2, y - h / 2, w, h); c2.lineWidth = 1; c2.strokeStyle = STATE_COL[it.st.kind] || "#fff"; c2.globalAlpha *= 0.6; c2.stroke(); c2.globalAlpha = Math.max(0, Math.min(1, (1.42 - it.d) / 0.25)); }
+            c2.beginPath(); c2.moveTo(x - 3.5, y + h / 2 - 0.5); c2.lineTo(x + 3.5, y + h / 2 - 0.5); c2.lineTo(x, y + h / 2 + 4); c2.closePath();
+            c2.fillStyle = light ? "#f1ecd8" : "rgba(9,14,11,0.94)"; c2.fill();
+            c2.fillStyle = light ? "#161b17" : "#f1f6f2"; c2.fillText(name, x, y + 0.5);
+            c2.restore();
           });
         }
         function want() { if (!G.raf) G.raf = requestAnimationFrame(draw); }
-        function bump() { G.moving++; clearTimeout(G.hiT); G.hiT = setTimeout(() => { G.moving = 0; want(); }, 160); want(); }
-        function clampLat() { G.rot[1] = Math.max(-90, Math.min(90, G.rot[1])); }
-        /* camera */
-        function stop() { cancelAnimationFrame(G.anim); G.anim = 0; G.vel = [0, 0]; }
+        function bump() { G.moving++; clearTimeout(G.hiT); G.hiT = setTimeout(() => { G.moving = 0; want(); }, 140); want(); }
+        /* camera animations */
+        function stopRot() { cancelAnimationFrame(G.anim); G.anim = 0; }
         function fly(lonlat, zoom, ms) {
-          stop();
-          const from = [G.rot[0], G.rot[1]], z0 = G.zoom;
-          const to = [-lonlat[0], -lonlat[1]];
-          let dl = to[0] - from[0]; while (dl > 180) dl -= 360; while (dl < -180) dl += 360;
-          const t0 = performance.now();
+          stopRot();
+          const from = G.q, to = qEuler([-lonlat[0], -lonlat[1], 0]), z0 = G.zoom, t0 = performance.now();
+          G.zoomT = zoom;
+          cancelAnimationFrame(G.zanim); G.zanim = 0;
           const step = (t) => {
             const k = Math.min(1, (t - t0) / ms), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
-            G.rot[0] = from[0] + dl * e; G.rot[1] = from[1] + (to[1] - from[1]) * e; G.zoom = z0 + (zoom - z0) * e;
+            setQ(qSlerp(from, to, e)); G.zoom = z0 + (zoom - z0) * e;
             bump();
             if (k < 1) G.anim = requestAnimationFrame(step); else G.anim = 0;
           };
@@ -1250,51 +1278,88 @@
           if (!A || !B) return;
           const pa = labelPoint(a, A), pb = labelPoint(b, B);
           const mid = d3.geoInterpolate(pa, pb)(0.5), ang = d3.geoDistance(pa, pb);
-          const z = Math.max(0.95, Math.min(5.5, 0.62 / Math.max(0.12, Math.sin(Math.min(ang, 3.0) / 2))));
-          fly(mid, z, 1100);
+          const z = Math.max(1, Math.min(3.2, 0.62 / Math.max(0.22, Math.sin(Math.min(ang, 2.2) * 0.75))));
+          fly(mid, z, 1200);
         }
-        function zoomBy(k) { G.zoom = Math.max(0.8, Math.min(9, G.zoom * k)); bump(); }
-        /* pointer: drag to rotate on any axis, wheel / pinch to zoom */
-        const ptrs = new Map(); let pinch = 0, last = null;
+        function zoomTick() {
+          let last = performance.now();
+          const step = (t) => {
+            const dt = Math.min(50, t - last); last = t;
+            G.zoom += (G.zoomT - G.zoom) * (1 - Math.exp(-dt / 85));
+            bump();
+            if (Math.abs(G.zoomT - G.zoom) > G.zoomT * 0.002) G.zanim = requestAnimationFrame(step); else { G.zoom = G.zoomT; G.zanim = 0; want(); }
+          };
+          if (!G.zanim) G.zanim = requestAnimationFrame(step);
+        }
+        function zoomBy(k) { G.zoomT = Math.max(0.75, Math.min(8, G.zoomT * k)); zoomTick(); }
+        /* pointer: grab the globe and it follows the cursor exactly (any axis); wheel / pinch to zoom */
+        const ptrs = new Map(); let pinch = 0, drag = null;
+        const local = (e) => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+        function onSphere(x, y, rot) {
+          const R = radius(), cx = G.w / 2, cy = G.h / 2;
+          let dx = x - cx, dy = y - cy; const d = Math.hypot(dx, dy), lim = R * 0.996;
+          if (d > lim) { dx *= lim / d; dy *= lim / d; }
+          proj.translate([cx, cy]).scale(R).rotate(rot);
+          const ll = proj.invert([cx + dx, cy + dy]);
+          return ll ? qCart(ll) : null;
+        }
         cv.addEventListener("pointerdown", (e) => {
-          cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY]);
-          stop(); G.drag = true; host.classList.add("drag"); last = [e.clientX, e.clientY, performance.now()];
-          if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch = Math.hypot(a[0] - b[0], a[1] - b[1]); }
+          cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, local(e));
+          stopRot(); host.classList.add("drag");
+          if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch = Math.hypot(a[0] - b[0], a[1] - b[1]); drag = null; return; }
+          const [x, y] = local(e);
+          if (Math.hypot(x - G.w / 2, y - G.h / 2) > radius()) { host.classList.remove("drag"); return; }   /* a drag must start on the globe */
+          drag = { lx: x, ly: y, dq: null, t: performance.now() };
         });
         cv.addEventListener("pointermove", (e) => {
           if (!ptrs.has(e.pointerId)) return;
-          ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+          ptrs.set(e.pointerId, local(e));
           if (ptrs.size === 2) {
             const [a, b] = [...ptrs.values()], d = Math.hypot(a[0] - b[0], a[1] - b[1]);
-            if (pinch) zoomBy(d / pinch); pinch = d; return;
+            if (pinch) { G.zoomT = G.zoom = Math.max(0.75, Math.min(8, G.zoom * d / pinch)); bump(); } pinch = d; return;
           }
-          if (!last) return;
-          const dx = e.clientX - last[0], dy = e.clientY - last[1], dt = Math.max(8, performance.now() - last[2]);
-          const k = 57.3 / radius();
-          G.rot[0] += dx * k; G.rot[1] -= dy * k; clampLat();
-          G.vel = [(dx * k) / dt * 16, (-dy * k) / dt * 16];
-          last = [e.clientX, e.clientY, performance.now()]; bump();
+          if (!drag) return;
+          /* relative drag: keeps rotating when the cursor leaves the globe, sensitivity toned down */
+          const [x, y] = local(e), K = 0.62, cx = G.w / 2, cy = G.h / 2, eu = qToEuler(G.q);
+          const v0 = onSphere(cx, cy, eu), v1 = onSphere(cx + (x - drag.lx) * K, cy + (y - drag.ly) * K, eu);
+          drag.lx = x; drag.ly = y;
+          if (!v0 || !v1) return;
+          const qn = qNorm(qMul(G.q, qDelta(v0, v1))), now = performance.now(), dt = Math.max(6, now - drag.t);
+          const step = qMul(qn, qConj(G.q));   /* what this move rotated by, in screen terms */
+          drag.dq = qPow(step, 16 / dt); drag.t = now;
+          setQ(qn); bump();
         });
         const up = (e) => {
           ptrs.delete(e.pointerId); pinch = 0;
-          if (ptrs.size) return;
-          G.drag = false; host.classList.remove("drag"); last = null;
-          if (Math.hypot(G.vel[0], G.vel[1]) > 0.05) coast();
+          if (ptrs.size) { drag = null; return; }
+          host.classList.remove("drag");
+          const d = drag; drag = null;
+          if (d && d.dq && performance.now() - d.t < 70) coast(d.dq);
         };
         cv.addEventListener("pointerup", up); cv.addEventListener("pointercancel", up);
-        function coast() {
-          const step = () => {
-            G.vel[0] *= 0.94; G.vel[1] *= 0.94;
-            G.rot[0] += G.vel[0]; G.rot[1] += G.vel[1]; clampLat(); bump();
-            if (Math.hypot(G.vel[0], G.vel[1]) > 0.04 && !G.drag) G.anim = requestAnimationFrame(step); else G.anim = 0;
+        function coast(dq) {
+          let f = 1, last = performance.now();
+          const step = (t) => {
+            const dt = Math.min(40, t - last); last = t;
+            f *= Math.pow(0.955, dt / 16);
+            const ang = 2 * Math.acos(Math.min(1, Math.abs(dq[0]))) * f;
+            if (ang < 0.00035 || G.drag) { G.anim = 0; want(); return; }
+            setQ(qMul(qPow(dq, f * dt / 16), G.q)); bump();
+            G.anim = requestAnimationFrame(step);
           };
-          cancelAnimationFrame(G.anim); G.anim = requestAnimationFrame(step);
+          stopRot(); G.anim = requestAnimationFrame(step);
         }
-        cv.addEventListener("wheel", (e) => { e.preventDefault(); zoomBy(e.deltaY < 0 ? 1.12 : 1 / 1.12); }, { passive: false });
+        cv.addEventListener("wheel", (e) => { e.preventDefault(); const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY; zoomBy(Math.exp(-Math.max(-120, Math.min(120, dy)) * 0.0018)); }, { passive: false });
         cv.addEventListener("keydown", (e) => {
-          const k = { ArrowLeft: [-6, 0], ArrowRight: [6, 0], ArrowUp: [0, 5], ArrowDown: [0, -5] }[e.key];
-          if (k) { e.preventDefault(); G.rot[0] += k[0]; G.rot[1] += k[1]; clampLat(); bump(); }
-          else if (e.key === "+" || e.key === "=") zoomBy(1.2); else if (e.key === "-") zoomBy(1 / 1.2);
+          const k = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key];
+          if (k) {
+            e.preventDefault();
+            const ang = 7 * D2R / Math.max(1, G.zoom), ax = [-k[1], k[0], 0], s = Math.sin(ang / 2);
+            const r = [Math.cos(ang / 2), 0, 0, 0];
+            /* turn about the screen axis: use two small delta rotations on the globe surface */
+            const c = onSphere(G.w / 2, G.h / 2, G.rot), t = onSphere(G.w / 2 + k[0] * -40, G.h / 2 + k[1] * 40, G.rot);
+            if (c && t) { stopRot(); setQ(qNorm(qMul(G.q, qDelta(t, c)))); bump(); }
+          } else if (e.key === "+" || e.key === "=") zoomBy(1.25); else if (e.key === "-") zoomBy(1 / 1.25);
         });
         new ResizeObserver(() => resize()).observe(host);
         return {
@@ -1302,66 +1367,131 @@
           set(code, kind, label = true) { G.states.set(code, { kind, label }); want(); },
           clear() { G.states.clear(); want(); },
           setLabels(v) { G.labels = !!v; want(); },
-          home() { fly([10, 20], 1, 900); },
-          show(code) { const f = G.feats.get(code); if (!f) return; const ll = labelPoint(code, f); if (d3.geoDistance(ll, [-G.rot[0], -G.rot[1]]) > 1.2) fly(ll, G.zoom, 800); },
+          home() { fly([10, 25], 1, 900); },
+          show(code) { const f = G.feats.get(code); if (!f) return; const ll = labelPoint(code, f), c = proj.invert([G.w / 2, G.h / 2]); if (!c || d3.geoDistance(ll, c) > 1.15) fly(ll, G.zoomT, 900); },
         };
       }
 
-      /* ---------- the region wheel ---------- */
+      /* ---------- the region wheel: a horizontal drum. Drag sideways, it loops, ticks like a real wheel and snaps ---------- */
       const REGIONS = [
-        { v: "all", label: "All continents", sub: "A random continent each round" },
-        { v: "continental", label: "Continental", sub: "Two different continents" },
-        { v: "AF", label: "Africa", sub: "" }, { v: "AS", label: "Asia", sub: "" }, { v: "EU", label: "Europe", sub: "" },
-        { v: "NA", label: "North America", sub: "" }, { v: "SA", label: "South America", sub: "" },
+        { v: "all", label: "All" },
+        { v: "continental", label: "Continental" },
+        { v: "AF", label: "Africa" }, { v: "AS", label: "Asia" }, { v: "EU", label: "Europe" },
+        { v: "NA", label: "North America" }, { v: "SA", label: "South America" },
       ];
       const regionLabel = (v) => (REGIONS.find((r) => r.v === v) || REGIONS[0]).label;
-      function makeWheel(root, items, value, onChange) {
-        root.innerHTML = '<div class="wheel-band"></div><div class="wheel-items"></div><div class="wheel-fade top"></div><div class="wheel-fade bottom"></div>';
-        const box = root.querySelector(".wheel-items"), IH = 40, TH = 0.6, N = items.length;
-        const els = items.map((it, i) => { const b = document.createElement("button"); b.type = "button"; b.className = "wheel-item"; b.innerHTML = `<span>${esc(it.label)}</span>`; b.tabIndex = -1; box.appendChild(b); return b; });
-        let pos = Math.max(0, items.findIndex((x) => x.v === value)), cur = Math.round(pos), raf = 0, drag = null, vel = 0;
+      function wheelTick() {
+        try {
+          const v = sfxVol(); if (v <= 0) return;
+          const c = ctx(), t = c.currentTime;
+          const len = Math.floor(c.sampleRate * 0.012), buf = c.createBuffer(1, len, c.sampleRate), d = buf.getChannelData(0);
+          for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3);
+          const n = c.createBufferSource(), bp = c.createBiquadFilter(), ng = c.createGain();
+          n.buffer = buf; bp.type = "bandpass"; bp.frequency.value = 2600; bp.Q.value = 0.9; ng.gain.value = Math.min(1, v * 1.4);
+          n.connect(bp); bp.connect(ng); ng.connect(c.destination); n.start(t);
+          const o = c.createOscillator(), og = c.createGain();
+          o.type = "triangle"; o.frequency.setValueAtTime(1500, t); o.frequency.exponentialRampToValueAtTime(700, t + 0.03);
+          og.gain.setValueAtTime(Math.max(0.0002, v * 0.2), t); og.gain.exponentialRampToValueAtTime(0.0001, t + 0.045);
+          o.connect(og); og.connect(c.destination); o.start(t); o.stop(t + 0.06);
+        } catch (e) {}
+      }
+      function makeWheel(root, items, value, onChange, opts = {}) {
+        const calm = !!opts.calm;
+        root.classList.add("wheel-h"); if (calm) root.classList.add("calm");
+        root.innerHTML = '<i class="wheel-arrow"></i><div class="wheel-items"></div>';
+        const box = root.querySelector(".wheel-items"), arrow = root.querySelector(".wheel-arrow"), N = items.length;
+        const els = items.map((it) => { const b = document.createElement("span"); b.className = "wheel-item"; b.textContent = it.label; box.appendChild(b); return b; });
+        const GAP = 18;   /* true edge-to-edge gap between neighbouring labels */
+        let X = [], T = 0, unit = 90;
+        function measure() {
+          const w = els.map((e) => e.getBoundingClientRect().width || 70);
+          X = []; let acc = 0;
+          for (let i = 0; i < N; i++) { X.push(acc); acc += (w[i] + w[(i + 1) % N]) / 2 + GAP; }
+          T = acc; unit = T / N;
+        }
+        const IW = () => unit;
+        let raw = Math.max(0, items.findIndex((x) => x.v === value)), committed = Math.round(raw), shown = committed, raf = 0, drag = null, arrowT = 0;
         root.tabIndex = 0; root.setAttribute("role", "listbox"); root.setAttribute("aria-label", "Region");
+        const wrap = (i) => ((i % N) + N) % N;
+        const Xf = (t) => { const n = Math.floor(t), f = t - n, i = wrap(n), nx = i === N - 1 ? T : X[i + 1]; return X[i] + Math.floor(n / N) * T + (nx - X[i]) * f; };
+        /* a little resistance: the wheel is "sticky" near each option and speeds up between them */
+        const warp = (p) => { if (calm) return p; const r = Math.round(p), f = p - r; return r + Math.sign(f) * 0.5 * Math.pow(Math.abs(f) * 2, 1.15); };
+        const ease = (x) => x * x * (3 - 2 * x);
+        const mix = (a, b, t) => Math.round(a + (b - a) * t);
         function render() {
+          if (!X.length) measure();
+          const p = warp(raw), c = Xf(p);
           els.forEach((b, i) => {
-            let d = i - pos; d = ((d + N / 2) % N + N) % N - N / 2;
-            const a = d * TH;
-            if (Math.abs(a) > 1.45) { b.style.opacity = 0; return; }
-            const y = Math.sin(a) * (IH / TH), s = Math.cos(a);
-            b.style.transform = `translateY(${y.toFixed(1)}px) rotateX(${(-a * 57.3).toFixed(1)}deg) scale(${(0.82 + 0.18 * s).toFixed(3)})`;
-            b.style.opacity = Math.max(0, Math.pow(s, 2.2)).toFixed(3);
-            b.classList.toggle("sel", Math.abs(d) < 0.5);
-            b.setAttribute("aria-selected", Math.abs(d) < 0.5 ? "true" : "false");
+            let d = i - p; d = ((d + N / 2) % N + N) % N - N / 2;
+            const ad = Math.abs(d);
+            if (ad > 1.75) { b.style.opacity = 0; b.style.visibility = "hidden"; return; }
+            b.style.visibility = "visible";
+            const op = ad <= 1 ? 1 - 0.5 * ease(ad) : 0.5 * ease(Math.max(0, (1.75 - ad) / 0.75));
+            b.style.opacity = op.toFixed(3);
+            const k = ease(Math.max(0, 1 - ad)), g = (v) => mix(143, 255, k);
+            b.style.color = `rgb(${mix(143, 255, k)},${mix(156, 255, k)},${mix(148, 255, k)})`;
+            b.style.transform = `translateX(${(Xf(p + d) - c).toFixed(1)}px)`;
+            b.classList.toggle("sel", ad < 0.5);
           });
+          const idx = wrap(Math.round(raw));
+          if (idx !== shown) { shown = idx; wheelTick(); }
         }
-        function settle() {
-          const i = ((Math.round(pos) % N) + N) % N;
-          if (i !== cur) { cur = i; onChange(items[i].v, items[i]); }
+        function showArrow(on) { clearTimeout(arrowT); if (on) arrow.classList.add("on"); else arrowT = setTimeout(() => arrow.classList.remove("on"), 650); }
+        function settleDone() {
+          const idx = wrap(Math.round(raw));
+          if (idx !== committed) { committed = idx; onChange(items[idx].v, items[idx]); }
+          showArrow(false);
         }
-        function tween(to) {
-          cancelAnimationFrame(raf);
-          const from = pos, t0 = performance.now(), ms = 280 + Math.min(300, Math.abs(to - from) * 60);
-          const step = (t) => { const k = Math.min(1, (t - t0) / ms); pos = from + (to - from) * (1 - Math.pow(1 - k, 3)); render(); if (k < 1) raf = requestAnimationFrame(step); else { pos = to; settle(); } };
+        function spring(target, v0) {
+          cancelAnimationFrame(raf); showArrow(true);
+          let last = performance.now(), vel = v0 || 0;
+          const step = (t) => {
+            const dt = Math.min(0.04, (t - last) / 1000); last = t;
+            /* critically damped spring: smooth, no bounce */
+            const k = calm ? 90 : 120, c = 2 * Math.sqrt(k), a = k * (target - raw) - c * vel;
+            vel += a * dt; raw += vel * dt; render();
+            if (Math.abs(target - raw) < 0.0015 && Math.abs(vel) < 0.02) { raw = target; render(); settleDone(); raf = 0; return; }
+            raf = requestAnimationFrame(step);
+          };
           raf = requestAnimationFrame(step);
+          return () => vel;
         }
-        function snapTo(i) { let d = i - (((Math.round(pos) % N) + N) % N); if (d > N / 2) d -= N; if (d < -N / 2) d += N; tween(Math.round(pos) + d); }
-        function nudge(k) { tween(Math.round(pos) + k); }
-        root.addEventListener("pointerdown", (e) => { cancelAnimationFrame(raf); drag = { y: e.clientY, t: performance.now(), moved: 0 }; vel = 0; root.setPointerCapture(e.pointerId); });
+        let springVel = null;
+        function goTo(target, v0) { cancelAnimationFrame(raf); springVel = spring(target, v0); }
+        function nudge(k) { goTo(Math.round(raw) + k); }
+        root.addEventListener("pointerdown", (e) => {
+          cancelAnimationFrame(raf); raf = 0;
+          drag = { x: e.clientX, t: performance.now(), moved: 0, v: 0, x0: e.clientX };
+          root.setPointerCapture(e.pointerId); showArrow(true); root.classList.add("drag");
+        });
         root.addEventListener("pointermove", (e) => {
           if (!drag) return;
-          const dy = e.clientY - drag.y, dt = Math.max(8, performance.now() - drag.t);
-          pos -= dy / IH * 0.9; vel = (-dy / IH * 0.9) / dt * 16; drag.moved += Math.abs(dy); drag.y = e.clientY; drag.t = performance.now(); render();
+          const dx = e.clientX - drag.x, now = performance.now(), dt = Math.max(6, now - drag.t);
+          const gain = 0.9;
+          raw -= dx / IW() * gain;
+          drag.v = drag.v * 0.6 + (-dx / IW() * gain / dt * 1000) * 0.4;
+          drag.moved += Math.abs(dx); drag.x = e.clientX; drag.t = now; render();
         });
         const end = (e) => {
           if (!drag) return;
-          const moved = drag.moved; drag = null;
-          if (moved < 4) { let i = -1, bd = 1e9; els.forEach((x, k) => { if (+x.style.opacity < 0.15) return; const r = x.getBoundingClientRect(), d = Math.abs(e.clientY - (r.top + r.height / 2)); if (d < bd && d < r.height * 0.7) { bd = d; i = k; } }); if (i >= 0) snapTo(i); return; }
-          tween(Math.round(pos + vel * 9));
+          const d = drag; drag = null; root.classList.remove("drag");
+          if (d.moved < 5) {                      /* a tap: go to the option that was tapped */
+            const r = root.getBoundingClientRect(), off = (e.clientX - (r.left + r.width / 2)) / IW();
+            goTo(Math.round(raw) + Math.max(-1, Math.min(1, Math.round(off)))); return;
+          }
+          const v = performance.now() - d.t < 120 ? d.v : 0;          /* options per second at release */
+          goTo(Math.round(raw + Math.max(-1.5, Math.min(1.5, v * 0.18))), Math.max(-6, Math.min(6, v)));
         };
         root.addEventListener("pointerup", end); root.addEventListener("pointercancel", end);
-        root.addEventListener("wheel", (e) => { e.preventDefault(); nudge(e.deltaY > 0 ? 1 : -1); }, { passive: false });
-        root.addEventListener("keydown", (e) => { if (e.key === "ArrowDown" || e.key === "ArrowRight") { e.preventDefault(); nudge(1); } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") { e.preventDefault(); nudge(-1); } });
-        render();
-        return { set(v) { const i = items.findIndex((x) => x.v === v); if (i >= 0) { cur = i; snapTo(i); } }, get: () => items[cur].v };
+        let wt = 0;
+        root.addEventListener("wheel", (e) => { e.preventDefault(); const n = performance.now(); if (n - wt < 130) return; wt = n; const dd = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY; if (Math.abs(dd) > 2) nudge(dd > 0 ? 1 : -1); }, { passive: false });
+        root.addEventListener("keydown", (e) => { if (e.key === "ArrowRight" || e.key === "ArrowDown") { e.preventDefault(); nudge(1); } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") { e.preventDefault(); nudge(-1); } });
+        new ResizeObserver(() => { measure(); render(); }).observe(root);
+        measure(); render();
+        /* label widths change once the web font arrives: re-measure so gaps stay even */
+        if (document.fonts) { document.fonts.ready.then(() => { measure(); render(); }); document.fonts.addEventListener && document.fonts.addEventListener("loadingdone", () => { measure(); render(); }); }
+        setTimeout(() => { measure(); render(); }, 400);
+        return { set(v) { const i = items.findIndex((x) => x.v === v); if (i < 0) return; cancelAnimationFrame(raf); raf = 0; raw = i; committed = i; shown = i; render(); }, get: () => items[committed].v };
       }
 
       /* ---------- countries and borders ---------- */
@@ -1551,7 +1681,7 @@
 894|ZM|Zambia|AF
 716|ZW|Zimbabwe|AF
 XKX|XK|Kosovo|EU`;
-      const EDGE_STR = "AE:OM,SA;AF:CN,IR,PK,TJ,TM,UZ;AL:GR,ME,MK,XK;AM:AZ,GE,IR,TR;AO:CD,CG,NA,ZM;AR:BO,BR,CL,PY,UY;AT:CH,CZ,DE,HU,IT,SI,SK;AZ:GE,IR,RU,TR;BA:HR,ME,RS;BD:IN,MM;BE:DE,FR,LU,NL;BF:BJ,CI,GH,ML,NE,TG;BG:GR,MK,RO,RS,TR;BH:SA;BI:CD,RW,TZ;BJ:NE,NG,TG;BN:MY;BO:BR,CL,PE,PY;BR:CO,GY,PE,PY,SR,UY,VE;BT:CN,IN;BW:NA,ZA,ZM,ZW;BY:LT,LV,PL,RU,UA;BZ:GT,MX;CA:US;CD:CF,CG,RW,SS,TZ,UG,ZM;CF:CG,CM,SD,SS,TD;CG:CM,GA;CH:DE,FR,IT;CI:GH,GN,LR,ML;CL:PE;CM:GA,GQ,NG,TD;CN:IN,KG,KP,KZ,LA,MM,MN,NP,PK,RU,TJ,VN;CO:EC,PA,PE,VE;CR:NI,PA;CZ:DE,PL,SK;DE:DK,FR,LU,NL,PL;DJ:ER,ET,SO;DK:SE;DZ:LY,MA,ML,MR,NE,TN;EC:PE;EE:LV,RU;EG:IL,LY,PS,SD;ER:ET,SD;ES:FR,MA,PT;ET:KE,SD,SO,SS;FI:NO,RU,SE;FR:GB,IT,LU;GA:GQ;GB:IE;GE:RU,TR;GH:TG;GM:SN;GN:GW,LR,ML,SL,SN;GR:MK,TR;GT:HN,MX,SV;GW:SN;GY:SR,VE;HN:NI,SV;HR:HU,ME,RS,SI;HU:RO,RS,SI,SK,UA;ID:MY,TL;IL:JO,LB,PS,SY;IN:MM,NP,PK;IQ:IR,JO,KW,SA,SY,TR;IR:PK,TM,TR;IT:SI;JO:PS,SA,SY;KE:SO,SS,TZ,UG;KG:KZ,TJ,UZ;KH:LA,TH,VN;KP:KR,RU;KW:SA;KZ:RU,TM,UZ;LA:MM,TH,VN;LB:SY;LR:SL;LS:ZA;LT:LV,PL,RU;LV:RU;LY:NE,SD,TD,TN;MD:RO,UA;ME:RS,XK;MK:RS,XK;ML:MR,NE,SN;MM:TH;MN:RU;MR:SN;MW:MZ,TZ,ZM;MX:US;MY:SG,TH;MZ:SZ,TZ,ZA,ZM,ZW;NA:ZA,ZM;NE:NG,TD;NG:TD;NO:RU,SE;OM:SA,YE;PL:RU,SK,UA;QA:SA;RO:RS,UA;RS:XK;RU:UA;RW:TZ,UG;SA:YE;SD:SS,TD;SK:UA;SS:UG;SY:TR;SZ:ZA;TJ:UZ;TM:UZ;TZ:UG,ZM;ZA:ZW;ZM:ZW";
+      const EDGE_STR = "AE:OM,SA;AF:CN,IR,PK,TJ,TM,UZ;AL:GR,ME,MK,XK;AM:AZ,GE,IR,TR;AO:CD,CG,NA,ZM;AR:BO,BR,CL,PY,UY;AT:CH,CZ,DE,HU,IT,SI,SK;AZ:GE,IR,RU,TR;BA:HR,ME,RS;BD:IN,MM;BE:DE,FR,LU,NL;BF:BJ,CI,GH,ML,NE,TG;BG:GR,MK,RO,RS,TR;BI:CD,RW,TZ;BJ:NE,NG,TG;BN:MY;BO:BR,CL,PE,PY;BR:CO,GY,PE,PY,SR,UY,VE;BT:CN,IN;BW:NA,ZA,ZM,ZW;BY:LT,LV,PL,RU,UA;BZ:GT,MX;CA:US;CD:CF,CG,RW,SS,TZ,UG,ZM;CF:CG,CM,SD,SS,TD;CG:CM,GA;CH:DE,FR,IT;CI:GH,GN,LR,ML;CL:PE;CM:GA,GQ,NG,TD;CN:IN,KG,KP,KZ,LA,MM,MN,NP,PK,RU,TJ,VN;CO:EC,PA,PE,VE;CR:NI,PA;CZ:DE,PL,SK;DE:DK,FR,LU,NL,PL;DJ:ER,ET,SO;DZ:LY,MA,ML,MR,NE,TN;EC:PE;EE:LV,RU;EG:IL,LY,PS,SD;ER:ET,SD;ES:FR,PT;ET:KE,SD,SO,SS;FI:NO,RU,SE;FR:IT,LU;GA:GQ;GB:IE;GE:RU,TR;GH:TG;GM:SN;GN:GW,LR,ML,SL,SN;GR:MK,TR;GT:HN,MX,SV;GW:SN;GY:SR,VE;HN:NI,SV;HR:HU,ME,RS,SI;HU:RO,RS,SI,SK,UA;ID:MY,TL;IL:JO,LB,PS,SY;IN:MM,NP,PK;IQ:IR,JO,KW,SA,SY,TR;IR:PK,TM,TR;IT:SI;JO:PS,SA,SY;KE:SO,SS,TZ,UG;KG:KZ,TJ,UZ;KH:LA,TH,VN;KP:KR,RU;KW:SA;KZ:RU,TM,UZ;LA:MM,TH,VN;LB:SY;LR:SL;LS:ZA;LT:LV,PL,RU;LV:RU;LY:NE,SD,TD,TN;MD:RO,UA;ME:RS,XK;MK:RS,XK;ML:MR,NE,SN;MM:TH;MN:RU;MR:SN;MW:MZ,TZ,ZM;MX:US;MY:TH;MZ:SZ,TZ,ZA,ZM,ZW;NA:ZA,ZM;NE:NG,TD;NG:TD;NO:RU,SE;OM:SA,YE;PL:RU,SK,UA;QA:SA;RO:RS,UA;RS:XK;RU:UA;RW:TZ,UG;SA:YE;SD:SS,TD;SK:UA;SS:UG;SY:TR;SZ:ZA;TJ:UZ;TM:UZ;TZ:UG,ZM;ZA:ZW;ZM:ZW";
       const FAMOUS = new Set("US CA MX BR AR CO PE CL VE FR DE IT ES PT GB IE NL BE CH AT PL CZ HU GR SE NO FI DK RU UA TR EG MA DZ LY SD ET KE TZ ZA NG GH SN CN IN PK AF IR IQ SA IL JO SY TH VN MM MY ID KR KP MN KZ UZ RO BG RS HR PA CR CD AO ZM ZW NA MZ".split(" "));
       const ALIASES = {
         US: ["usa", "united states of america", "america", "us"], GB: ["uk", "great britain", "britain", "england", "scotland", "wales"], CZ: ["czech republic"],
@@ -1695,7 +1825,7 @@ XKX|XK|Kosovo|EU`;
       };
       function gameHTML(p) {
         return `
-          <div class="bg-panel" id="${p}Panel">
+          <div class="bg-card" id="${p}Panel">
             <div class="bg-head">
               <div class="bg-side"><small>FROM</small><b class="nm" id="${p}From">&nbsp;</b></div>
               <div class="bg-mid"><small>BETWEEN</small><b id="${p}Between">-</b></div>
@@ -1704,23 +1834,23 @@ XKX|XK|Kosovo|EU`;
             <div class="bg-stage" id="${p}Stage">
               <div class="bg-chips" id="${p}Chips"></div>
               <div class="bg-load" id="${p}Load"><i></i><span>Loading the globe...</span></div>
-              <button class="bg-ctl info" onclick="toggleLegend('${p}')" aria-label="What do the colours mean?">i</button>
+              <button class="bg-ctl info" onclick="toggleLegend('${p}')" aria-label="What do the colours mean?"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></button>
               <div class="bg-legend" id="${p}Legend"><div><i style="background:#2fe08a"></i><b>Green</b> On a shortest route</div><div><i style="background:#e8b84a"></i><b>Yellow</b> A short detour</div><div><i style="background:#ef4d4d"></i><b>Red</b> Off course</div></div>
               <div class="bg-zoom">
-                <button class="bg-ctl" onclick="zoomGlobe('${p}',1.3)" aria-label="Zoom in">+</button>
-                <button class="bg-ctl" onclick="zoomGlobe('${p}',1/1.3)" aria-label="Zoom out">&minus;</button>
+                <button class="bg-ctl" onclick="zoomGlobe('${p}',1.35)" aria-label="Zoom in">+</button>
+                <button class="bg-ctl" onclick="zoomGlobe('${p}',1/1.35)" aria-label="Zoom out">&minus;</button>
                 <button class="bg-ctl" onclick="toggleFull('${p}')" aria-label="Full screen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
               </div>
               <div class="bg-crumb" id="${p}Crumb"></div>
             </div>
-          </div>
-          <div id="${p}Action">
-            <div class="answer-row">
-              <div class="search" id="${p}Search">${SEARCH_SVG}<input id="${p}Input" autocomplete="off" spellcheck="false" placeholder="Search countries..." oninput="guessInput('${p}')" onkeydown="guessKey(event,'${p}')" />${X_SVG}<div class="hearts-in" id="${p}HeartsCard" title="Hearts left"><b id="${p}Hearts">6</b>${HEART_SVG}</div></div>
-              <button class="gs-btn" id="${p}Btn" onclick="guessPress('${p}')"><span class="ico">${FLAG_SVG}</span><span class="lbl">Give up</span></button>
+            <div id="${p}Action">
+              <div class="answer-row">
+                <div class="search" id="${p}Search">${SEARCH_SVG}<input id="${p}Input" autocomplete="off" spellcheck="false" placeholder="Search countries..." oninput="guessInput('${p}')" onkeydown="guessKey(event,'${p}')" />${X_SVG}<div class="hearts-in" id="${p}HeartsCard" title="Hearts left"><b id="${p}Hearts">6</b>${HEART_SVG}</div></div>
+                <button class="gs-btn" id="${p}Btn" onclick="guessPress('${p}')"><span class="ico">${FLAG_SVG}</span><span class="lbl">Give up</span></button>
+              </div>
+              <div class="sugg" id="${p}Sugg"></div>
+              <div class="msg" id="${p}Msg"></div>
             </div>
-            <div class="sugg" id="${p}Sugg"></div>
-            <div class="msg" id="${p}Msg"></div>
           </div>`;
       }
       function toggleLegend(p) { $(p + "Legend").classList.toggle("open"); }
@@ -1824,7 +1954,11 @@ XKX|XK|Kosovo|EU`;
         const raw = $(p + "Input").value.trim();
         hideSugg(p);
         if (!raw) return;
-        renderSugg(p, rankCountries(raw));
+        const list = rankCountries(raw);
+        renderSugg(p, list);
+        /* typing a country's full name exactly is enough: no need to click the suggestion */
+        const q = fold(raw), r = R[p], ex = list.find((c) => c.keys.includes(q));
+        if (ex && r && !r.locked && !r.guesses.has(ex.code) && ex.code !== r.a && ex.code !== r.b) { PICKED[p] = ex.code; updateBtn(p); }
       }
       function renderSugg(p, list) {
         const box = $(p + "Sugg"), st = SQ[p];
@@ -1897,26 +2031,21 @@ XKX|XK|Kosovo|EU`;
           box.appendChild(b);
         });
       }
-      let WHEEL = { home: null, modal: null, duel: null };
-      function setScope(v, from) {
-        if (!REGIONS.some((r) => r.v === v)) return;
+      let WHEEL = { solo: null, duel: null };
+      function setScope(v) {
+        if (!REGIONS.some((r) => r.v === v) || v === S.scope) return;
         S.scope = v; lsSet("bg_scope", v);
-        ["home", "modal"].forEach((k) => { if (k !== from && WHEEL[k] && WHEEL[k].get() !== v) WHEEL[k].set(v); });
-        updateRegionBtn(); S.scopeDirty = true;
-        if (typeof wheelSub === "function") { wheelSub("homeWheelSub", v); wheelSub("modalWheelSub", v); }
+        if ($("gameView").classList.contains("active")) beginSolo();
       }
-      function updateRegionBtn() { const b = $("regionBtnLbl"); if (b) b.textContent = regionLabel(S.scope); }
-      function openRegion() { S.scopeDirty = false; $("regionModal").classList.add("open"); }
-      function closeRegion() { $("regionModal").classList.remove("open"); if (S.scopeDirty && $("gameView").classList.contains("active")) { S.scopeDirty = false; beginSolo(); } }
 
       /* ---------- solo ---------- */
-      const S = { diff: "easy", scope: lsGet("bg_scope", "all"), token: 0, cancel: null, pendingLoad: false, ls: {}, lastEst: 0, scopeDirty: false };
+      const S = { diff: "easy", scope: lsGet("bg_scope", "all"), token: 0, cancel: null, pendingLoad: false, ls: {}, lastEst: 0, };
       if (!REGIONS.some((r) => r.v === S.scope)) S.scope = "all";
       function startSolo() {
         closeSoloResult();
         showView("gameView");
         renderDiff("soloDiff", S.diff, (l) => { S.diff = l; beginSolo(); });
-        updateRegionBtn(); updateScoreChip();
+        updateScoreChip();
         beginSolo();
       }
       function leaveGame() { S.pendingLoad = false; S.token++; closeSoloResult(); resetSearch("solo"); R.solo = null; showView("homeView"); }
@@ -2694,19 +2823,14 @@ XKX|XK|Kosovo|EU`;
 
 
       /* ---------- init ---------- */
-      const GLOBE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></svg>';
-      $("soloStack").innerHTML = `<div class="top-row"><button class="back" onclick="leaveGame()" aria-label="Back">${BACK_SVG}</button><button class="region-btn" onclick="openRegion()" aria-label="Choose region">${GLOBE_SVG}<span id="regionBtnLbl">All continents</span></button><button class="score-chip" onclick="openLb('score')" aria-label="Open leaderboard"><span id="soloScore">0</span><span class="rk" id="soloRank"></span></button></div>
+      $("soloStack").innerHTML = `<div class="reg-row"><div class="wheel-h" id="soloWheel"></div><button class="back" onclick="leaveGame()" aria-label="Back">${BACK_SVG}</button><button class="score-chip" onclick="openLb('score')" aria-label="Open leaderboard"><span id="soloScore">0</span><span class="rk" id="soloRank"></span></button></div>
         <div id="soloBody" class="game-body"><div class="diff" id="soloDiff"></div>${gameHTML("solo")}</div><div id="soloResult" style="display:none"></div>`;
       $("duelStack").innerHTML = `<div class="duel-top"><button class="back" onclick="disconnectDuel()" aria-label="Back">${BACK_SVG}</button><span id="duelRound">Round 1 / 10</span><span class="score" id="duelScore">0</span></div>
         <div class="duel-wrap"><div id="duelBody" class="game-body">${gameHTML("duel")}</div><div id="duelWait" class="wait"><i></i>Waiting for the other players...</div></div>`;
       renderDiff("duelDiff", duelDiffSel, (l) => { duelDiffSel = l; });
-      const wheelSub = (id, v) => { const r = REGIONS.find((x) => x.v === v); $(id).textContent = r ? r.sub || "Pairs inside " + r.label : ""; };
-      WHEEL.home = makeWheel($("homeWheel"), REGIONS, S.scope, (v) => { setScope(v, "home"); wheelSub("homeWheelSub", v); });
-      WHEEL.modal = makeWheel($("modalWheel"), REGIONS, S.scope, (v) => { setScope(v, "modal"); wheelSub("modalWheelSub", v); });
       if (!REGIONS.some((r) => r.v === duelScope)) duelScope = "all";
-      WHEEL.duel = makeWheel($("duelWheel"), REGIONS, duelScope, (v) => { duelScope = v; wheelSub("duelWheelSub", v); });
-      wheelSub("homeWheelSub", S.scope); wheelSub("modalWheelSub", S.scope); wheelSub("duelWheelSub", duelScope);
-      updateRegionBtn();
+      WHEEL.solo = makeWheel($("soloWheel"), REGIONS, S.scope, (v) => setScope(v));
+      WHEEL.duel = makeWheel($("duelWheel"), REGIONS, duelScope, (v) => { duelScope = v; }, { calm: true });
       recomputeRanks();
       updateUserCard();
       updateScoreChip();

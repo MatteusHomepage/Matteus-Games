@@ -77,6 +77,7 @@
         cursor: not-allowed;
       }
 
+      /* spotlight */
       .spot {
         position: fixed;
         inset: 0;
@@ -173,6 +174,50 @@
       .brand-mark svg {
         width: 20px;
         height: 20px;
+      }
+      .hub-btn {
+        position: absolute;
+        right: max(16px, env(safe-area-inset-right));
+        top: calc(14px + env(safe-area-inset-top));
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        height: 40px;
+        padding: 0 14px;
+        background: #070b09;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        color: #cfd8d1;
+        font:
+          700 13px "DM Sans",
+          sans-serif;
+        text-decoration: none;
+        transition:
+          background 0.2s,
+          border-color 0.2s,
+          color 0.2s,
+          transform 0.15s;
+        animation: rise 0.5s var(--ease) both;
+      }
+      .hub-btn:hover {
+        background: #0e2418;
+        border-color: #1d4a30;
+        color: #b9f3d1;
+      }
+      .hub-btn:active {
+        transform: scale(0.97);
+      }
+      .hub-btn svg {
+        width: 15px;
+        height: 15px;
+      }
+      @media (max-width: 420px) {
+        .hub-btn span {
+          display: none;
+        }
+        .hub-btn {
+          padding: 0 12px;
+        }
       }
       .user-card {
         position: absolute;
@@ -459,6 +504,7 @@
         margin: 4px 0 0;
       }
 
+      /* difficulty pills */
       .diff {
         display: flex;
         gap: 6px;
@@ -505,6 +551,7 @@
         }
       }
 
+      /* snippet + playback bar */
       .clip-bar {
         height: 16px;
         background: #131a15;
@@ -622,6 +669,7 @@
         color: var(--accent);
       }
 
+      /* guess row */
       .answer-row {
         display: flex;
         gap: 8px;
@@ -1031,6 +1079,7 @@
         font-size: 12px;
       }
 
+      /* result (solo) */
       #confetti {
         position: fixed;
         inset: 0;
@@ -1215,6 +1264,7 @@
         text-align: center;
       }
 
+      /* custom dropdown */
       .dd {
         position: relative;
       }
@@ -1296,6 +1346,7 @@
         opacity: 1;
       }
 
+      /* multiplayer menus */
       .duel-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -1362,6 +1413,7 @@
         margin-bottom: 22px;
       }
 
+      /* leaderboard overlay */
       .lb-overlay {
         position: fixed;
         inset: 0;
@@ -1457,6 +1509,7 @@
         color: var(--muted);
       }
 
+      /* podium */
       .pd {
         text-align: center;
         padding-top: 40px;
@@ -1605,6 +1658,7 @@
         transform: translate(-50%, 0);
       }
 
+      /* settings */
       .modal-back {
         position: fixed;
         inset: 0;
@@ -1760,6 +1814,7 @@
         font-weight: 700;
       }
 
+      /* intro */
       #intro {
         position: fixed;
         inset: 0;
@@ -1859,6 +1914,7 @@
         }
       }
 
+      /* ---------- device compatibility ---------- */
       .topbar {
         padding-left: max(16px, env(safe-area-inset-left));
         padding-right: max(16px, env(safe-area-inset-right));
@@ -2014,51 +2070,732 @@
         }
       }
 
-      .hub-btn {
-        position: absolute;
-        right: max(16px, env(safe-area-inset-right));
-        top: calc(14px + env(safe-area-inset-top));
+      /* ---------- v3 additions ---------- */
+      [hidden] {
+        display: none !important;
+      }
+      .top-row {
+        justify-content: space-between;
+      }
+      .score-chip {
         display: flex;
         align-items: center;
+        gap: 9px;
+        height: 34px;
+        padding: 0 14px;
+        background: #070b09;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--accent);
+        font:
+          700 15px "Outfit",
+          sans-serif;
+        font-variant-numeric: tabular-nums;
+      }
+      .score-chip:hover {
+        background: #0e2418;
+        border-color: #1d4a30;
+      }
+      .score-chip .rk {
+        font-size: 12px;
+        color: #8aa395;
+        font-weight: 700;
+      }
+      .score-chip .rk:empty {
+        display: none;
+      }
+      .user-card .uname {
+        max-width: 150px;
+      }
+      .user-card .nm-rk {
+        max-width: none;
+        overflow: visible;
+        font-size: inherit;
+      }
+      .nm-rk {
+        display: inline-flex;
+        align-items: center;
+      }
+      .crown-i {
+        width: 1.05em;
+        height: 1.05em;
+        margin-right: 5px;
+        flex: none;
+      }
+      .rk1 {
+        color: #ffd84d;
+      }
+      .rk2 {
+        color: #d6dde3;
+      }
+      .rk3 {
+        color: #e29a5f;
+      }
+      .menu-pop {
+        position: absolute;
+        left: 0;
+        top: calc(100% + 8px);
+        min-width: 210px;
+        background: #070b09;
+        border: 1px solid #17261c;
+        border-radius: 14px;
+        padding: 6px;
+        opacity: 0;
+        transform: translateY(-6px) scale(0.97);
+        transform-origin: top left;
+        pointer-events: none;
+        transition: 0.22s var(--ease);
+        z-index: 20;
+        box-shadow: 0 18px 40px #000a;
+      }
+      .menu-pop.open {
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+      }
+      .menu-item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        border: 0;
+        background: transparent;
+        color: #dfe8e1;
+        padding: 11px 12px;
+        border-radius: 9px;
+        font-weight: 700;
+        font-size: 13px;
+        text-align: left;
+      }
+      .menu-item:hover {
+        background: #0e2418;
+        color: #b9f3d1;
+      }
+      .menu-item svg {
+        width: 17px;
+        height: 17px;
+        color: var(--accent);
+        flex: none;
+      }
+
+      /* click mode hearts + smaller skip */
+      .click-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+        align-items: stretch;
+      }
+      .click-actions .skip-btn {
+        margin-top: 0;
+        flex: 1;
+        padding: 9px 14px;
+        font-size: 13px;
+      }
+      .hearts {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         gap: 7px;
-        height: 40px;
+        min-width: 76px;
         padding: 0 14px;
         background: #070b09;
         border: 1px solid var(--line);
         border-radius: 12px;
+        font:
+          800 16px "Outfit",
+          sans-serif;
+        color: #fff;
+        font-variant-numeric: tabular-nums;
+      }
+      .hearts svg {
+        width: 18px;
+        height: 18px;
+        color: #ff5a78;
+      }
+      .hearts.hit {
+        animation: heartHit 0.55s;
+      }
+      @keyframes heartHit {
+        30% {
+          transform: scale(1.14);
+          border-color: #ff5a7899;
+          box-shadow: 0 0 20px #ff5a7844;
+        }
+      }
+
+      /* suggestions: long, scrollable list */
+      .sugg.open {
+        max-height: 340px;
+        overflow-y: auto;
+        padding-right: 3px;
+        scrollbar-width: thin;
+        scrollbar-color: #1d4a30 transparent;
+      }
+      .sugg.open::-webkit-scrollbar {
+        width: 6px;
+      }
+      .sugg.open::-webkit-scrollbar-thumb {
+        background: #1d4a30;
+        border-radius: 9px;
+      }
+      .sugg-row {
+        flex: none;
+      }
+
+      /* join message + player list */
+      .join-msg {
+        font-size: 13px;
+        font-weight: 600;
+        color: #ff8e8e;
+        text-align: center;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        margin-top: 0;
+        transition: 0.3s;
+        line-height: 1.45;
+      }
+      .join-msg.show {
+        max-height: 70px;
+        opacity: 1;
+        margin-top: 12px;
+      }
+      .join-msg.note {
+        color: #9aa6a0;
+      }
+      .code-input.err {
+        border-color: var(--red);
+        background: #150b0b;
+      }
+      input.shake {
+        animation: shake 0.4s;
+      }
+      .lobby-head {
+        display: flex;
+        justify-content: space-between;
+        margin: 24px 0 8px;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 1.4px;
+        color: #8a978e;
+      }
+      .player-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        text-align: left;
+        max-height: 320px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #1d4a30 transparent;
+      }
+      .pl-row {
+        flex: none;
+        min-height: 52px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        background: #0a100c;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        animation: rise 0.3s var(--ease) both;
+      }
+      .pl-name {
+        flex: 1;
+        font-weight: 700;
+        font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .pl-name small {
+        color: var(--muted);
+        font-weight: 500;
+      }
+      .pl-tag {
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        color: var(--accent);
+      }
+      .kick {
+        width: 30px;
+        height: 30px;
+        flex: none;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #0a0f0c;
+        color: #9aa6a0;
+        display: grid;
+        place-items: center;
+      }
+      .kick:hover {
+        background: #2a1010;
+        border-color: #7a2a2a;
+        color: #ff8e8e;
+      }
+      .kick svg {
+        width: 13px;
+        height: 13px;
+      }
+      .lobby-settings {
+        margin-top: 16px;
+      }
+      .diff.off {
+        opacity: 0.35;
+        pointer-events: none;
+      }
+
+      /* toggles */
+      .switch-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14px;
+        padding: 8px 0 14px;
+        font-size: 13px;
+        font-weight: 700;
         color: #cfd8d1;
+      }
+      .switch-row small {
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 500;
+        margin-top: 3px;
+        line-height: 1.4;
+      }
+      .switch {
+        position: relative;
+        width: 46px;
+        height: 26px;
+        flex: none;
+      }
+      .switch input {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 1;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+      .switch i {
+        position: absolute;
+        inset: 0;
+        background: #0b100d;
+        border: 1px solid var(--line);
+        border-radius: 99px;
+        transition: 0.25s;
+      }
+      .switch i::after {
+        content: "";
+        position: absolute;
+        left: 3px;
+        top: 3px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #6d7a72;
+        transition: 0.25s var(--ease);
+      }
+      .switch input:checked + i {
+        background: #0e2418;
+        border-color: #1d6a40;
+      }
+      .switch input:checked + i::after {
+        transform: translateX(20px);
+        background: var(--accent);
+      }
+
+      /* podium list + overlay scroll */
+      .pd-col {
+        width: min(140px, 29vw);
+      }
+      .pd-rest {
+        max-width: 380px;
+        margin: 0 auto 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        max-height: 220px;
+        overflow-y: auto;
+        text-align: left;
+        scrollbar-width: thin;
+        scrollbar-color: #1d4a30 transparent;
+      }
+      .pd-rest-row {
+        flex: none;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        padding: 9px 14px;
+        background: #0a100c;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        font-size: 14px;
+      }
+      .pd-rest-row .rn {
+        width: 22px;
+        color: #6d7a72;
+        font:
+          800 14px "Outfit",
+          sans-serif;
+      }
+      .pd-rest-row .nm {
+        flex: 1;
+        font-weight: 700;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .pd-rest-row b {
+        font:
+          700 14px "Outfit",
+          sans-serif;
+        color: var(--accent);
+      }
+      .lb-overlay {
+        overflow-y: auto;
+      }
+      .lb-inner {
+        margin: auto;
+      }
+      @media (max-width: 420px) {
+        .pd-col {
+          width: 30vw;
+        }
+        .pd-podium {
+          gap: 6px;
+        }
+      }
+
+      /* leaderboards */
+      .lbsheet {
+        width: min(500px, 100%);
+      }
+      .tabs {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 14px;
+        background: #050806;
+        border: 1px solid #0f1712;
+        border-radius: 12px;
+        padding: 4px;
+      }
+      .tab {
+        flex: 1;
+        border: 0;
+        background: transparent;
+        color: #7f8b83;
         font:
           700 13px "DM Sans",
           sans-serif;
-        text-decoration: none;
-        transition:
-          background 0.2s,
-          border-color 0.2s,
-          color 0.2s,
-          transform 0.15s;
-        animation: rise 0.5s var(--ease) both;
+        padding: 9px 6px;
+        border-radius: 9px;
       }
-      .hub-btn:hover {
+      .tab:hover {
+        color: #cfd8d1;
+      }
+      .tab.sel {
+        background: #0e2418;
+        color: #b9f3d1;
+        box-shadow: 0 0 0 1px #1d4a30;
+      }
+      .chips {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin: 16px 0 14px;
+      }
+      .chip {
+        border: 1px solid var(--line);
+        background: #0a0f0c;
+        color: #9aa6a0;
+        font:
+          700 12px "DM Sans",
+          sans-serif;
+        padding: 7px 12px;
+        border-radius: 999px;
+      }
+      .chip:hover {
+        color: #cfd8d1;
+        border-color: #1d4a30;
+      }
+      .chip.sel {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #05120a;
+      }
+      .lbr {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 11px 14px;
+        border-radius: 12px;
+        margin-bottom: 6px;
+        background: #0a100c;
+        border: 1px solid var(--line);
+        animation: rise 0.35s var(--ease) both;
+      }
+      .lbr-rank {
+        width: 26px;
+        font:
+          800 15px "Outfit",
+          sans-serif;
+        color: #6d7a72;
+      }
+      .lbr-name {
+        flex: 1;
+        min-width: 0;
+        font-weight: 700;
+        font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .lbr-name small {
+        color: var(--muted);
+        font-weight: 500;
+      }
+      .lbr b {
+        font:
+          700 15px "Outfit",
+          sans-serif;
+        font-variant-numeric: tabular-nums;
+        color: #dfe8e1;
+      }
+      .lbr.p1 {
+        background: linear-gradient(100deg, #40320b, #1b1606);
+        border-color: #9c7a14;
+      }
+      .lbr.p1 .lbr-rank {
+        color: #ffd84d;
+      }
+      .lbr.p1 b {
+        color: #ffe58a;
+      }
+      .lbr.p2 {
+        background: linear-gradient(100deg, #2f353a, #15191c);
+        border-color: #76828d;
+      }
+      .lbr.p2 .lbr-rank {
+        color: #d6dde3;
+      }
+      .lbr.p2 b {
+        color: #e8edf1;
+      }
+      .lbr.p3 {
+        background: linear-gradient(100deg, #40261a, #1b100a);
+        border-color: #9a6038;
+      }
+      .lbr.p3 .lbr-rank {
+        color: #e29a5f;
+      }
+      .lbr.p3 b {
+        color: #f0b78a;
+      }
+      .lbr.me {
+        box-shadow: 0 0 0 1px #19d77b77;
+      }
+      .lb-note {
+        color: var(--muted);
+        font-size: 13px;
+        text-align: center;
+        padding: 22px 8px;
+        line-height: 1.5;
+      }
+      .lb-dots {
+        text-align: center;
+        color: #4f5c54;
+        letter-spacing: 4px;
+        margin: 2px 0 8px;
+      }
+      .reset-btn {
+        margin-top: 12px;
+        width: 100%;
+        border: 1px solid #3a1c1c;
+        background: #140a0a;
+        color: #ff8e8e;
+        border-radius: 12px;
+        padding: 11px;
+        font-weight: 700;
+        font-size: 13px;
+      }
+      .reset-btn:hover {
+        background: #231010;
+        border-color: #7a2a2a;
+      }
+
+      /* account */
+      .sheet.small {
+        width: min(400px, 100%);
+      }
+      .sheet p.sub {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+        margin: -8px 0 16px;
+      }
+      .form {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+      }
+      .auth-msg {
+        display: none;
+        font-size: 12px;
+        color: #ff8e8e;
+        margin-top: 11px;
+        line-height: 1.45;
+        text-align: center;
+      }
+      .auth-msg.show {
+        display: block;
+      }
+      .auth-msg.good {
+        color: #70efa5;
+      }
+      .auth-switch {
+        font-size: 12px;
+        color: var(--muted);
+        text-align: center;
+        margin: 14px 0 0;
+      }
+      .link {
+        color: var(--accent);
+        font: inherit;
+        font-weight: 700;
+        background: none;
+        border: 0;
+        padding: 0;
+        cursor: pointer;
+      }
+      .link:hover {
+        text-decoration: underline;
+      }
+      .link.muted {
+        color: #9aa6a0;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .forgot {
+        display: block;
+        text-align: center;
+        margin-top: 12px;
+      }
+      .acc-label {
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 1.2px;
+        color: #8a978e;
+        margin: 12px 0 7px;
+      }
+      .acc-label:first-child {
+        margin-top: 0;
+      }
+      .acc-field {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .acc-wrap {
+        position: relative;
+        flex: 1;
+        min-width: 0;
+      }
+      .acc-input[readonly] {
+        background: #060908;
+        color: #7f8b83;
+        border-color: #101813;
+        cursor: default;
+      }
+      .acc-input.editing {
+        background: #080c0a;
+        color: #fff;
+        border-color: #19d77b88;
+      }
+      .icon-btn {
+        width: 44px;
+        height: 44px;
+        flex: none;
+        border: 1px solid var(--line);
+        background: #0a0f0c;
+        color: #cfd8d1;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+      }
+      .icon-btn:hover {
         background: #0e2418;
         border-color: #1d4a30;
         color: #b9f3d1;
       }
-      .hub-btn:active {
-        transform: scale(0.97);
+      .icon-btn svg {
+        width: 16px;
+        height: 16px;
       }
-      .hub-btn svg {
-        width: 15px;
-        height: 15px;
+      .eye {
+        position: absolute;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 32px;
+        height: 32px;
+        border: 0;
+        background: transparent;
+        color: #7f8b83;
+        display: grid;
+        place-items: center;
+        border-radius: 8px;
       }
-      @media (max-width: 420px) {
-        .hub-btn span {
-          display: none;
-        }
-        .hub-btn {
-          padding: 0 12px;
-        }
+      .eye:hover {
+        color: #b9f3d1;
       }
-
+      .eye svg {
+        width: 17px;
+        height: 17px;
+      }
+      .acc-wrap input.has-eye {
+        padding-right: 42px;
+      }
+      .logout {
+        margin-top: 18px;
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #0a0f0c;
+        color: #cfd8d1;
+        padding: 11px;
+        font-weight: 700;
+        font-size: 13px;
+      }
+      .logout:hover {
+        background: #0e2418;
+        border-color: #1d4a30;
+        color: #b9f3d1;
+      }
+      #welcomeModal {
+        z-index: 60;
+      }
+      .mono {
+        font-family:
+          ui-monospace, "SF Mono", Menlo, Consolas, monospace !important;
+        font-size: 12px !important;
+        letter-spacing: 0;
+        text-overflow: ellipsis;
+      }
+      .hint {
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.5;
+        margin: 10px 0 0;
+      }
       @media (prefers-reduced-motion: reduce) {
         * {
           animation: none !important;
@@ -2081,15 +2818,63 @@
       </div>
     </div>
     <header class="topbar">
+      <a class="hub-btn" href="index.html" aria-label="To hub"
+        ><svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M3 11l9-8 9 8" />
+          <path d="M5 10v10h14V10" /></svg
+        ><span>To hub</span></a
+      >
       <div class="user-card">
-        <span id="userName">Player</span>
-        <button class="dots" onclick="openSettings()" aria-label="Settings">
+        <span id="userName" class="uname">Player</span>
+        <button
+          class="dots"
+          onclick="toggleMenu(event)"
+          aria-label="Menu"
+          aria-haspopup="true"
+        >
           <svg viewBox="0 0 24 24" fill="currentColor">
             <circle cx="12" cy="5" r="2" />
             <circle cx="12" cy="12" r="2" />
             <circle cx="12" cy="19" r="2" />
           </svg>
         </button>
+        <div class="menu-pop" id="menuPop">
+          <button class="menu-item" onclick="openSettings()">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="3" />
+              <path
+                d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5h0a1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"
+              /></svg
+            >Settings
+          </button>
+          <button class="menu-item" onclick="openLb()">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z" />
+              <path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3" /></svg
+            >Leaderboards
+          </button>
+        </div>
       </div>
       <button class="brand" onclick="goHome()">
         <span class="brand-mark">
@@ -2105,19 +2890,6 @@
         </span>
         <span class="brand-text">SONG GUESSER</span>
       </button>
-      <a class="hub-btn" href="index.html" aria-label="To hub"
-        ><svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.4"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M3 11l9-8 9 8" />
-          <path d="M5 10v10h14V10" /></svg
-        ><span>To hub</span></a
-      >
     </header>
     <main>
       <section class="view active" id="homeView">
@@ -2180,8 +2952,8 @@
             ></span>
             <h2>Multiplayer</h2>
             <p>
-              Challenge a friend in a live 1v1 music battle. Create a duel or
-              join with a code.
+              Challenge your friends in a live music battle. Create a duel or
+              join one with a code.
             </p>
             <span class="card-bottom">PLAY WITH FRIENDS <span>→</span></span>
           </button>
@@ -2209,7 +2981,7 @@
             </button>
             <div>
               <h1>Multiplayer</h1>
-              <p>Two players. One playlist. Who knows more songs?</p>
+              <p>Two or more players. One playlist. Who knows more songs?</p>
             </div>
           </div>
           <div class="duel-grid">
@@ -2227,15 +2999,29 @@
                 autocomplete="off"
                 oninput="onJoinInput()"
               />
+              <div class="join-msg" id="joinMsg"></div>
             </div>
             <div class="menu">
               <h2>Create a duel</h2>
               <p>
-                Choose your duel settings, create a room and invite a friend.
+                Choose your duel settings, create a room and invite your
+                friends.
               </p>
               <div class="field">
                 <label class="field-label">DIFFICULTY</label>
                 <div class="diff wrap" id="duelDiff" style="margin: 0"></div>
+              </div>
+              <div class="switch-row">
+                <span
+                  >Random difficulty<small
+                    >Every round picks its own difficulty.</small
+                  ></span
+                ><label class="switch"
+                  ><input
+                    type="checkbox"
+                    id="duelRandom"
+                    onchange="setDuelRandom(this.checked)" /><i></i
+                ></label>
               </div>
               <div class="field">
                 <label class="field-label">GAME MODE</label>
@@ -2342,10 +3128,10 @@
           <button class="skip-btn small" onclick="copyCode()">
             Copy invite code
           </button>
-          <div class="lobby-players">
-            <div id="hostLine"></div>
-            <div id="guestLine"></div>
+          <div class="lobby-head">
+            <span>PLAYERS</span><span id="lobbyCount"></span>
           </div>
+          <div class="player-list" id="playerList"></div>
           <div class="lobby-settings" id="lobbySettings"></div>
           <button
             class="primary full"
@@ -2353,10 +3139,11 @@
             onclick="startMatch()"
             disabled
           >
-            Waiting for opponent...
+            Waiting for players...
           </button>
           <p class="helper">
-            Both players must be connected before the host can start.
+            You need at least 2 players. Anyone with the code can join until the
+            host starts the duel.
           </p>
         </div>
       </section>
@@ -2395,13 +3182,84 @@
           </button>
         </div>
         <section>
-          <h3>Profile</h3>
-          <input
-            id="usernameSetting"
-            maxlength="20"
-            placeholder="Choose a username"
-            autocomplete="off"
-          />
+          <h3>Account</h3>
+          <div class="acc-label">USERNAME</div>
+          <div class="acc-field">
+            <div class="acc-wrap">
+              <input
+                id="ac_username"
+                class="acc-input"
+                readonly
+                maxlength="20"
+                autocomplete="off"
+                spellcheck="false"
+                onkeydown="
+                  if (event.key === 'Enter') commitEdit();
+                  if (event.key === 'Escape') {
+                    event.stopPropagation();
+                    cancelEdit();
+                  }
+                "
+              />
+            </div>
+            <button class="icon-btn" id="ac_btn_username"></button>
+          </div>
+          <div class="acc-label">DATA TOKEN</div>
+          <div class="acc-field">
+            <div class="acc-wrap">
+              <input
+                id="ac_token"
+                class="acc-input mono"
+                readonly
+                autocomplete="off"
+                spellcheck="false"
+                aria-label="Your data token"
+              />
+            </div>
+            <button
+              class="icon-btn"
+              id="ac_btn_copy"
+              onclick="copyToken()"
+              aria-label="Copy data token"
+              title="Copy"
+            ></button>
+          </div>
+          <p class="hint">
+            This is your account. Keep it somewhere safe: it's the only way to
+            get your progress back on another device, and anyone who has it can
+            play as you.
+          </p>
+          <button
+            class="link muted forgot"
+            style="margin-top: 4px"
+            onclick="toggleSwitch()"
+          >
+            Enter a different data token
+          </button>
+          <div
+            class="acc-field"
+            id="tokenSwitch"
+            hidden
+            style="margin-top: 10px"
+          >
+            <div class="acc-wrap">
+              <input
+                id="tokenIn"
+                class="acc-input editing mono"
+                placeholder="Paste a data token"
+                autocomplete="off"
+                spellcheck="false"
+                onkeydown="if (event.key === 'Enter') commitSwitch();"
+              />
+            </div>
+            <button
+              class="icon-btn"
+              id="ac_btn_switch"
+              onclick="commitSwitch()"
+              aria-label="Load this account"
+            ></button>
+          </div>
+          <div class="auth-msg" id="authMsg"></div>
         </section>
         <section>
           <h3>Audio</h3>
@@ -2415,10 +3273,131 @@
           </div>
         </section>
         <section>
-          <h3>Statistics</h3>
-          <div class="stat-grid" id="statGrid"></div>
+          <h3>Gameplay</h3>
+          <div class="switch-row" style="padding-bottom: 0">
+            <span
+              >Auto-advance difficulty<small
+                >In solo modes, a correct answer moves you up to the next
+                difficulty (stops at Impossible).</small
+              ></span
+            ><label class="switch"
+              ><input type="checkbox" id="autoDiff" /><i></i
+            ></label>
+          </div>
         </section>
-        <button class="primary full" onclick="saveSettings()">Save</button>
+        <button class="primary full" onclick="saveSettings()">Done</button>
+      </div>
+    </div>
+
+    <div
+      class="modal-back"
+      id="lbModal"
+      onclick="if (event.target === this) closeLb();"
+    >
+      <div class="sheet lbsheet">
+        <div class="sheet-head">
+          <h2>Leaderboards</h2>
+          <button class="x" onclick="closeLb()" aria-label="Close">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.6"
+              stroke-linecap="round"
+            >
+              <path d="M6 6l12 12M18 6 6 18" />
+            </svg>
+          </button>
+        </div>
+        <div class="tabs" id="lbTabs"></div>
+        <div id="lbStats" hidden>
+          <div class="stat-grid" id="lbTiles"></div>
+          <button class="reset-btn" onclick="resetStats()">
+            Reset statistics
+          </button>
+          <div class="chips" id="lbChips"></div>
+        </div>
+        <div id="lbList"></div>
+        <div id="lbMine"></div>
+      </div>
+    </div>
+
+    <div class="modal-back" id="welcomeModal">
+      <div class="sheet small">
+        <div id="wc_new" class="form">
+          <div class="sheet-head"><h2>Welcome!</h2></div>
+          <p class="sub">Pick a username to create your account.</p>
+          <input
+            id="wcName"
+            placeholder="Username"
+            maxlength="20"
+            autocomplete="off"
+            spellcheck="false"
+            onkeydown="if (event.key === 'Enter') createAccount();"
+          />
+          <button class="primary full" id="wcCreate" onclick="createAccount()">
+            Create account
+          </button>
+          <p class="auth-switch">
+            Already have an account?
+            <button class="link" onclick="wcShow('token')">
+              Enter your data token
+            </button>
+          </p>
+        </div>
+        <div id="wc_token" class="form" hidden>
+          <div class="sheet-head"><h2>Enter data token</h2></div>
+          <p class="sub">Paste the data token from your account's settings.</p>
+          <input
+            id="wcToken"
+            class="mono"
+            placeholder="Data token"
+            autocomplete="off"
+            spellcheck="false"
+            onkeydown="if (event.key === 'Enter') wcLoad();"
+          />
+          <button class="primary full" id="wcLoad" onclick="wcLoad()">
+            Load account
+          </button>
+          <p class="auth-switch">
+            New here?
+            <button class="link" onclick="wcShow('new')">
+              Create an account
+            </button>
+          </p>
+        </div>
+        <div id="wc_done" class="form" hidden>
+          <div class="sheet-head"><h2>You're in!</h2></div>
+          <p class="sub">
+            This is your data token. Save it somewhere safe: it's how you get
+            back into your account on another device, and anyone who has it can
+            play as you. You can copy it again later in Settings.
+          </p>
+          <div class="acc-field">
+            <div class="acc-wrap">
+              <input id="wcTokenOut" class="acc-input mono" readonly />
+            </div>
+            <button
+              class="icon-btn"
+              onclick="copyText($('wcTokenOut').value, $('wcTokenOut'))"
+              aria-label="Copy data token"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="9" y="9" width="11" height="11" rx="2" />
+                <path d="M5 15V6a2 2 0 0 1 2-2h9" />
+              </svg>
+            </button>
+          </div>
+          <button class="primary full" onclick="wcDone()">Continue</button>
+        </div>
+        <div class="auth-msg" id="wcMsg"></div>
       </div>
     </div>
 
@@ -2433,6 +3412,10 @@
       const SUPABASE_ANON_KEY =
         "sb_publishable_fIFvv3lqR66EOuclo_bscg_Qv8OKNt1";
       const LEVELS = ["easy", "medium", "hard", "expert", "impossible"];
+      const CLICK_LIVES = 2;
+      const MAX_PLAYERS = 40;
+      let ME = null; /* current account: { id, token, username } */
+      const TOKEN_KEY = "sg_token";
       const LEVEL_NAMES = {
         easy: "Easy",
         medium: "Medium",
@@ -2440,7 +3423,8 @@
         expert: "Expert",
         impossible: "Impossible",
       };
-
+      /* Every artist here is a name most people know. Difficulty comes from how deep into
+         their catalogue we go (hits first, deeper album tracks later) and how famous the artist is. */
       const MEGA = [
         "Taylor Swift",
         "Ed Sheeran",
@@ -2659,7 +3643,7 @@
         "Jimi Hendrix",
         "Creedence Clearwater Revival",
       ];
-
+      /* [artists, first song, last song] taken from each artist's songs ranked by popularity */
       const TIERS = {
         easy: [[MEGA, 0, 5]],
         medium: [
@@ -2684,6 +3668,7 @@
         ],
       };
 
+      /* ---------- utils ---------- */
       const lsGet = (k, d) => {
         try {
           const v = localStorage.getItem(k);
@@ -2737,69 +3722,99 @@
       const vol = () => Number(lsGet("sg_music", 0.8));
       const sfxVol = () => Number(lsGet("sg_sfx", 0.35));
 
-      const STATS_KEY = "sg_stats_v2";
-      function loadStats() {
-        const s = {
-          correct: 0,
-          wrong: 0,
-          best: 0,
-          fastest: null,
-          duels: 0,
-          wins: 0,
-          streaks: {},
-        };
-        try {
-          const o = JSON.parse(lsGet(STATS_KEY, "{}"));
-          if (o && typeof o === "object") {
-            ["correct", "wrong", "best", "duels", "wins"].forEach((k) => {
-              s[k] = Number(o[k]) || 0;
-            });
-            if (o.fastest !== null && Number.isFinite(Number(o.fastest)))
-              s.fastest = Number(o.fastest);
-            if (o.streaks && typeof o.streaks === "object")
-              s.streaks = o.streaks;
-          }
-        } catch (e) {}
-        return s;
+      /* ---------- identity ---------- */
+      const currentName = () =>
+        (ME && ME.username) || lsGet("sg_name", "") || "Player";
+      const NAME_RE = /^[A-Za-z0-9ÅÄÖåäö _.,!?'\-]{3,20}$/;
+      function checkUsername(v) {
+        if (!NAME_RE.test(v))
+          return "Usernames are 3–20 characters: letters (A–Z, Å, Ä, Ö), numbers and . , ! ? ' - _";
+        if (v !== v.trim() || /\s{2,}/.test(v))
+          return "No extra spaces in usernames.";
+        return "";
       }
-      let stats = loadStats();
-      function saveStats() {
-        lsSet(STATS_KEY, JSON.stringify(stats));
-        if ($("settingsModal").classList.contains("open")) renderStats();
+      const CROWN_I =
+        '<svg class="crown-i" viewBox="0 0 24 24" fill="currentColor"><path d="M3 8l4 4 5-7 5 7 4-4-2 11H5z"/></svg>';
+      const HEART_SVG =
+        '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
+      let RANKS = {}; /* lower-case username -> best rank held (1-3) */
+      let RANK_SRC =
+        {}; /* lower-case username -> [{ rank, key }] for every board where they are top 3 */
+      const BOARD_LABEL = {
+        type: "Type answer (score)",
+        click: "Click answer (score)",
+        correct: "Songs guessed",
+        accuracy: "Accuracy",
+        streak: "Best streak",
+        fastest: "Fastest guess",
+        duels: "Duels played",
+        wins: "Duels won",
+      };
+      function rankTip(name) {
+        const src = RANK_SRC[String(name || "").toLowerCase()];
+        if (!src || !src.length) return "";
+        const by = {};
+        src.forEach((x) => {
+          (by[x.rank] = by[x.rank] || []).push(BOARD_LABEL[x.key] || x.key);
+        });
+        return Object.keys(by)
+          .sort()
+          .map((r) => "#" + r + " in " + by[r].join(", "))
+          .join("\n");
       }
-      function recordGuess(ok, secs) {
-        if (ok) {
-          stats.correct++;
-          if (secs > 0 && (stats.fastest === null || secs < stats.fastest))
-            stats.fastest = secs;
-        } else stats.wrong++;
-        saveStats();
+      function nameHTML(name) {
+        const r = RANKS[String(name || "").toLowerCase()];
+        return r
+          ? `<span class="nm-rk rk${r}" title="${esc(rankTip(name))}">${CROWN_I}${esc(name)}</span>`
+          : esc(name);
       }
-      function bumpStreak(key, ok) {
-        const n = ok ? (Number(stats.streaks[key]) || 0) + 1 : 0;
-        stats.streaks[key] = n;
-        if (n > stats.best) stats.best = n;
-        saveStats();
-        return n;
+
+      /* ---------- stats (read-only copy of what the server says) ---------- */
+      const BLANK = () => ({
+        correct: 0,
+        wrong: 0,
+        best: 0,
+        fastest: null,
+        duels: 0,
+        wins: 0,
+        score: { type: 0, click: 0 },
+      });
+      let stats = BLANK();
+      const fmtSecs = (v) => (v < 10 ? v.toFixed(1) : Math.round(v)) + "s";
+      let resetArm = 0;
+      function resetStats() {
+        const b = document.querySelector(".reset-btn");
+        if (!resetArm) {
+          resetArm = setTimeout(() => {
+            resetArm = 0;
+            b.textContent = "Reset statistics";
+          }, 3500);
+          b.textContent = "Tap again to confirm";
+          return;
+        }
+        clearTimeout(resetArm);
+        resetArm = 0;
+        b.textContent = "Reset statistics";
+        srv("reset_stats").then((st) =>
+          showToast(
+            st
+              ? "All your statistics and scores were reset."
+              : "Couldn't reset right now.",
+          ),
+        );
       }
-      function renderStats() {
+      function statTiles() {
         const tot = stats.correct + stats.wrong;
         const acc = tot ? Math.round((stats.correct / tot) * 100) + "%" : "–";
-        const fast =
-          stats.fastest !== null
-            ? (stats.fastest < 10
-                ? stats.fastest.toFixed(1)
-                : Math.round(stats.fastest)) + "s"
-            : "–";
-        const items = [
+        const fast = stats.fastest !== null ? fmtSecs(stats.fastest) : "–";
+        return [
           [stats.correct.toLocaleString(), "Songs guessed"],
           [acc, "Accuracy"],
           [stats.best.toLocaleString(), "Best streak"],
           [fast, "Fastest guess"],
           [stats.duels.toLocaleString(), "Duels played"],
           [stats.wins.toLocaleString(), "Duels won"],
-        ];
-        $("statGrid").innerHTML = items
+        ]
           .map(
             ([v, l]) =>
               `<div class="stat-tile"><b>${v}</b><span>${l}</span></div>`,
@@ -2807,6 +3822,7 @@
           .join("");
       }
 
+      /* ---------- sound ---------- */
       let actx = null;
       function ctx() {
         actx ||= new (window.AudioContext || window.webkitAudioContext)();
@@ -2902,6 +3918,7 @@
         } catch (e) {}
       }
 
+      /* ---------- views ---------- */
       const VIEWS = [
         "homeView",
         "gameView",
@@ -2928,6 +3945,7 @@
         }
       }
 
+      /* ---------- confetti ---------- */
       const cf = { raf: 0 };
       function stopConfetti() {
         cancelAnimationFrame(cf.raf);
@@ -2987,6 +4005,7 @@
         cf.raf = requestAnimationFrame(frame);
       }
 
+      /* ---------- cooldown (pauses while settings are open or tab hidden) ---------- */
       function runCooldown(ms, el, onTick, onDone) {
         let acc = 0,
           last = performance.now(),
@@ -3018,12 +4037,43 @@
         return () => clearInterval(id);
       }
 
+      /* ---------- music catalogue (iTunes first, Deezer JSONP fallback) ---------- */
       const JUNK_T =
         /(\(|\[|\s-\s)[^)\]]*\b(live|remix|karaoke|instrumental|acoustic|demo|tribute|cover|sped up|slowed|reverb|medley|session|a cappella|radio edit|edit|mix|mixes)\b/i;
       const JUNK_A =
         /\b(karaoke|tribute|remixes|sped up|slowed|live at|live in|live from|unplugged|in concert|mtv)\b/i;
       const cleanTrack = (title, album) =>
         !JUNK_T.test(title) && !JUNK_A.test(album || "");
+      /* requests are paced per provider (iTunes and Deezer both rate-limit), a provider that fails is rested for a while,
+         and artist results are remembered on this device so reloads don't hit the APIs again */
+      const NET = {
+        itunes: { q: [], n: 0, max: 2, gap: 450, down: 0 },
+        itunesjs: { q: [], n: 0, max: 2, gap: 450, down: 0 },
+        deezer: { q: [], n: 0, max: 3, gap: 320, down: 0 },
+      };
+      function paced(name, fn) {
+        const p = NET[name];
+        return new Promise((res, rej) => {
+          p.q.push({ fn, res, rej });
+          pump(name);
+        });
+      }
+      function pump(name) {
+        const p = NET[name];
+        while (p.n < p.max && p.q.length) {
+          const j = p.q.shift();
+          p.n++;
+          Promise.resolve()
+            .then(j.fn)
+            .then(j.res, j.rej)
+            .finally(() =>
+              setTimeout(() => {
+                p.n--;
+                pump(name);
+              }, p.gap),
+            );
+        }
+      }
       async function itunesSearch(term, limit, byArtist) {
         const r = await fetch(
           "https://itunes.apple.com/search?media=music&entity=song&limit=" +
@@ -3052,6 +4102,55 @@
             cover: (x.artworkUrl100 || "").replace("100x100", "300x300"),
           }));
       }
+      function itunesJsonp(term, limit, byArtist) {
+        return new Promise((resolve, reject) => {
+          const cb = "it" + Math.random().toString(36).slice(2);
+          const s = document.createElement("script");
+          const done = () => {
+            clearTimeout(t);
+            delete window[cb];
+            s.remove();
+          };
+          const t = setTimeout(() => {
+            done();
+            reject(new Error("timeout"));
+          }, 10000);
+          window[cb] = (d) => {
+            done();
+            resolve(
+              (d?.results || [])
+                .filter(
+                  (x) =>
+                    x.previewUrl &&
+                    x.trackName &&
+                    x.artistName &&
+                    cleanTrack(x.trackName, x.collectionName),
+                )
+                .map((x) => ({
+                  id: "i" + x.trackId,
+                  title: x.trackName,
+                  artist: x.artistName,
+                  album: x.collectionName || "",
+                  preview: x.previewUrl,
+                  cover: (x.artworkUrl100 || "").replace("100x100", "300x300"),
+                })),
+            );
+          };
+          s.onerror = () => {
+            done();
+            reject(new Error("blocked"));
+          };
+          s.src =
+            "https://itunes.apple.com/search?media=music&entity=song&limit=" +
+            limit +
+            (byArtist ? "&attribute=artistTerm" : "") +
+            "&term=" +
+            encodeURIComponent(term) +
+            "&callback=" +
+            cb;
+          document.head.appendChild(s);
+        });
+      }
       function deezerSearch(term, limit, byArtist) {
         return new Promise((resolve, reject) => {
           const cb = "dz" + Math.random().toString(36).slice(2);
@@ -3067,24 +4166,32 @@
           }, 10000);
           window[cb] = (d) => {
             done();
-            resolve(
-              (d?.data || [])
-                .filter(
-                  (x) =>
-                    x.preview &&
-                    x.title &&
-                    x.artist?.name &&
-                    cleanTrack(x.title, x.album?.title),
-                )
-                .map((x) => ({
-                  id: "d" + x.id,
-                  title: x.title,
-                  artist: x.artist.name,
-                  album: x.album?.title || "",
-                  preview: x.preview,
-                  cover: x.album?.cover_medium || "",
-                })),
-            );
+            if (d && d.error) {
+              reject(new Error((d.error.message || "error") + ""));
+              return;
+            }
+            const list = (d?.data || [])
+              .filter(
+                (x) =>
+                  x.preview &&
+                  x.title &&
+                  x.artist?.name &&
+                  cleanTrack(x.title, x.album?.title),
+              )
+              .map((x) => ({
+                id: "d" + x.id,
+                title: x.title,
+                artist: x.artist.name,
+                album: x.album?.title || "",
+                preview: x.preview,
+                cover: x.album?.cover_medium || "",
+                pop: Number(x.rank) || 0,
+              }));
+            if (!list.length && (d?.data || []).length) {
+              reject(new Error("no previews"));
+              return;
+            }
+            resolve(list);
           };
           s.onerror = () => {
             done();
@@ -3101,12 +4208,53 @@
           document.head.appendChild(s);
         });
       }
-      async function searchTerm(term, limit = 30, byArtist = false) {
-        try {
-          const r = await itunesSearch(term, limit, byArtist);
-          if (r.length) return r;
-        } catch (e) {}
-        return deezerSearch(term, limit, byArtist);
+      let LOAD_ERR = "";
+      const PROV = {
+        itunes: itunesSearch,
+        itunesjs: itunesJsonp,
+        deezer: deezerSearch,
+      };
+      const RESTS = { itunes: 45000, itunesjs: 45000, deezer: 15000 };
+      const PNAME = {
+        itunes: "iTunes",
+        itunesjs: "iTunes (script)",
+        deezer: "Deezer",
+      };
+      const PERR = {};
+      const errSummary = () =>
+        Object.keys(PERR)
+          .map((k) => PNAME[k] + ": " + PERR[k])
+          .join(" · ");
+      async function searchTerm(
+        term,
+        limit = 30,
+        byArtist = false,
+        urgent = false,
+      ) {
+        for (let round = 0; round < 2; round++) {
+          let order = ["itunes", "itunesjs", "deezer"];
+          const now = Date.now();
+          const up = order.filter((n) => NET[n].down <= now);
+          if (up.length) order = up;
+          else order = [order.sort((a, b) => NET[a].down - NET[b].down)[0]];
+          for (const name of order) {
+            try {
+              const run = () => PROV[name](term, limit, byArtist);
+              const r = await (urgent ? run() : paced(name, run));
+              if (r.length) {
+                NET[name].down = 0;
+                delete PERR[name];
+                return r;
+              }
+            } catch (e) {
+              PERR[name] = String(e.message || e);
+              LOAD_ERR = errSummary();
+              NET[name].down = Date.now() + RESTS[name];
+            }
+          }
+          if (round === 0) await delay(1200);
+        }
+        return [];
       }
 
       const POOL = {},
@@ -3136,6 +4284,22 @@
       const ART_CACHE = new Map();
       function artistTracks(artist) {
         if (!ART_CACHE.has(artist)) {
+          const ck = "sg_at_" + plain(artist);
+          try {
+            const c = JSON.parse(lsGet(ck, "null"));
+            if (c && Date.now() - c.t < 14 * 864e5 && c.l.length >= 5) {
+              const list = c.l.map((x) => ({
+                id: x[0],
+                title: x[1],
+                artist: x[2],
+                album: x[3],
+                preview: x[4],
+                cover: x[5],
+              }));
+              ART_CACHE.set(artist, Promise.resolve(list));
+              return ART_CACHE.get(artist);
+            }
+          } catch (e) {}
           ART_CACHE.set(
             artist,
             searchTerm(artist, 40, true)
@@ -3151,6 +4315,21 @@
                     return true;
                   });
                 if (!out.length) ART_CACHE.delete(artist);
+                else
+                  lsSet(
+                    ck,
+                    JSON.stringify({
+                      t: Date.now(),
+                      l: out.map((t) => [
+                        t.id,
+                        t.title,
+                        t.artist,
+                        t.album,
+                        t.preview,
+                        t.cover,
+                      ]),
+                    }),
+                  );
                 return out;
               }),
           );
@@ -3178,18 +4357,25 @@
           await batch(terms.slice(0, 8));
           const rest = terms.slice(8);
           if ((POOL[level] || []).length < 15) await batch(rest.slice(0, 8));
+          if ((POOL[level] || []).length < 6) {
+            await delay(1500);
+            await batch(rest.slice(8, 16));
+          }
+          if ((POOL[level] || []).length < 6)
+            throw new Error(
+              "No playable songs found." +
+                (LOAD_ERR ? " (" + LOAD_ERR + ")" : ""),
+            );
           (async () => {
             for (
               let i = (POOL[level] || []).length < 15 ? 8 : 0;
-              i < rest.length;
-              i += 6
+              i < Math.min(rest.length, 40);
+              i += 4
             ) {
-              await delay(1800);
-              await batch(rest.slice(i, i + 6));
+              await delay(3500);
+              await batch(rest.slice(i, i + 4));
             }
           })();
-          if ((POOL[level] || []).length < 6)
-            throw new Error("No playable songs found.");
           return POOL[level];
         };
         LOADING[level] = run().finally(() => {
@@ -3199,6 +4385,7 @@
       }
       const allTracks = () => Object.values(POOL).flat();
 
+      /* songs you heard recently are skipped for a long while (remembered across visits) */
       let recent = [];
       try {
         recent = JSON.parse(lsGet("sg_recent", "[]"));
@@ -3226,7 +4413,7 @@
         markRecent(t);
         return t;
       }
-
+      /* alternatives rotate so the same five don't keep showing up together */
       let optRecent = [];
       const SAME_ARTIST = {
         easy: 0,
@@ -3271,12 +4458,13 @@
         return shuffle([...chosen, track]);
       }
 
+      /* ---------- scoring ---------- */
       const DIFF_MULT = {
         easy: 1,
-        medium: 1.1,
-        hard: 1.2,
-        expert: 1.35,
-        impossible: 1.5,
+        medium: 1.2,
+        hard: 1.4,
+        expert: 2.2,
+        impossible: 3.2,
       };
       const STEP_F = [1, 0.9, 0.75, 0.55, 0.4];
       function calcPoints({ secs, wrongs, step, mode, diff, streak }) {
@@ -3291,6 +4479,7 @@
         );
       }
 
+      /* ---------- snippet player ---------- */
       const PLAY_SVG =
         '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
       const PAUSE_SVG =
@@ -3313,7 +4502,8 @@
           if (!S.startedAt) S.startedAt = Date.now();
         } else if (!D.startedAt) D.startedAt = Date.now();
       }
-
+      /* Finds the hook of a 30s preview: the loudest, punchiest stretch (the chorus) that still leaves room for
+         the full 15s snippet. Falls back to the start of the preview if the audio can't be analysed. */
       const HOOK = new Map();
       function findHook(url) {
         if (HOOK.has(url)) return HOOK.get(url);
@@ -3493,7 +4683,7 @@
           c.prog(0);
         };
         c.toggle = () => (el.paused && !c.waiting ? c.play() : c.stop());
-
+        /* revealing more never restarts the song: if it's playing it simply keeps going */
         c.advance = (quiet) => {
           if (c.step >= STEPS.length - 1) return false;
           c.step++;
@@ -3543,11 +4733,15 @@
           </div>
           <div id="${p}ClickArea" style="display:none">
             <div class="options" id="${p}Options"></div>
-            <button class="skip-btn" onclick="skipPress('${p}')">${SKIP_SVG}Skip</button>
+            <div class="click-actions">
+              <button class="skip-btn" onclick="skipPress('${p}')">${SKIP_SVG}Skip</button>
+              <div class="hearts" id="${p}HeartsCard" title="Lives left"><b id="${p}Hearts">${CLICK_LIVES}</b>${HEART_SVG}</div>
+            </div>
           </div>
           <div class="msg" id="${p}Msg"></div>`;
       }
 
+      /* ---------- shared guess handling ---------- */
       const cur = (p) => (p === "solo" ? S.track : D.track);
       function setMsg(p, html, cls = "") {
         const m = $(p + "Msg");
@@ -3580,6 +4774,7 @@
         s._t = setTimeout(() => s.classList.remove("bad"), 900);
       }
 
+      /* ---------- search: waits for you to stop typing, then shows ranked results ---------- */
       const SQ = {
         solo: { timer: 0, id: 0, items: [], sel: -1 },
         duel: { timer: 0, id: 0, items: [], sel: -1 },
@@ -3611,13 +4806,69 @@
           return true;
         });
       }
+      const FAME = new Map();
+      [
+        [MEGA, 46],
+        [POPULAR, 32],
+        [CLASSIC, 26],
+        [DEEP, 14],
+        [LEGENDS, 10],
+      ].forEach(([list, v]) =>
+        list.forEach((a) => {
+          const k = plain(a);
+          if (!FAME.has(k) || FAME.get(k) < v) FAME.set(k, v);
+        }),
+      );
+      const fameOf = (artist) => {
+        const k = plain(artist);
+        if (FAME.has(k)) return FAME.get(k);
+        let best = 0;
+        String(artist)
+          .split(
+            /\s*(?:,|&|\+|\bfeat\.?|\bft\.?|\bwith\b|\band\b|\bx\b|\/)\s*/i,
+          )
+          .forEach((x) => {
+            best = Math.max(best, FAME.get(plain(x)) || 0);
+          });
+        return best;
+      };
       function cachedSearch(q) {
         const k = q.toLowerCase();
         if (SCACHE.has(k)) return SCACHE.get(k);
-        const pr = searchTerm(q, 15)
-          .then((r) => {
-            if (!r.length) SCACHE.delete(k);
-            return r;
+        const iUp = NET.itunes.down <= Date.now(),
+          dUp = NET.deezer.down <= Date.now() || !iUp;
+        const pr = Promise.all([
+          iUp
+            ? itunesSearch(q, 60)
+                .catch(() => itunesJsonp(q, 60))
+                .catch((e) => {
+                  NET.itunes.down = Date.now() + RESTS.itunes;
+                  return [];
+                })
+            : [],
+          iUp ? itunesSearch(q, 30, true).catch(() => []) : [],
+          dUp
+            ? deezerSearch(q, 60).catch((e) => {
+                NET.deezer.down = Date.now() + RESTS.deezer;
+                return [];
+              })
+            : [],
+        ])
+          .then(([a, b, c]) => {
+            const pop = new Map();
+            c.forEach((t) => pop.set(tk(t), t.pop));
+            const seen = new Set(),
+              out = [];
+            [a, b, c].forEach((list) =>
+              list.forEach((t, i) => {
+                const key = tk(t);
+                if (seen.has(key)) return;
+                seen.add(key);
+                out.push({ ...t, pop: t.pop || pop.get(key) || 0, ord: i });
+              }),
+            );
+            if (!out.length) SCACHE.delete(k);
+            return out;
           })
           .catch(() => {
             SCACHE.delete(k);
@@ -3651,6 +4902,9 @@
               if (ti.split(" ").some((x) => x.startsWith(w))) s += 8;
             });
             s -= Math.min(20, ti.length / 6);
+            s += fameOf(t.artist);
+            if (t.pop) s += Math.min(40, Math.log10(t.pop + 1) * 6);
+            if (t.ord !== undefined) s += Math.max(0, 14 - t.ord * 0.35);
             return { t, s };
           })
           .filter(Boolean)
@@ -3686,8 +4940,8 @@
         let items = rankTracks(
           uniqTracks([...live, ...allTracks()]),
           raw,
-        ).slice(0, 6);
-        if (!items.length) items = uniqTracks(live).slice(0, 5);
+        ).slice(0, 40);
+        if (!items.length) items = uniqTracks(live).slice(0, 20);
         setLoading(p, false);
         renderSugg(p, items);
       }
@@ -3706,9 +4960,13 @@
           b.dataset.i = i;
           b.innerHTML = `<img src="${esc(t.cover)}" alt="" onerror="this.style.visibility='hidden'"><span class="t"><b>${esc(t.title)}</b><small>${esc(t.artist)}</small></span>${done ? '<span class="ag">Already guessed</span>' : ""}`;
           if (done) b.disabled = true;
-          b.onclick = () => pickGuess(p, t);
+          b.onclick = () => {
+            pickGuess(p, t);
+            $(p + "Input").blur();
+          };
           box.appendChild(b);
         });
+        box.scrollTop = 0;
         box.classList.add("open");
       }
       const GUESSED = { solo: new Set(), duel: new Set() };
@@ -3755,6 +5013,16 @@
       function submit(p, ok) {
         p === "solo" ? soloAnswer(ok) : duelAnswer(ok);
       }
+      function setLives(p, n) {
+        const el = $(p + "Hearts");
+        if (el) el.textContent = Math.max(0, n);
+      }
+      function hitHeart(p) {
+        const c = $(p + "HeartsCard");
+        c.classList.remove("hit");
+        void c.offsetWidth;
+        c.classList.add("hit");
+      }
       function renderOptions(p, list) {
         const box = $(p + "Options");
         box.innerHTML = "";
@@ -3787,6 +5055,7 @@
         $(p + "ClickArea").style.display = mode === "click" ? "block" : "none";
       }
 
+      /* ---------- difficulty pills ---------- */
       function renderDiff(id, current, onPick) {
         const box = $(id);
         box.innerHTML = "";
@@ -3805,6 +5074,7 @@
         });
       }
 
+      /* ---------- solo ---------- */
       const S = {
         mode: "type",
         diff: "easy",
@@ -3813,7 +5083,10 @@
         token: 0,
         startedAt: 0,
         wrongs: 0,
+        lives: CLICK_LIVES,
         cancel: null,
+        pendingLoad: false,
+        ls: {},
       };
       function startSolo(mode) {
         closeSoloResult();
@@ -3824,9 +5097,11 @@
           S.diff = l;
           beginSolo();
         });
+        updateScoreChip();
         beginSolo();
       }
       function leaveGame() {
+        S.pendingLoad = false;
         S.token++;
         closeSoloResult();
         clips.solo.stop();
@@ -3849,7 +5124,12 @@
           if (t !== S.token) return;
           setMsg(
             "solo",
-            'Couldn\'t reach the music catalogue.<button class="retry" onclick="beginSolo()">Retry</button>',
+            'Couldn\'t reach the music catalogue.<button class="retry" onclick="beginSolo()">Retry</button>' +
+              (LOAD_ERR
+                ? '<small style="display:block;margin-top:8px;color:#7f8b83">' +
+                  esc(LOAD_ERR) +
+                  "</small>"
+                : ""),
           );
           return;
         }
@@ -3869,8 +5149,11 @@
         S.locked = false;
         S.startedAt = 0;
         S.wrongs = 0;
+        S.lives = CLICK_LIVES;
+        setLives("solo", S.lives);
         GUESSED.solo.clear();
         clips.solo.load(tr.preview);
+        srv("start_round", { mode: S.mode, diff: S.diff });
         $("soloInput").value = "";
         updateBtn("solo");
         resetSearch("solo");
@@ -3885,8 +5168,17 @@
           return;
         }
         S.wrongs++;
-        recordGuess(false);
+        srv("record_wrong");
         wrongFx("solo");
+        if (S.mode === "click") {
+          S.lives--;
+          setLives("solo", S.lives);
+          hitHeart("solo");
+          if (S.lives <= 0) {
+            soloEnd(false);
+            return;
+          }
+        }
         if (!clips.solo.advance(true)) soloEnd(false);
       }
       function soloSkip() {
@@ -3899,18 +5191,35 @@
         resetSearch("solo");
         const secs = S.startedAt ? (Date.now() - S.startedAt) / 1000 : 0;
         const key = S.mode + ":" + S.diff;
-        let streak = 0;
+        let streak = 0,
+          nextDiff = "",
+          pending = null;
         if (correct) {
-          recordGuess(true, secs);
-          streak = bumpStreak(key, true);
+          streak = S.ls[key] = (S.ls[key] || 0) + 1;
+          pending = srv("record_correct", {
+            secs: Math.max(0.5, secs),
+            step: clips.solo.step,
+          });
           sfx("correct");
+          if (lsGet("sg_autodiff", "0") === "1") {
+            const i = LEVELS.indexOf(S.diff);
+            if (i >= 0 && i < LEVELS.length - 1) nextDiff = LEVELS[i + 1];
+          }
         } else {
-          bumpStreak(key, false);
+          S.ls[key] = 0;
+          srv("record_loss");
           sfx("lose");
         }
-        showSoloResult(correct, secs, streak);
+        S.pendingLoad = !!nextDiff;
+        showSoloResult(correct, secs, streak, nextDiff, pending);
       }
-      function showSoloResult(correct, secs, streak) {
+      function showSoloResult(
+        correct,
+        secs,
+        streak,
+        nextDiff = "",
+        pending = null,
+      ) {
         const t = S.track,
           tok = S.token;
         const secTxt = secs < 10 ? secs.toFixed(1) : Math.round(secs);
@@ -3918,11 +5227,25 @@
         const art = `<img class="res-art" src="${esc(t.cover)}" alt="" onerror="this.style.visibility='hidden'">`;
         $("soloResult").innerHTML = correct
           ? `<div class="res good">${art}<h2 class="res-title">${esc(t.title)}</h2><div class="res-sub">${sub}</div>
-              <div class="res-badges"><span class="stamp">GUESSED IN ${secTxt}S!</span><span class="streak">${FLAME_SVG} ${streak} in a row</span></div>
+              <div class="res-badges"><span class="stamp">GUESSED IN ${secTxt}S!</span><span class="streak" id="soloStreakTxt">${FLAME_SVG} ${streak} in a row</span><span class="streak" id="soloPts">+… pts</span>${nextDiff ? `<span class="streak">&#8593; ${LEVEL_NAMES[nextDiff]} next</span>` : ""}</div>
               <div class="res-actions"><button class="res-next" onclick="nextSolo()">Next</button></div><div class="cool"><i id="soloCool"></i></div></div>`
           : `<div class="res bad">${art}<div class="res-eyebrow">IT WAS_</div><h2 class="res-title">${esc(t.title)}</h2><div class="res-sub">${sub}</div>
               <div class="res-badges"><span class="stamp">LOST!</span></div>
               <div class="res-actions"><button class="res-next" onclick="nextSolo()">Try again</button></div><div class="cool"><i id="soloCool"></i></div></div>`;
+        if (pending)
+          pending.then((st) => {
+            if (tok !== S.token) return;
+            const pt = $("soloPts"),
+              sk = $("soloStreakTxt");
+            if (!pt) return;
+            if (!st) pt.textContent = "Not saved";
+            else if (st.rejected) pt.textContent = "Too quick to count";
+            else {
+              pt.textContent =
+                "+" + Number(st.points).toLocaleString() + " pts";
+              if (sk) sk.innerHTML = FLAME_SVG + " " + st.streak + " in a row";
+            }
+          });
         $("soloBody").style.display = "none";
         $("soloResult").style.display = "block";
         document.body.classList.toggle("lost", !correct);
@@ -3945,6 +5268,17 @@
       }
       function nextSolo() {
         if (!S.locked) return;
+        if (S.pendingLoad) {
+          S.pendingLoad = false;
+          const i = LEVELS.indexOf(S.diff);
+          if (i >= 0 && i < LEVELS.length - 1) S.diff = LEVELS[i + 1];
+          renderDiff("soloDiff", S.diff, (l) => {
+            S.diff = l;
+            beginSolo();
+          });
+          beginSolo();
+          return;
+        }
         closeSoloResult();
         newSoloRound();
       }
@@ -3964,16 +5298,19 @@
         }
       }
 
+      /* ---------- duels (any number of players) ---------- */
       const D = {
         client: null,
         channel: null,
         code: "",
         host: false,
-        opponent: null,
+        hostId: "",
+        players: [],
         settings: null,
         round: 0,
         total: 10,
         track: null,
+        roundDiff: "easy",
         score: {},
         answers: {},
         locked: true,
@@ -3981,33 +5318,45 @@
         startedAt: 0,
         roundStart: 0,
         wrongs: 0,
+        lives: CLICK_LIVES,
         streak: 0,
         finished: false,
         inMatch: false,
+        started: false,
         joining: false,
         myId: crypto.randomUUID(),
-        name: lsGet("sg_player_name", "Player"),
+        name: currentName(),
         helloTimer: null,
         nextTimer: null,
         podTimer: null,
       };
       let duelDiffSel = "easy",
-        duelMode = null;
-      function supabaseClient() {
-        if (!window.supabase)
-          throw new Error("Supabase library did not load. Reload the page.");
-        return window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-          auth: { persistSession: false },
-          realtime: { params: { eventsPerSecond: 10 } },
-        });
+        duelMode = null,
+        duelRandom = false;
+      let SBC = null;
+      function sb() {
+        if (!SBC) {
+          if (!window.supabase)
+            throw new Error("Supabase library did not load. Reload the page.");
+          SBC = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: {
+              persistSession: false,
+              autoRefreshToken: false,
+              detectSessionInUrl: false,
+            },
+            realtime: { params: { eventsPerSecond: 10 } },
+          });
+        }
+        return SBC;
       }
+      const supabaseClient = sb;
       const makeCode = () =>
         Math.random().toString(36).slice(2, 8).toUpperCase().padEnd(6, "X");
       const send = (event, payload) =>
         D.channel?.send({ type: "broadcast", event, payload });
       const settingsText = () =>
         D.settings
-          ? `${LEVEL_NAMES[D.settings.difficulty]} · ${D.settings.mode === "type" ? "Type answer" : "Click answer"} · ${D.settings.total} rounds`
+          ? `${D.settings.random ? "Random difficulty" : LEVEL_NAMES[D.settings.difficulty]} · ${D.settings.mode === "type" ? "Type answer" : "Click answer"} · ${D.settings.total} rounds`
           : "";
 
       function toggleDD(e) {
@@ -4023,6 +5372,10 @@
           .forEach((i) => i.classList.toggle("sel", i.dataset.v === v));
         $("modeDD").classList.remove("open");
         $("createBtn").disabled = false;
+      }
+      function setDuelRandom(v) {
+        duelRandom = !!v;
+        $("duelDiff").classList.toggle("off", duelRandom);
       }
       document.addEventListener("click", (e) => {
         if (!e.target.closest("#modeDD")) $("modeDD").classList.remove("open");
@@ -4041,16 +5394,32 @@
             Math.min(100, Math.floor(Number($("duelRounds").value) || 10)),
           );
           $("duelRounds").value = total;
-          await loadTracks(duelDiffSel);
-          D.client = supabaseClient();
+          await loadTracks(duelRandom ? "easy" : duelDiffSel);
+          D.client = sb();
+          D.name = currentName();
           D.code = makeCode();
           D.host = true;
-          D.opponent = null;
-          D.settings = { difficulty: duelDiffSel, mode: duelMode, total };
+          D.hostId = D.myId;
+          D.started = false;
+          D.players = [{ id: D.myId, name: D.name }];
+          D.settings = {
+            difficulty: duelDiffSel,
+            mode: duelMode,
+            total,
+            random: duelRandom,
+          };
           D.total = total;
           D.score = { [D.myId]: 0 };
           await connectDuel();
           showLobby();
+          if (duelRandom)
+            (async () => {
+              for (const l of LEVELS) {
+                if (!D.channel) return;
+                await loadTracks(l).catch(() => {});
+                await delay(600);
+              }
+            })();
         } catch (e) {
           showToast(e.message || "Could not create duel.");
           await disconnectDuel(null);
@@ -4060,64 +5429,164 @@
       function onJoinInput() {
         const inp = $("joinCode");
         inp.value = inp.value.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+        inp.classList.remove("err");
+        $("joinMsg").classList.remove("show");
         if (inp.value.length === 6) joinDuel(inp.value);
+      }
+      function joinFail(msg) {
+        const inp = $("joinCode"),
+          m = $("joinMsg");
+        inp.value = "";
+        inp.disabled = false;
+        inp.classList.add("err", "shake");
+        m.textContent = msg;
+        m.classList.remove("note");
+        m.classList.add("show");
+        showToast(msg);
+        setTimeout(() => inp.classList.remove("shake"), 450);
+        clearTimeout(joinFail.t);
+        joinFail.t = setTimeout(() => {
+          m.classList.remove("show");
+          inp.classList.remove("err");
+        }, 9000);
+        inp.focus();
+      }
+      function joinNote(msg) {
+        const m = $("joinMsg");
+        m.textContent = msg;
+        m.classList.add("show", "note");
+      }
+      function failJoin(msg) {
+        clearTimeout(joinFail.watch);
+        clearInterval(joinFail.pres);
+        try {
+          disconnectDuel(null).catch(() => {});
+        } catch (e) {}
+        joinFail(msg);
       }
       async function joinDuel(code) {
         if (D.joining) return;
         D.joining = true;
         $("joinCode").disabled = true;
+        joinNote("Looking for that duel...");
+        clearTimeout(joinFail.t);
+        $("joinCode").classList.remove("err");
+        clearTimeout(joinFail.watch);
+        clearInterval(joinFail.pres);
+        joinFail.watch = setTimeout(() => {
+          if (D.joining && !D.settings)
+            failJoin("That duel code doesn't exist. Check it and try again.");
+        }, 7000);
         try {
-          D.client = supabaseClient();
+          D.client = sb();
+          D.name = currentName();
           D.code = code;
           D.host = false;
-          D.opponent = null;
+          D.hostId = "";
+          D.players = [];
           D.settings = null;
+          D.started = false;
           await connectDuel();
+          /* nobody else in the room after a couple of seconds = no such duel */
+          const t0 = Date.now();
+          joinFail.pres = setInterval(() => {
+            if (D.settings || !D.channel) {
+              clearInterval(joinFail.pres);
+              return;
+            }
+            let others = 1;
+            try {
+              others = Object.keys(D.channel.presenceState() || {}).filter(
+                (k) => k !== D.myId,
+              ).length;
+            } catch (e) {}
+            if (!others && Date.now() - t0 > 2500)
+              failJoin("That duel code doesn't exist. Check it and try again.");
+          }, 300);
           let tries = 0;
           const hello = () => {
-            if (D.settings) return;
-            if (tries++ >= 6) {
-              showToast("Couldn't find that duel. Check the code.");
-              disconnectDuel(null);
+            if (D.settings || !D.channel) return;
+            if (tries++ >= 5) {
+              failJoin("That duel code doesn't exist. Check it and try again.");
               return;
             }
             send("hello", { id: D.myId, name: D.name });
-            D.helloTimer = setTimeout(hello, 1200);
+            D.helloTimer = setTimeout(hello, 800);
           };
           hello();
         } catch (e) {
-          showToast(e.message || "Could not join duel.");
-          await disconnectDuel(null);
+          failJoin(e.message || "Couldn't connect. Check your connection.");
         }
       }
+      const broadcastRoster = () =>
+        send("roster", {
+          players: D.players,
+          hostId: D.myId,
+          settings: D.settings,
+        });
       async function connectDuel() {
         D.channel = D.client.channel("song-guesser-" + D.code, {
           config: { broadcast: { self: false }, presence: { key: D.myId } },
         });
         const on = (ev, fn) =>
           D.channel.on("broadcast", { event: ev }, ({ payload }) =>
-            fn(payload),
+            fn(payload || {}),
           );
         on("hello", (p) => {
-          if (!D.host) return;
-          if (D.opponent && D.opponent.id !== p.id) return;
-          D.opponent = { id: p.id, name: p.name };
-          send("room-info", {
-            settings: D.settings,
-            hostName: D.name,
-            hostId: D.myId,
-          });
+          if (!D.host || !p.id) return;
+          const known = D.players.find((x) => x.id === p.id);
+          if (!known) {
+            if (D.started) {
+              send("denied", { to: p.id, reason: "started" });
+              return;
+            }
+            if (D.players.length >= MAX_PLAYERS) {
+              send("denied", { to: p.id, reason: "full" });
+              return;
+            }
+            D.players.push({
+              id: p.id,
+              name: String(p.name || "Player").slice(0, 24),
+            });
+            D.score[p.id] = 0;
+          } else known.name = String(p.name || known.name).slice(0, 24);
+          broadcastRoster();
           updateLobby();
         });
-        on("room-info", (p) => {
-          if (D.host || D.settings) return;
+        on("roster", (p) => {
+          if (
+            D.host ||
+            !Array.isArray(p.players) ||
+            !p.players.some((x) => x.id === D.myId)
+          )
+            return;
+          const first = !D.settings;
           clearTimeout(D.helloTimer);
           D.settings = p.settings;
           D.total = p.settings.total;
-          D.opponent = { id: p.hostId, name: p.hostName };
-          D.score = { [p.hostId]: 0, [D.myId]: 0 };
-          loadTracks(p.settings.difficulty).catch(() => {});
-          showLobby();
+          D.hostId = p.hostId;
+          D.players = p.players;
+          if (first) {
+            D.score = {};
+            D.players.forEach((x) => {
+              D.score[x.id] = 0;
+            });
+            showLobby();
+          } else if (!D.inMatch) updateLobby();
+        });
+        on("denied", (p) => {
+          if (D.host || p.to !== D.myId) return;
+          failJoin(
+            p.reason === "full"
+              ? "That duel is full."
+              : "That duel has already started, so you can't join anymore.",
+          );
+        });
+        on("kick", (p) => {
+          if (!D.host && p.id === D.myId) {
+            showToast("The host removed you from the duel.");
+            disconnectDuel();
+          }
         });
         on("match-start", (p) => {
           if (!D.host) {
@@ -4138,7 +5607,7 @@
           if (!D.host) showMatchResult(p);
         });
         D.channel.on("presence", { event: "leave" }, ({ key }) => {
-          if (key !== D.myId && D.channel) opponentLeft();
+          if (key !== D.myId && D.channel) playerLeft(key);
         });
         await new Promise((resolve, reject) => {
           const t = setTimeout(
@@ -4159,43 +5628,70 @@
         });
         await D.channel.track({ id: D.myId, name: D.name });
       }
-      function opponentLeft() {
+      function playerLeft(id) {
         if (D.finished) return;
-        if (D.inMatch) {
-          showToast("Your opponent left the duel.");
-          disconnectDuel();
-        } else if (D.host) {
-          D.opponent = null;
-          updateLobby();
-        } else {
+        if (D.host) {
+          const i = D.players.findIndex((x) => x.id === id);
+          if (i < 0) return;
+          const gone = D.players.splice(i, 1)[0];
+          delete D.answers[id];
+          delete D.score[id];
+          if (!D.inMatch) {
+            broadcastRoster();
+            updateLobby();
+            return;
+          }
+          showToast(gone.name + " left the duel.");
+          if (D.players.length < 2) {
+            showToast("Everyone else left the duel.");
+            disconnectDuel();
+            return;
+          }
+          broadcastRoster();
+          checkResolve();
+        } else if (id === D.hostId) {
           showToast("The host left the duel.");
           disconnectDuel();
         }
       }
+      function kickPlayer(id) {
+        if (!D.host || D.inMatch || id === D.myId) return;
+        const i = D.players.findIndex((x) => x.id === id);
+        if (i < 0) return;
+        send("kick", { id });
+        D.players.splice(i, 1);
+        delete D.score[id];
+        broadcastRoster();
+        updateLobby();
+      }
       function showLobby() {
+        clearTimeout(joinFail.watch);
+        clearInterval(joinFail.pres);
+        $("joinMsg").classList.remove("show", "note");
         D.joining = false;
         showView("lobbyView");
         $("lobbyCode").textContent = D.code;
         updateLobby();
       }
+      const X_SM =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>';
       function updateLobby() {
-        const hostName = D.host ? D.name : D.opponent?.name || "Host";
-        const guestName = D.host
-          ? D.opponent?.name || "Waiting for player..."
-          : D.name;
-        $("hostLine").innerHTML = esc(hostName) + "<small>Host</small>";
-        $("guestLine").innerHTML =
-          esc(guestName) +
-          "<small>" +
-          (D.host ? (D.opponent ? "Connected" : "Not connected") : "You") +
-          "</small>";
+        const n = D.players.length;
+        $("lobbyCount").textContent = n + (n === 1 ? " player" : " players");
+        $("playerList").innerHTML = D.players
+          .map((pl) => {
+            const isHost = pl.id === D.hostId || (D.host && pl.id === D.myId);
+            const me = pl.id === D.myId;
+            return `<div class="pl-row"><span class="pl-name">${nameHTML(pl.name)}${me ? " <small>(you)</small>" : ""}</span>${isHost ? '<span class="pl-tag">HOST</span>' : ""}${D.host && !isHost ? `<button class="kick" onclick="kickPlayer('${esc(pl.id)}')" aria-label="Remove player" title="Remove player">${X_SM}</button>` : ""}</div>`;
+          })
+          .join("");
         $("lobbySettings").textContent = settingsText();
         const b = $("startBtn");
-        b.disabled = !D.host || !D.opponent;
+        b.disabled = !D.host || n < 2;
         b.textContent = D.host
-          ? D.opponent
-            ? "Start duel"
-            : "Waiting for opponent..."
+          ? n < 2
+            ? "Waiting for players..."
+            : "Start duel (" + n + " players)"
           : "Waiting for host to start...";
       }
       function copyCode() {
@@ -4209,23 +5705,43 @@
           .catch(() => showToast("Duel code: " + D.code));
       }
       function startMatch() {
-        if (!D.host || !D.opponent) return;
-        D.score = { [D.myId]: 0, [D.opponent.id]: 0 };
+        if (!D.host || D.players.length < 2 || D.started) return;
+        D.started = true;
+        $("startBtn").disabled = true;
+        D.score = {};
+        D.players.forEach((x) => {
+          D.score[x.id] = 0;
+        });
         D.round = 0;
         D.streak = 0;
         hostNextRound("match-start");
       }
-      function hostNextRound(event = "new-round") {
+      async function hostNextRound(event = "new-round") {
         D.round++;
-        const track = pickTrack(D.settings.difficulty);
+        let diff = D.settings.random
+          ? LEVELS[Math.floor(Math.random() * LEVELS.length)]
+          : D.settings.difficulty;
+        if (D.settings.random)
+          await Promise.race([loadTracks(diff).catch(() => {}), delay(8000)]);
+        if (!D.channel) return;
+        let track = pickTrack(diff);
+        if (!track) {
+          for (const l of shuffle(
+            LEVELS.filter((x) => (POOL[x] || []).length),
+          )) {
+            track = pickTrack(l);
+            if (track) {
+              diff = l;
+              break;
+            }
+          }
+        }
         if (!track) {
           showToast("No songs available.");
           return;
         }
         const options =
-          D.settings.mode === "click"
-            ? makeOptions(track, D.settings.difficulty)
-            : [];
+          D.settings.mode === "click" ? makeOptions(track, diff) : [];
         const payload = {
           settings: D.settings,
           total: D.total,
@@ -4233,6 +5749,8 @@
           track,
           options,
           score: D.score,
+          diff,
+          players: D.players,
         };
         send(event, payload);
         beginRound(payload);
@@ -4243,22 +5761,29 @@
         stopConfetti();
         D.inMatch = true;
         D.finished = false;
+        D.started = true;
+        if (p.players) D.players = p.players;
         D.round = p.round;
         D.total = p.total;
         D.track = p.track;
         D.score = p.score;
+        D.roundDiff = p.diff || D.settings.difficulty;
         D.answers = {};
         D.locked = false;
         D.resolved = false;
         D.startedAt = 0;
         D.roundStart = Date.now();
         D.wrongs = 0;
+        D.lives = CLICK_LIVES;
+        setLives("duel", D.lives);
         GUESSED.duel.clear();
         $("lbOverlay").classList.remove("open");
         $("duelBody").classList.remove("waiting");
         $("duelWait").classList.remove("show");
         showView("duelView");
-        $("duelRound").textContent = `Round ${p.round} / ${p.total}`;
+        $("duelRound").textContent =
+          `Round ${p.round} / ${p.total}` +
+          (D.settings.random ? " · " + LEVEL_NAMES[D.roundDiff] : "");
         $("duelScore").textContent = (D.score[D.myId] || 0).toLocaleString();
         applyMode("duel", D.settings.mode);
         clips.duel.load(p.track.preview);
@@ -4276,8 +5801,17 @@
           return;
         }
         D.wrongs++;
-        recordGuess(false);
+        srv("record_duel_guess", { kind: "wrong", secs: 0 });
         wrongFx("duel");
+        if (D.settings.mode === "click") {
+          D.lives--;
+          setLives("duel", D.lives);
+          hitHeart("duel");
+          if (D.lives <= 0) {
+            finishDuel(false);
+            return;
+          }
+        }
         if (!clips.duel.advance(true)) finishDuel(false);
       }
       function duelSkip() {
@@ -4300,22 +5834,41 @@
             wrongs: D.wrongs,
             step: clips.duel.step,
             mode: D.settings.mode,
-            diff: D.settings.difficulty,
+            diff: D.roundDiff,
             streak: D.streak,
           });
           D.streak++;
-          recordGuess(true, secs);
+          srv("record_duel_guess", {
+            kind: "correct",
+            secs: Math.max(0.5, secs),
+          });
           sfx("correct");
-        } else D.streak = 0;
+        } else {
+          D.streak = 0;
+          srv("record_duel_guess", { kind: "lost", secs: 0 });
+        }
         const payload = { id: D.myId, correct, points };
         if (D.host) handleDone(payload);
         else send("done", payload);
       }
       function handleDone(p) {
-        if (!p?.id || D.answers[p.id] || D.resolved) return;
-        D.answers[p.id] = p;
-        if (D.opponent && D.answers[D.myId] && D.answers[D.opponent.id])
-          resolveRound();
+        if (
+          !p?.id ||
+          D.answers[p.id] ||
+          D.resolved ||
+          !D.players.some((x) => x.id === p.id)
+        )
+          return;
+        D.answers[p.id] = {
+          id: p.id,
+          correct: !!p.correct,
+          points: Math.max(0, Math.min(5000, Number(p.points) || 0)),
+        };
+        checkResolve();
+      }
+      function checkResolve() {
+        if (D.resolved || !D.inMatch || !D.host) return;
+        if (D.players.every((pl) => D.answers[pl.id])) resolveRound();
       }
       function resolveRound() {
         if (D.resolved) return;
@@ -4324,6 +5877,10 @@
         Object.values(D.answers).forEach((a) => {
           D.score[a.id] = (D.score[a.id] || 0) + (a.correct ? a.points : 0);
         });
+        const names = {};
+        D.players.forEach((pl) => {
+          names[pl.id] = pl.name;
+        });
         const payload = {
           score: D.score,
           prev,
@@ -4331,10 +5888,10 @@
           track: D.track,
           round: D.round,
           total: D.total,
-          names: { [D.myId]: D.name, [D.opponent.id]: D.opponent.name },
+          names,
         };
         if (D.round >= D.total) {
-          const res = { score: D.score, names: payload.names };
+          const res = { score: D.score, names };
           send("match-end", res);
           showMatchResult(res);
           return;
@@ -4376,7 +5933,7 @@
             const me = id === D.myId;
             return `<div class="lb-row ${prevOrder[0] === id ? "first" : ""}" data-id="${esc(id)}" style="--i:${prevOrder.indexOf(id)}">
             <span class="rank">${prevOrder.indexOf(id) + 1}</span>
-            <span class="nm">${esc(p.names?.[id] || "Player")}${me ? " <small>(you)</small>" : ""}</span>
+            <span class="nm">${nameHTML(p.names?.[id] || "Player")}${me ? " <small>(you)</small>" : ""}</span>
             <span class="gain">+${p.answers[id]?.correct ? p.answers[id].points : 0}</span>
             <span class="pts">${(p.prev[id] || 0).toLocaleString()}</span></div>`;
           })
@@ -4418,29 +5975,36 @@
             id,
             me: id === D.myId,
             score: p.score[id] || 0,
-            name:
-              p.names?.[id] ||
-              (id === D.myId ? D.name : D.opponent?.name || "Player"),
+            name: p.names?.[id] || "Player",
           }))
           .sort((a, b) => b.score - a.score);
-        const tie = rows.length > 1 && rows[0].score === rows[1].score;
-        stats.duels++;
-        if (!tie && rows[0].me) stats.wins++;
-        saveStats();
-        const col = (
-          r,
-          place,
-        ) => `<div class="pd-col ${place === 1 ? "first" : ""}">
-          <div class="pd-av">${place === 1 && !tie ? CROWN_SVG : ""}${esc((r.name || "?").trim().charAt(0).toUpperCase())}</div>
-          <div class="pd-name">${esc(r.name)}${r.me ? " <small>(you)</small>" : ""}</div>
+        let pl = 0,
+          prevS = null;
+        rows.forEach((r, i) => {
+          if (r.score !== prevS) pl = i + 1;
+          r.place = pl;
+          prevS = r.score;
+        });
+        const tie = rows.filter((r) => r.place === 1).length > 1;
+        srv("record_duel", { won: !tie && !!rows[0]?.me });
+        const H = { 1: 200, 2: 150, 3: 110 };
+        const col = (r) => `<div class="pd-col ${r.place === 1 ? "first" : ""}">
+          <div class="pd-av">${r.place === 1 && !tie ? CROWN_SVG : ""}${esc((r.name || "?").trim().charAt(0).toUpperCase())}</div>
+          <div class="pd-name">${nameHTML(r.name)}${r.me ? " <small>(you)</small>" : ""}</div>
           <div class="pd-score">${r.score.toLocaleString()}</div>
-          <div class="pd-block" data-h="${place === 1 || tie ? 200 : 130}">${tie ? 1 : place}</div></div>`;
+          <div class="pd-block" data-h="${H[r.place] || 110}">${r.place}</div></div>`;
+        const order =
+          rows.length >= 2
+            ? [rows[1], rows[0], rows[2]].filter(Boolean)
+            : [rows[0]];
+        const rest = rows.slice(3);
         $("podium").innerHTML = `
           <div class="pd-intro" id="pdIntro"><div class="eyebrow">THE RESULTS ARE IN</div><h2>And the winner is...</h2>
             <div class="pd-bars">${Array.from({ length: 13 }, (_, i) => `<i style="--k:${i}"></i>`).join("")}</div></div>
           <div class="pd-stage" id="pdStage">
-            <h1 class="pd-title">${tie ? "It's a tie!" : esc(rows[0].name) + " wins!"}</h1>
-            <div class="pd-podium">${rows[1] ? col(rows[1], 2) : ""}${col(rows[0], 1)}</div>
+            <h1 class="pd-title">${tie ? "It's a tie!" : nameHTML(rows[0].name) + " wins!"}</h1>
+            <div class="pd-podium">${order.map(col).join("")}</div>
+            ${rest.length ? `<div class="pd-rest">${rest.map((r) => `<div class="pd-rest-row"><span class="rn">${r.place}</span><span class="nm">${nameHTML(r.name)}${r.me ? " <small>(you)</small>" : ""}</span><b>${r.score.toLocaleString()}</b></div>`).join("")}</div>` : ""}
             <button class="primary" style="min-width:160px" onclick="goHome()">Home</button></div>`;
         showView("resultView");
         buildUp(3200);
@@ -4470,27 +6034,568 @@
         const ch = D.channel,
           cl = D.client;
         D.channel = null;
-        D.opponent = null;
+        D.players = [];
+        D.hostId = "";
         D.settings = null;
         D.inMatch = false;
+        D.started = false;
         D.joining = false;
         D.resolved = true;
         D.finished = false;
+        $("joinCode").disabled = false;
+        $("joinCode").value = "";
+        if (view) showView(view);
         if (ch) {
           try {
-            await ch.unsubscribe();
+            await Promise.race([ch.unsubscribe(), delay(1500)]);
           } catch (e) {}
           try {
             cl?.removeChannel(ch);
           } catch (e) {}
         }
-        $("joinCode").disabled = false;
-        $("joinCode").value = "";
-        if (view) showView(view);
       }
 
+      /* ---------- leaderboards ---------- */
+      const BOARDS = {
+        type: {
+          val: (p) => Number(p.score_type),
+          fmt: (v) => v.toLocaleString(),
+          dir: -1,
+        },
+        click: {
+          val: (p) => Number(p.score_click),
+          fmt: (v) => v.toLocaleString(),
+          dir: -1,
+        },
+        correct: {
+          label: "Songs guessed",
+          val: (p) => Number(p.correct),
+          fmt: (v) => v.toLocaleString(),
+          dir: -1,
+        },
+        accuracy: {
+          label: "Accuracy",
+          val: (p) =>
+            Number(p.correct) + Number(p.wrong) >= 20
+              ? Number(p.correct) / (Number(p.correct) + Number(p.wrong))
+              : null,
+          fmt: (v) => Math.round(v * 1000) / 10 + "%",
+          dir: -1,
+          note: "Needs at least 20 guesses to qualify.",
+        },
+        streak: {
+          label: "Best streak",
+          val: (p) => Number(p.best_streak),
+          fmt: (v) => v.toLocaleString(),
+          dir: -1,
+        },
+        fastest: {
+          label: "Fastest guess",
+          val: (p) =>
+            p.fastest === null || p.fastest === undefined
+              ? null
+              : Number(p.fastest),
+          fmt: fmtSecs,
+          dir: 1,
+        },
+        duels: {
+          label: "Duels played",
+          val: (p) => Number(p.duels),
+          fmt: (v) => v.toLocaleString(),
+          dir: -1,
+        },
+        wins: {
+          label: "Duels won",
+          val: (p) => Number(p.wins),
+          fmt: (v) => v.toLocaleString(),
+          dir: -1,
+        },
+      };
+      const STAT_KEYS = [
+        "correct",
+        "accuracy",
+        "streak",
+        "fastest",
+        "duels",
+        "wins",
+      ];
+      let PROFILES = [];
+      const liveProfiles = () => PROFILES;
+      function boardRows(key) {
+        const b = BOARDS[key];
+        const rows = liveProfiles()
+          .map((p) => ({ p, v: b.val(p) }))
+          .filter((r) => r.v !== null && Number.isFinite(r.v) && r.v > 0);
+        rows.sort(
+          (a, z) =>
+            b.dir * (a.v - z.v) ||
+            String(a.p.username).localeCompare(String(z.p.username)),
+        );
+        let rank = 0,
+          prev = null;
+        rows.forEach((r, i) => {
+          if (prev === null || r.v !== prev) rank = i + 1;
+          r.rank = rank;
+          prev = r.v;
+        });
+        return rows;
+      }
+      function recomputeRanks() {
+        const out = {},
+          src = {};
+        Object.keys(BOARDS).forEach((k) =>
+          boardRows(k).forEach((r) => {
+            if (r.rank > 3) return;
+            const n = String(r.p.username).toLowerCase();
+            out[n] = Math.min(out[n] || 9, r.rank);
+            (src[n] = src[n] || []).push({ rank: r.rank, key: k });
+          }),
+        );
+        RANKS = out;
+        RANK_SRC = src;
+      }
+      let boardsT = 0;
+      function boardsChanged() {
+        clearTimeout(boardsT);
+        boardsT = setTimeout(() => {
+          recomputeRanks();
+          updateUserCard();
+          updateScoreChip();
+          if ($("lbModal").classList.contains("open")) renderLb();
+          if (D.channel && $("lobbyView").classList.contains("active"))
+            updateLobby();
+        }, 60);
+      }
+      async function fetchProfiles() {
+        try {
+          const { data, error } = await sb()
+            .from("stats")
+            .select(
+              "id,username,score_type,score_click,correct,wrong,best_streak,fastest,duels,wins",
+            )
+            .limit(5000);
+          if (!error && Array.isArray(data)) {
+            PROFILES = data;
+            boardsChanged();
+          }
+        } catch (e) {}
+      }
+      let boardSub = null;
+      function subscribeBoards() {
+        if (boardSub || !window.supabase) return;
+        try {
+          boardSub = sb()
+            .channel("stats-live")
+            .on(
+              "postgres_changes",
+              { event: "*", schema: "public", table: "stats" },
+              (pl) => {
+                if (pl.eventType === "DELETE")
+                  PROFILES = PROFILES.filter((p) => p.id !== pl.old?.id);
+                else if (pl.new?.id) {
+                  const i = PROFILES.findIndex((p) => p.id === pl.new.id);
+                  if (i >= 0) PROFILES[i] = { ...PROFILES[i], ...pl.new };
+                  else PROFILES.push(pl.new);
+                  if (
+                    ME &&
+                    pl.new.id === ME.id &&
+                    pl.new.username &&
+                    pl.new.username !== ME.username
+                  ) {
+                    ME.username = pl.new.username;
+                    refreshIdentity();
+                    renderAccount();
+                  }
+                }
+                boardsChanged();
+              },
+            )
+            .subscribe();
+        } catch (e) {}
+      }
+      function updateScoreChip() {
+        const el = $("soloScore");
+        if (!el) return;
+        const v = stats.score[S.mode] || 0;
+        el.textContent = v.toLocaleString();
+        let t = "";
+        if (ME && ME.id && v > 0) {
+          const r = boardRows(S.mode).find((x) => x.p.id === ME.id);
+          if (r) t = r.rank <= 10 ? "#" + r.rank : "10+";
+        }
+        $("soloRank").textContent = t;
+      }
+      const LB = { tab: "type", stat: "correct" };
+      function openLb(tab) {
+        closeMenu();
+        if (tab === "type" || tab === "click" || tab === "stats") LB.tab = tab;
+        $("lbModal").classList.add("open");
+        renderLb();
+        fetchProfiles();
+      }
+      function closeLb() {
+        $("lbModal").classList.remove("open");
+      }
+      function lbRow(r, i) {
+        const me = ME && r.p.id === ME.id;
+        const key = LB.tab === "stats" ? LB.stat : LB.tab;
+        return `<div class="lbr ${r.rank <= 3 ? "p" + r.rank : ""} ${me ? "me" : ""}" style="animation-delay:${i * 25}ms"><span class="lbr-rank">${r.rank}</span><span class="lbr-name">${nameHTML(r.p.username)}${me ? " <small>(you)</small>" : ""}</span><b>${BOARDS[key].fmt(r.v)}</b></div>`;
+      }
+      function renderLb() {
+        const isStats = LB.tab === "stats";
+        $("lbTabs").innerHTML = [
+          ["type", "Type answer"],
+          ["click", "Click answer"],
+          ["stats", "Statistics"],
+        ]
+          .map(
+            ([k, l]) =>
+              `<button class="tab ${LB.tab === k ? "sel" : ""}" onclick="setLbTab('${k}')">${l}</button>`,
+          )
+          .join("");
+        $("lbStats").hidden = !isStats;
+        if (isStats) {
+          $("lbTiles").innerHTML = statTiles();
+          $("lbChips").innerHTML = STAT_KEYS.map(
+            (k) =>
+              `<button class="chip ${LB.stat === k ? "sel" : ""}" onclick="setLbStat('${k}')">${BOARDS[k].label}</button>`,
+          ).join("");
+        }
+        const key = isStats ? LB.stat : LB.tab;
+        const rows = boardRows(key);
+        let html = rows.slice(0, 10).map(lbRow).join("");
+        if (!rows.length)
+          html =
+            '<div class="lb-note">Nobody is on this leaderboard yet. Be the first!</div>';
+        let mine = "";
+        if (ME && ME.id) {
+          const idx = rows.findIndex((r) => r.p.id === ME.id);
+          if (idx >= 10)
+            mine = '<div class="lb-dots">• • •</div>' + lbRow(rows[idx], 0);
+          else if (idx < 0)
+            mine =
+              '<div class="lb-note">You\'re not on this leaderboard yet.' +
+              (BOARDS[key].note ? " " + BOARDS[key].note : "") +
+              "</div>";
+        }
+        if (isStats && BOARDS[key].note && ME && !mine.includes("not on"))
+          mine +=
+            '<div class="lb-note" style="padding-top:8px">' +
+            BOARDS[key].note +
+            "</div>";
+        $("lbList").innerHTML = html;
+        $("lbMine").innerHTML = mine;
+      }
+      function setLbTab(t) {
+        LB.tab = t;
+        renderLb();
+      }
+      function setLbStat(k) {
+        LB.stat = k;
+        renderLb();
+      }
+
+      /* ---------- menu ---------- */
+      function toggleMenu(e) {
+        e.stopPropagation();
+        $("menuPop").classList.toggle("open");
+      }
+      function closeMenu() {
+        $("menuPop").classList.remove("open");
+      }
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest(".user-card")) closeMenu();
+      });
+
+      /* ---------- account: username + data token (all numbers live on the server) ---------- */
+      const TOKEN_RE = /^[A-Za-z0-9]{20,128}$/;
+      const api = async (name, args) => {
+        const { data, error } = await sb().rpc(name, args);
+        if (error) throw error;
+        return data;
+      };
+      function apiMsg(e) {
+        const m =
+          String((e && e.message) || e || "") +
+          " " +
+          String((e && (e.code || e.details)) || "");
+        if (/username_taken/.test(m)) return "That username is already taken.";
+        if (/username_invalid/.test(m))
+          return "Usernames are 3–20 characters: letters (A–Z, Å, Ä, Ö), numbers and . , ! ? ' - _";
+        if (/invalid_token/.test(m))
+          return "That data token doesn't match any account.";
+        if (/could not find the function|schema cache|PGRST202|42883/i.test(m))
+          return "The server isn't set up yet. Run supabase-setup.sql in Supabase first.";
+        return "Couldn't reach the server. Check your connection and try again.";
+      }
+      let warnedAt = 0;
+      function srv(name, args = {}) {
+        if (!ME || !ME.token) return Promise.resolve(null);
+        return api(name, { t: ME.token, ...args })
+          .then((st) => {
+            if (st && st.id) applyState(st);
+            return st;
+          })
+          .catch((e) => {
+            if (Date.now() - warnedAt > 20000) {
+              warnedAt = Date.now();
+              showToast("Couldn't save your progress. " + apiMsg(e));
+            }
+            return null;
+          });
+      }
+      const rowToStats = (r) => ({
+        correct: Number(r.correct) || 0,
+        wrong: Number(r.wrong) || 0,
+        best: Number(r.best_streak) || 0,
+        fastest:
+          r.fastest === null || r.fastest === undefined
+            ? null
+            : Number(r.fastest),
+        duels: Number(r.duels) || 0,
+        wins: Number(r.wins) || 0,
+        score: {
+          type: Number(r.score_type) || 0,
+          click: Number(r.score_click) || 0,
+        },
+      });
+      function applyState(st) {
+        ME = { ...(ME || {}), id: st.id, username: st.username };
+        if (st.token) ME.token = st.token;
+        lsSet("sg_name", st.username);
+        if (st.stats) {
+          stats = rowToStats(st.stats);
+          const row = { ...st.stats, id: st.id, username: st.username };
+          const i = PROFILES.findIndex((p) => p.id === st.id);
+          if (i >= 0) PROFILES[i] = row;
+          else PROFILES.push(row);
+        }
+        refreshIdentity();
+        renderAccount();
+      }
+      function refreshIdentity() {
+        D.name = currentName();
+        updateUserCard();
+        updateScoreChip();
+        boardsChanged();
+      }
+
+      /* first-visit / switch-account screen */
+      const wcMsg = (t) => {
+        const m = $("wcMsg");
+        m.textContent = t || "";
+        m.className = "auth-msg" + (t ? " show" : "");
+      };
+      function wcShow(which) {
+        ["new", "token", "done"].forEach((k) => {
+          $("wc_" + k).hidden = k !== which;
+        });
+        wcMsg("");
+      }
+      function maybeWelcome() {
+        if (!lsGet(TOKEN_KEY, "")) {
+          wcShow("new");
+          $("welcomeModal").classList.add("open");
+        }
+      }
+      async function createAccount() {
+        const name = $("wcName").value.trim(),
+          bad = checkUsername(name);
+        if (bad) {
+          wcMsg(bad);
+          return;
+        }
+        const btn = $("wcCreate");
+        btn.disabled = true;
+        try {
+          const st = await api("create_player", { u: name });
+          lsSet(TOKEN_KEY, st.token);
+          ME = { token: st.token };
+          applyState(st);
+          $("wcTokenOut").value = st.token;
+          wcShow("done");
+        } catch (e) {
+          wcMsg(apiMsg(e));
+        } finally {
+          btn.disabled = false;
+        }
+      }
+      async function loadToken(raw) {
+        const t = String(raw || "").replace(/\s/g, "");
+        if (!TOKEN_RE.test(t)) throw new Error("invalid_token");
+        const st = await api("get_player", { t });
+        if (!st || !st.id) throw new Error("invalid_token");
+        lsSet(TOKEN_KEY, t);
+        ME = { token: t };
+        applyState(st);
+      }
+      async function wcLoad() {
+        const btn = $("wcLoad");
+        btn.disabled = true;
+        try {
+          await loadToken($("wcToken").value);
+          $("welcomeModal").classList.remove("open");
+          showToast("Welcome back, " + ME.username + "!");
+        } catch (e) {
+          wcMsg(apiMsg(e));
+        } finally {
+          btn.disabled = false;
+        }
+      }
+      function wcDone() {
+        $("welcomeModal").classList.remove("open");
+      }
+      function copyText(v, inp) {
+        const ok = () => showToast("Data token copied.");
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard
+            .writeText(v)
+            .then(ok)
+            .catch(() => fallbackCopy(inp, ok));
+        } else fallbackCopy(inp, ok);
+      }
+      function fallbackCopy(inp, ok) {
+        try {
+          inp.focus();
+          inp.select();
+          document.execCommand("copy")
+            ? ok()
+            : showToast("Select the token and copy it.");
+        } catch (e) {
+          showToast("Select the token and copy it.");
+        }
+      }
+      const copyToken = () => copyText($("ac_token").value, $("ac_token"));
+
+      /* settings panel */
+      const PEN =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';
+      const CHECK =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 5 5 9-11"/></svg>';
+      const COPY =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>';
+      let EDIT = false;
+      const authMsg = (t, good) => {
+        const m = $("authMsg");
+        m.textContent = t || "";
+        m.className = "auth-msg" + (t ? " show" : "") + (good ? " good" : "");
+      };
+      function setEditBtn(editing) {
+        const b = $("ac_btn_username");
+        b.innerHTML = editing ? CHECK : PEN;
+        b.setAttribute("aria-label", editing ? "Confirm" : "Edit username");
+        b.onclick = () => (editing ? commitEdit() : startEdit());
+      }
+      function resetField() {
+        const i = $("ac_username");
+        i.readOnly = true;
+        i.classList.remove("editing");
+        i.value = (ME && ME.username) || currentName();
+        setEditBtn(false);
+      }
+      function renderAccount() {
+        if (!$("ac_username")) return;
+        if (!EDIT) resetField();
+        $("ac_token").value = (ME && ME.token) || "";
+        $("ac_btn_copy").innerHTML = COPY;
+        $("ac_btn_switch").innerHTML = CHECK;
+      }
+      function startEdit() {
+        EDIT = true;
+        authMsg("");
+        const i = $("ac_username");
+        i.readOnly = false;
+        i.classList.add("editing");
+        setEditBtn(true);
+        i.focus();
+      }
+      function cancelEdit() {
+        if (!EDIT) return;
+        EDIT = false;
+        resetField();
+      }
+      async function commitEdit() {
+        if (!EDIT) return;
+        const v = $("ac_username").value.trim(),
+          bad = checkUsername(v);
+        if (bad) {
+          authMsg(bad);
+          return;
+        }
+        if (ME && v === ME.username) {
+          cancelEdit();
+          return;
+        }
+        try {
+          const st = await api("set_username", { t: ME.token, u: v });
+          EDIT = false;
+          applyState(st);
+          authMsg("");
+          showToast("Username updated.");
+        } catch (e) {
+          authMsg(apiMsg(e));
+        }
+      }
+      function toggleSwitch() {
+        const b = $("tokenSwitch");
+        b.hidden = !b.hidden;
+        if (!b.hidden) $("tokenIn").focus();
+        authMsg("");
+      }
+      async function commitSwitch() {
+        const v = $("tokenIn").value.replace(/\s/g, "");
+        if (!v) {
+          authMsg("Paste a data token first.");
+          return;
+        }
+        if (ME && v === ME.token) {
+          $("tokenSwitch").hidden = true;
+          $("tokenIn").value = "";
+          return;
+        }
+        try {
+          await loadToken(v);
+          $("tokenIn").value = "";
+          $("tokenSwitch").hidden = true;
+          authMsg("");
+          showToast("Switched to " + ME.username + ".");
+        } catch (e) {
+          authMsg(apiMsg(e));
+        }
+      }
+      async function initAccount() {
+        if (!window.supabase) {
+          showToast("Couldn't load the online library. Reload the page.");
+          return;
+        }
+        try {
+          subscribeBoards();
+          fetchProfiles();
+        } catch (e) {}
+        const t = lsGet(TOKEN_KEY, "");
+        if (!t) return;
+        ME = { token: t, username: lsGet("sg_name", "") };
+        try {
+          const st = await api("get_player", { t });
+          if (st && st.id) applyState(st);
+          else {
+            ME = null;
+            lsSet(TOKEN_KEY, "");
+            lsSet("sg_name", "");
+            refreshIdentity();
+            maybeWelcome();
+            showToast(
+              "That account wasn't found. Create a new one or enter another data token.",
+            );
+          }
+        } catch (e) {
+          /* offline: keep playing with the cached name */
+        }
+      }
+
+      /* ---------- settings ---------- */
       const updateUserCard = () => {
-        $("userName").textContent = lsGet("sg_player_name", "") || "Player";
+        $("userName").innerHTML = nameHTML(currentName());
       };
       function setRange(id, textId) {
         const r = $(id);
@@ -4498,39 +6603,38 @@
         $(textId).textContent = Math.round(r.value * 100) + "%";
       }
       function openSettings() {
-        $("usernameSetting").value = lsGet("sg_player_name", "");
+        closeMenu();
+        $("tokenSwitch").hidden = true;
+        authMsg("");
         $("musicVol").value = vol();
         $("sfxVol").value = sfxVol();
+        $("autoDiff").checked = lsGet("sg_autodiff", "0") === "1";
         setRange("musicVol", "musicVolText");
         setRange("sfxVol", "sfxVolText");
-        renderStats();
+        EDIT = false;
+        renderAccount();
         $("settingsModal").classList.add("open");
       }
       function closeSettings() {
-        if (!lsGet("sg_player_name", "")) {
-          $("usernameSetting").focus();
-          showToast("Pick a username first.");
-          return;
-        }
+        cancelEdit();
+        $("tokenSwitch").hidden = true;
         $("settingsModal").classList.remove("open");
       }
-      function saveSettings() {
-        const n = $("usernameSetting").value.trim().slice(0, 20);
-        if (!n) {
-          $("usernameSetting").focus();
-          showToast("Pick a username first.");
-          return;
+      async function saveSettings() {
+        if (EDIT) {
+          await commitEdit();
+          if (EDIT) return;
         }
-        lsSet("sg_player_name", n);
         lsSet("sg_music", $("musicVol").value);
         lsSet("sg_sfx", $("sfxVol").value);
-        D.name = n;
+        lsSet("sg_autodiff", $("autoDiff").checked ? "1" : "0");
         Object.values(clips).forEach((c) => {
           c.el.volume = vol();
         });
-        updateUserCard();
-        $("settingsModal").classList.remove("open");
+        closeSettings();
       }
+      $("autoDiff").onchange = () =>
+        lsSet("sg_autodiff", $("autoDiff").checked ? "1" : "0");
       $("musicVol").oninput = () => {
         setRange("musicVol", "musicVolText");
         Object.values(clips).forEach((c) => {
@@ -4543,12 +6647,55 @@
         sfx("correct");
       };
       document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && $("settingsModal").classList.contains("open"))
-          closeSettings();
+        if (e.key !== "Escape") return;
+        if ($("lbModal").classList.contains("open")) closeLb();
+        else if ($("settingsModal").classList.contains("open")) closeSettings();
+        closeMenu();
       });
 
+      /* ---------- keyboard: space plays, enter skips / guesses (outside text fields) ---------- */
+      document.addEventListener("keydown", (e) => {
+        if (
+          e.repeat ||
+          e.ctrlKey ||
+          e.metaKey ||
+          e.altKey ||
+          (e.key !== " " && e.key !== "Enter")
+        )
+          return;
+        const a = document.activeElement,
+          tag = a ? a.tagName : "";
+        if (
+          tag === "INPUT" ||
+          tag === "TEXTAREA" ||
+          tag === "SELECT" ||
+          (a && a.isContentEditable)
+        )
+          return;
+        if (
+          document.querySelector(".modal-back.open") ||
+          $("lbOverlay").classList.contains("open")
+        )
+          return;
+        const p = $("gameView").classList.contains("active")
+          ? "solo"
+          : $("duelView").classList.contains("active")
+            ? "duel"
+            : null;
+        if (!p) return;
+        if (p === "solo" ? S.locked || !S.track : D.locked || !D.track) return;
+        const mode = p === "solo" ? S.mode : D.settings?.mode;
+        if (mode !== "type" && mode !== "click") return;
+        e.preventDefault();
+        if (tag === "BUTTON") a.blur();
+        if (e.key === " ") togglePlay(p);
+        else if (mode === "type" && PICKED[p]) guessPress(p);
+        else skipPress(p);
+      });
+
+      /* ---------- init ---------- */
       $("soloStack").innerHTML =
-        `<div class="top-row"><button class="back" onclick="leaveGame()" aria-label="Back">${BACK_SVG}</button></div>
+        `<div class="top-row"><button class="back" onclick="leaveGame()" aria-label="Back">${BACK_SVG}</button><button class="score-chip" onclick="openLb(S.mode)" aria-label="Open leaderboard"><span id="soloScore">0</span><span class="rk" id="soloRank"></span></button></div>
         <div id="soloBody" class="game-body"><div class="diff" id="soloDiff"></div>${gameHTML("solo")}</div><div id="soloResult" style="display:none"></div>`;
       $("duelStack").innerHTML =
         `<div class="duel-top"><button class="back" onclick="disconnectDuel()" aria-label="Back">${BACK_SVG}</button><span id="duelRound">Round 1 / 10</span><span class="score" id="duelScore">0</span></div>
@@ -4562,7 +6709,10 @@
       renderDiff("duelDiff", duelDiffSel, (l) => {
         duelDiffSel = l;
       });
+      recomputeRanks();
       updateUserCard();
+      updateScoreChip();
+      initAccount();
 
       (function intro() {
         const el = $("intro"),
@@ -4578,7 +6728,7 @@
         setTimeout(() => el.classList.add("out"), 1000);
         setTimeout(() => {
           el.remove();
-          if (!lsGet("sg_player_name", "")) openSettings();
+          maybeWelcome();
         }, 1450);
       })();
     </script>

@@ -5230,7 +5230,7 @@
               <div class="res-badges"><span class="stamp">GUESSED IN ${secTxt}S!</span><span class="streak" id="soloStreakTxt">${FLAME_SVG} ${streak} in a row</span><span class="streak" id="soloPts">+… pts</span>${nextDiff ? `<span class="streak">&#8593; ${LEVEL_NAMES[nextDiff]} next</span>` : ""}</div>
               <div class="res-actions"><button class="res-next" onclick="nextSolo()">Next</button></div><div class="cool"><i id="soloCool"></i></div></div>`
           : `<div class="res bad">${art}<div class="res-eyebrow">IT WAS_</div><h2 class="res-title">${esc(t.title)}</h2><div class="res-sub">${sub}</div>
-              <div class="res-badges"><span class="stamp">LOST!</span></div>
+              <div class="res-badges"><span class="stamp">LOST!</span><span class="streak" style="color:#9aa6a0">No score</span></div>
               <div class="res-actions"><button class="res-next" onclick="nextSolo()">Try again</button></div><div class="cool"><i id="soloCool"></i></div></div>`;
         if (pending)
           pending.then((st) => {
@@ -6329,20 +6329,25 @@
         return "Couldn't reach the server. Check your connection and try again.";
       }
       let warnedAt = 0;
+      let srvChain = Promise.resolve(); // calls go to the server strictly in order (start_round must land before record_correct)
       function srv(name, args = {}) {
         if (!ME || !ME.token) return Promise.resolve(null);
-        return api(name, { t: ME.token, ...args })
-          .then((st) => {
-            if (st && st.id) applyState(st);
-            return st;
-          })
-          .catch((e) => {
-            if (Date.now() - warnedAt > 20000) {
-              warnedAt = Date.now();
-              showToast("Couldn't save your progress. " + apiMsg(e));
-            }
-            return null;
-          });
+        const run = () =>
+          api(name, { t: ME.token, ...args })
+            .then((st) => {
+              if (st && st.id) applyState(st);
+              return st;
+            })
+            .catch((e) => {
+              if (Date.now() - warnedAt > 20000) {
+                warnedAt = Date.now();
+                showToast("Couldn't save your progress. " + apiMsg(e));
+              }
+              return null;
+            });
+        const p = srvChain.then(run, run);
+        srvChain = p.catch(() => {});
+        return p;
       }
       const rowToStats = (r) => ({
         correct: Number(r.correct) || 0,

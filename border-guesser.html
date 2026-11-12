@@ -1228,6 +1228,21 @@
           o.beginPath(); o.arc(cx, cy, R, 0, 6.2832); o.fillStyle = g; o.fill();
           o.beginPath(); o.arc(cx, cy, R, 0, 6.2832); o.strokeStyle = "rgba(190,225,205,0.16)"; o.lineWidth = 1; o.stroke();
         }
+        /* a lighter copy of the detailed map (tiny wiggles dropped) used while you are turning or zooming in close */
+        function decimate(list, tol) {
+          const ring = (r) => {
+            const out = [r[0]]; let last = r[0];
+            for (let i = 1; i < r.length - 1; i++) { const p = r[i]; if (Math.abs(p[0] - last[0]) > tol || Math.abs(p[1] - last[1]) > tol) { out.push(p); last = p; } }
+            out.push(r[r.length - 1]);
+            return out.length >= 4 ? out : r;
+          };
+          return list.map((f) => {
+            const g = f.geometry; if (!g) return f;
+            const geometry = g.type === "Polygon" ? { type: "Polygon", coordinates: g.coordinates.map(ring) }
+              : g.type === "MultiPolygon" ? { type: "MultiPolygon", coordinates: g.coordinates.map((poly) => poly.map(ring)) } : g;
+            const m = { ...f, geometry }; m.__c = f.__c; m.__r = f.__r; return m;
+          });
+        }
         function draw() {
           G.raf = 0;
           if (!G.w) return;
@@ -1239,8 +1254,14 @@
           c2.save(); c2.setTransform(1, 0, 0, 1, 0, 0); c2.drawImage(under, 0, 0); c2.restore();
           /* land: slate green with fine light borders */
           const useLow = !!LAND.low && G.zoom < 2.4;   /* the lighter map is plenty sharp until you zoom in close */
+          /* zoomed in, only as much detail as a pixel can show; and only the patch of globe that is actually on screen is processed */
+          const lv = G.zoom < 4 ? 0 : G.zoom < 6 ? 1 : 2, TOL = [0.1, 0.06, 0.035];
+          const useMid = !useLow;
+          if (useMid) { LAND.lv ||= []; if (!LAND.lv[lv]) { LAND.lv[lv] = decimate(LAND.high, TOL[lv]); LAND.lvF ||= []; LAND.lvF[lv] = new Map(); LAND.lv[lv].forEach((f) => { const c = featureCode(f); if (c) LAND.lvF[lv].set(c, f); }); } }
+          const cap = Math.min(Math.PI / 2, Math.asin(Math.min(1, Math.hypot(G.w, G.h) / 2 / R)) + 0.08);
+          proj.clipAngle(cap * 57.2958);
           if (G.fc) {
-            const centre = proj.invert([cx, cy]), lim = Math.PI / 2 + 0.03, list = useLow ? LAND.low : LAND.high;
+            const centre = proj.invert([cx, cy]), lim = cap, list = useLow ? LAND.low : LAND.lv[lv];
             if (useLow && !list.__cull) cullInfo(list);
             proj.precision(G.moving ? 1.6 : 0.7);
             c2.beginPath();
@@ -1251,7 +1272,7 @@
           /* picked countries */
           if (useLow && !G.featsLow) { G.featsLow = new Map(); LAND.low.forEach((f) => { const c = featureCode(f); if (c) G.featsLow.set(c, f); }); }
           G.states.forEach((st, code) => {
-            const f = (useLow && G.featsLow.get(code)) || G.feats.get(code); if (!f) return;
+            const f = (useLow && G.featsLow.get(code)) || (useMid && LAND.lvF[lv].get(code)) || G.feats.get(code); if (!f) return;
             c2.beginPath(); path(f);
             c2.fillStyle = STATE_COL[st.kind] || "#fff"; c2.globalAlpha = st.kind === "reveal" ? 0.8 : 1; c2.fill(); c2.globalAlpha = 1;
             c2.strokeStyle = "rgba(8,12,10,0.6)"; c2.lineWidth = 0.7; c2.stroke();

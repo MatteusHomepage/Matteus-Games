@@ -173,7 +173,7 @@
         }
       }
 
-      /* game cards */
+
       .games {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(240px, 340px));
@@ -413,21 +413,12 @@
     <footer class="foot">Made by Matteus Aydin 2026</footer>
 
     <script>
-      /* ------------------------------------------------------------------
-         ADD A GAME: copy one block below, paste it after the last one and
-         change the fields. That's all — the card shows up automatically.
-
-           title: name shown on the card
-           desc:  one short sentence
-           url:   the game's page (relative path or full link)
-           tag:   small label in the corner (e.g. "Music", "Puzzle")
-           icon:  an inline <svg> (24x24 viewBox, uses the card's green)
-         ------------------------------------------------------------------ */
+     
       const GAMES = [
         {
           title: "Song Guesser",
           desc: "Hear a short clip, guess the song. Play solo or battle your friends in a live multiplayer duel.",
-          url: "song-guesser-updated.html",
+          url: "song-guesser.html",
           tag: "Music",
           icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 10v4M8 6v12M12 3v18M16 7v10M20 10v4" /></svg>',
         },
@@ -445,13 +436,7 @@
           tag: "Trivia",
           icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 19 10l-7 10.5L5 10z" /><path d="M5 10h14M9.5 10 12 3.5 14.5 10M9.5 10 12 20.5 14.5 10" /></svg>',
         },
-        // {
-        //   title: "Your next game",
-        //   desc: "A short description of the game.",
-        //   url: "your-game.html",
-        //   tag: "Puzzle",
-        //   icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="8" /></svg>',
-        // },
+       
       ];
 
       const grid = document.getElementById("games");
@@ -479,7 +464,7 @@
         grid.appendChild(a);
       });
 
-      /* intro: plays once whenever the hub is opened */
+     
       (function intro() {
         const el = document.getElementById("intro"),
           nm = document.getElementById("introName"),

@@ -657,6 +657,14 @@
       .wheel-h.calm .wheel-arrow { transform: none; transition: opacity 0.3s; filter: none; }
       .wheel-h.calm .wheel-arrow.on { opacity: 0.5; }
       .wheel-h.calm { cursor: grab; }
+
+      body.gmove .spot::after { animation-play-state: paused; }
+      .duel-top .duel-right { justify-self: end; display: flex; align-items: center; gap: 10px; }
+      .dtimer { display: none; font: 700 14px "Outfit", sans-serif; color: #dfe8e1; background: #0b120e; border: 1px solid var(--line); border-radius: 20px; padding: 3px 10px; font-variant-numeric: tabular-nums; letter-spacing: 0.3px; }
+      .dtimer.on { display: inline-block; }
+      .dtimer.low { color: #ff7b7b; border-color: #ff5a5a66; animation: tpulse 1s ease-in-out infinite; }
+      @keyframes tpulse { 50% { background: #2a0f0f; } }
+      .dd-menu.scroll { max-height: 226px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #1f3a2a transparent; }
     </style>
   <body>
     <div class="spot"><i class="tint"></i></div>
@@ -735,6 +743,16 @@
               <div class="field">
                 <label class="field-label">REGION</label>
                 <div class="wheel-h" id="duelWheel"></div>
+              </div>
+              <div class="field">
+                <label class="field-label">TIMER</label>
+                <div class="dd" id="timerDD">
+                  <button type="button" class="dd-btn has" id="timerBtn" onclick="toggleDD(event,'timerDD')">
+                    <span id="timerLabel">Off</span>
+                    <svg viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m1 1 5 5 5-5" /></svg>
+                  </button>
+                  <div class="dd-menu scroll" id="timerMenu"></div>
+                </div>
               </div>
               <div class="field">
                 <label class="field-label" for="duelRounds">ROUNDS</label>
@@ -1102,7 +1120,7 @@
           if (!window.d3) throw new Error("The map library didn't load.");
           const high = await fetchTopo(ATLAS.high);
           LAND.high = high;
-          fetchTopo(ATLAS.low).then((l) => { LAND.low = l; }).catch(() => {});
+          fetchTopo(ATLAS.low).then((l) => { LAND.low = l; try { Object.values(GL).forEach((g) => g && g.draw()); } catch (e) {} }).catch(() => {});
           return true;
         })().catch((e) => { ATLAS_STATE.promise = null; ATLAS_STATE.error = String((e && e.message) || e); throw e; });
         return ATLAS_STATE.promise;
@@ -1179,7 +1197,36 @@
           G.fc = { type: "FeatureCollection", features: LAND.high };
           G.feats.clear();
           LAND.high.forEach((f) => { const c = featureCode(f); if (c) G.feats.set(c, f); });
+          cullInfo(LAND.high);
           G.ready = true; draw();
+        }
+        /* each country gets a centre + radius once, so countries on the far side are skipped while drawing */
+        function cullInfo(list) {
+          if (list.__cull) return; list.__cull = true;
+          list.forEach((f) => {
+            const c = d3.geoCentroid(f); let r = 0;
+            const walk = (a) => { if (typeof a[0] === "number") { const d = d3.geoDistance(c, a); if (d > r) r = d; } else for (let i = 0; i < a.length; i++) walk(a[i]); };
+            walk(f.geometry.coordinates); f.__c = c; f.__r = r;
+          });
+        }
+        /* the sea + glow and the edge shading never change while turning, so they are painted once per size */
+        const under = document.createElement("canvas"), over = document.createElement("canvas"); let layerKey = "";
+        function layers(R, cx, cy) {
+          const key = [G.w, G.h, G.dpr, R.toFixed(1)].join("|");
+          if (key === layerKey) return; layerKey = key;
+          under.width = over.width = cv.width; under.height = over.height = cv.height;
+          const u = under.getContext("2d"), o = over.getContext("2d"), p = d3.geoPath(d3.geoOrthographic().translate([cx, cy]).scale(R).clipAngle(90).precision(0.6), null);
+          [u, o].forEach((k) => k.setTransform(G.dpr, 0, 0, G.dpr, 0, 0));
+          let g = u.createRadialGradient(cx, cy, R * 0.97, cx, cy, R * 1.2);
+          g.addColorStop(0, "rgba(25,215,123,0.2)"); g.addColorStop(0.35, "rgba(25,215,123,0.07)"); g.addColorStop(1, "rgba(25,215,123,0)");
+          u.fillStyle = g; u.beginPath(); u.arc(cx, cy, R * 1.2, 0, 6.2832); u.fill();
+          g = u.createRadialGradient(cx - R * 0.35, cy - R * 0.4, R * 0.05, cx, cy, R * 1.05);
+          g.addColorStop(0, "#16202c"); g.addColorStop(0.5, "#0e1520"); g.addColorStop(1, "#070b12");
+          u.beginPath(); u.arc(cx, cy, R, 0, 6.2832); u.fillStyle = g; u.fill();
+          g = o.createRadialGradient(cx - R * 0.32, cy - R * 0.36, R * 0.3, cx, cy, R);
+          g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(0.7, "rgba(2,5,9,0.22)"); g.addColorStop(1, "rgba(2,5,9,0.72)");
+          o.beginPath(); o.arc(cx, cy, R, 0, 6.2832); o.fillStyle = g; o.fill();
+          o.beginPath(); o.arc(cx, cy, R, 0, 6.2832); o.strokeStyle = "rgba(190,225,205,0.16)"; o.lineWidth = 1; o.stroke();
         }
         function draw() {
           G.raf = 0;
@@ -1188,38 +1235,35 @@
           proj.translate([cx, cy]).scale(R).rotate(G.rot);
           c2.setTransform(G.dpr, 0, 0, G.dpr, 0, 0);
           c2.clearRect(0, 0, G.w, G.h);
-          /* soft green glow around the globe */
-          let g = c2.createRadialGradient(cx, cy, R * 0.97, cx, cy, R * 1.2);
-          g.addColorStop(0, "rgba(25,215,123,0.2)"); g.addColorStop(0.35, "rgba(25,215,123,0.07)"); g.addColorStop(1, "rgba(25,215,123,0)");
-          c2.fillStyle = g; c2.beginPath(); c2.arc(cx, cy, R * 1.2, 0, 6.2832); c2.fill();
-          /* sea: very dark navy, a touch lighter where the light hits */
-          g = c2.createRadialGradient(cx - R * 0.35, cy - R * 0.4, R * 0.05, cx, cy, R * 1.05);
-          g.addColorStop(0, "#16202c"); g.addColorStop(0.5, "#0e1520"); g.addColorStop(1, "#070b12");
-          c2.beginPath(); path(sphere); c2.fillStyle = g; c2.fill();
+          layers(R, cx, cy);
+          c2.save(); c2.setTransform(1, 0, 0, 1, 0, 0); c2.drawImage(under, 0, 0); c2.restore();
           /* land: slate green with fine light borders */
-          const fc = G.moving && lowFC() ? lowFC() : G.fc;
-          if (fc) {
-            c2.beginPath(); path(fc);
+          const useLow = !!LAND.low && G.zoom < 2.4;   /* the lighter map is plenty sharp until you zoom in close */
+          if (G.fc) {
+            const centre = proj.invert([cx, cy]), lim = Math.PI / 2 + 0.03, list = useLow ? LAND.low : LAND.high;
+            if (useLow && !list.__cull) cullInfo(list);
+            proj.precision(G.moving ? 1.6 : 0.7);
+            c2.beginPath();
+            list.forEach((f) => { if (!centre || !f.__c || d3.geoDistance(f.__c, centre) < lim + f.__r) path(f); });
             c2.fillStyle = "#2c3933"; c2.fill();
             c2.strokeStyle = "rgba(178,196,186,0.42)"; c2.lineWidth = Math.max(0.4, Math.min(0.9, R / 380)); c2.lineJoin = "round"; c2.stroke();
           }
           /* picked countries */
+          if (useLow && !G.featsLow) { G.featsLow = new Map(); LAND.low.forEach((f) => { const c = featureCode(f); if (c) G.featsLow.set(c, f); }); }
           G.states.forEach((st, code) => {
-            const f = G.feats.get(code); if (!f) return;
+            const f = (useLow && G.featsLow.get(code)) || G.feats.get(code); if (!f) return;
             c2.beginPath(); path(f);
             c2.fillStyle = STATE_COL[st.kind] || "#fff"; c2.globalAlpha = st.kind === "reveal" ? 0.8 : 1; c2.fill(); c2.globalAlpha = 1;
             c2.strokeStyle = "rgba(8,12,10,0.6)"; c2.lineWidth = 0.7; c2.stroke();
           });
-          /* shading toward the edge + a faint rim light */
-          g = c2.createRadialGradient(cx - R * 0.32, cy - R * 0.36, R * 0.3, cx, cy, R);
-          g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(0.7, "rgba(2,5,9,0.22)"); g.addColorStop(1, "rgba(2,5,9,0.72)");
-          c2.beginPath(); path(sphere); c2.fillStyle = g; c2.fill();
-          c2.beginPath(); path(sphere); c2.strokeStyle = "rgba(190,225,205,0.16)"; c2.lineWidth = 1; c2.stroke();
+          c2.save(); c2.setTransform(1, 0, 0, 1, 0, 0); c2.drawImage(over, 0, 0); c2.restore();
           if (G.labels) drawLabels(R);
         }
         function drawLabels(R) {
           const centre = proj.invert([G.w / 2, G.h / 2]), placed = [];
           if (!centre) return;
+          const zf = Math.max(0, Math.min(1, (G.zoom - 0.82) / 0.16));   /* names fade away as you zoom out */
+          if (zf <= 0.01) return;
           const fs = Math.max(10, Math.min(12, G.w / 36));
           c2.font = `700 ${fs}px "DM Sans", sans-serif`; c2.textBaseline = "middle"; c2.textAlign = "center";
           const items = [];
@@ -1243,13 +1287,13 @@
             placed.push({ x, y, w });
             const light = it.st.kind === "start";
             c2.save();
-            c2.globalAlpha = Math.max(0, Math.min(1, (1.42 - it.d) / 0.25));   /* fades out as it turns away */
-            c2.shadowColor = "rgba(0,0,0,0.5)"; c2.shadowBlur = 7; c2.shadowOffsetY = 2;
+            c2.globalAlpha = zf * Math.max(0, Math.min(1, (1.42 - it.d) / 0.25));   /* fades out as it turns away */
+            if (!G.moving) { c2.shadowColor = "rgba(0,0,0,0.5)"; c2.shadowBlur = 7; c2.shadowOffsetY = 2; }
             c2.beginPath(); c2.roundRect ? c2.roundRect(x - w / 2, y - h / 2, w, h, h / 2) : c2.rect(x - w / 2, y - h / 2, w, h);
             c2.fillStyle = light ? "#f1ecd8" : "rgba(9,14,11,0.94)"; c2.fill();
             c2.restore();
-            c2.save(); c2.globalAlpha = Math.max(0, Math.min(1, (1.42 - it.d) / 0.25));
-            if (!light) { c2.beginPath(); c2.roundRect ? c2.roundRect(x - w / 2, y - h / 2, w, h, h / 2) : c2.rect(x - w / 2, y - h / 2, w, h); c2.lineWidth = 1; c2.strokeStyle = STATE_COL[it.st.kind] || "#fff"; c2.globalAlpha *= 0.6; c2.stroke(); c2.globalAlpha = Math.max(0, Math.min(1, (1.42 - it.d) / 0.25)); }
+            c2.save(); c2.globalAlpha = zf * Math.max(0, Math.min(1, (1.42 - it.d) / 0.25));
+            if (!light) { c2.beginPath(); c2.roundRect ? c2.roundRect(x - w / 2, y - h / 2, w, h, h / 2) : c2.rect(x - w / 2, y - h / 2, w, h); c2.lineWidth = 1; c2.strokeStyle = STATE_COL[it.st.kind] || "#fff"; c2.globalAlpha *= 0.6; c2.stroke(); c2.globalAlpha = zf * Math.max(0, Math.min(1, (1.42 - it.d) / 0.25)); }
             c2.beginPath(); c2.moveTo(x - 3.5, y + h / 2 - 0.5); c2.lineTo(x + 3.5, y + h / 2 - 0.5); c2.lineTo(x, y + h / 2 + 4); c2.closePath();
             c2.fillStyle = light ? "#f1ecd8" : "rgba(9,14,11,0.94)"; c2.fill();
             c2.fillStyle = light ? "#161b17" : "#f1f6f2"; c2.fillText(name, x, y + 0.5);
@@ -1257,7 +1301,7 @@
           });
         }
         function want() { if (!G.raf) G.raf = requestAnimationFrame(draw); }
-        function bump() { G.moving++; clearTimeout(G.hiT); G.hiT = setTimeout(() => { G.moving = 0; want(); }, 140); want(); }
+        function bump() { if (!G.moving) document.body.classList.add("gmove"); G.moving++; clearTimeout(G.hiT); G.hiT = setTimeout(() => { G.moving = 0; document.body.classList.remove("gmove"); want(); }, 140); want(); }
         /* camera animations */
         function stopRot() { cancelAnimationFrame(G.anim); G.anim = 0; }
         function fly(lonlat, zoom, ms) {
@@ -1294,7 +1338,7 @@
         function zoomBy(k) { G.zoomT = Math.max(0.75, Math.min(8, G.zoomT * k)); zoomTick(); }
         /* pointer: grab the globe and it follows the cursor exactly (any axis); wheel / pinch to zoom */
         const ptrs = new Map(); let pinch = 0, drag = null;
-        const local = (e) => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+        let rc = null; const local = (e) => { const r = rc || (rc = cv.getBoundingClientRect()); return [e.clientX - r.left, e.clientY - r.top]; };
         function onSphere(x, y, rot) {
           const R = radius(), cx = G.w / 2, cy = G.h / 2;
           let dx = x - cx, dy = y - cy; const d = Math.hypot(dx, dy), lim = R * 0.996;
@@ -1303,13 +1347,17 @@
           const ll = proj.invert([cx + dx, cy + dy]);
           return ll ? qCart(ll) : null;
         }
+        /* turntable drag: north stays up, works anywhere in the card, keeps going when the cursor leaves it */
+        const setRot = (l, p) => { G.rot = [l, Math.max(-90, Math.min(90, p)), 0]; G.q = qEuler(G.rot); };
+        const degPerPx = () => (K_DRAG * 57.2958) / radius();
+        const K_DRAG = 0.9;
         cv.addEventListener("pointerdown", (e) => {
-          cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, local(e));
+          rc = null; cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, local(e));
           stopRot(); host.classList.add("drag");
           if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch = Math.hypot(a[0] - b[0], a[1] - b[1]); drag = null; return; }
           const [x, y] = local(e);
-          if (Math.hypot(x - G.w / 2, y - G.h / 2) > radius()) { host.classList.remove("drag"); return; }   /* a drag must start on the globe */
-          drag = { lx: x, ly: y, dq: null, t: performance.now() };
+          drag = { lx: x, ly: y, t: performance.now(), vl: 0, vp: 0 };
+          setRot(G.rot[0], G.rot[1]); bump();
         });
         cv.addEventListener("pointermove", (e) => {
           if (!ptrs.has(e.pointerId)) return;
@@ -1319,32 +1367,29 @@
             if (pinch) { G.zoomT = G.zoom = Math.max(0.75, Math.min(8, G.zoom * d / pinch)); bump(); } pinch = d; return;
           }
           if (!drag) return;
-          /* relative drag: keeps rotating when the cursor leaves the globe, sensitivity toned down */
-          const [x, y] = local(e), K = 0.62, cx = G.w / 2, cy = G.h / 2, eu = qToEuler(G.q);
-          const v0 = onSphere(cx, cy, eu), v1 = onSphere(cx + (x - drag.lx) * K, cy + (y - drag.ly) * K, eu);
-          drag.lx = x; drag.ly = y;
-          if (!v0 || !v1) return;
-          const qn = qNorm(qMul(G.q, qDelta(v0, v1))), now = performance.now(), dt = Math.max(6, now - drag.t);
-          const step = qMul(qn, qConj(G.q));   /* what this move rotated by, in screen terms */
-          drag.dq = qPow(step, 16 / dt); drag.t = now;
-          setQ(qn); bump();
+          const [x, y] = local(e), now = performance.now(), dt = Math.max(4, now - drag.t), k = degPerPx();
+          const cosp = Math.max(0.35, Math.cos(G.rot[1] * D2R));
+          const dl = (x - drag.lx) * k / cosp, dp = -(y - drag.ly) * k;
+          drag.lx = x; drag.ly = y; drag.t = now;
+          drag.vl = drag.vl * 0.55 + (dl / dt) * 0.45; drag.vp = drag.vp * 0.55 + (dp / dt) * 0.45;   /* degrees per ms */
+          setRot(G.rot[0] + dl, G.rot[1] + dp); bump();
         });
         const up = (e) => {
           ptrs.delete(e.pointerId); pinch = 0;
           if (ptrs.size) { drag = null; return; }
           host.classList.remove("drag");
           const d = drag; drag = null;
-          if (d && d.dq && performance.now() - d.t < 70) coast(d.dq);
+          if (d && performance.now() - d.t < 80 && Math.hypot(d.vl, d.vp) > 0.02) coast(d.vl, d.vp);
         };
         cv.addEventListener("pointerup", up); cv.addEventListener("pointercancel", up);
-        function coast(dq) {
-          let f = 1, last = performance.now();
+        function coast(vl, vp) {
+          let last = performance.now();
           const step = (t) => {
             const dt = Math.min(40, t - last); last = t;
-            f *= Math.pow(0.955, dt / 16);
-            const ang = 2 * Math.acos(Math.min(1, Math.abs(dq[0]))) * f;
-            if (ang < 0.00035 || G.drag) { G.anim = 0; want(); return; }
-            setQ(qMul(qPow(dq, f * dt / 16), G.q)); bump();
+            const f = Math.exp(-dt / 380);
+            vl *= f; vp *= f;
+            if (Math.hypot(vl, vp) < 0.004) { G.anim = 0; want(); return; }
+            setRot(G.rot[0] + vl * dt, G.rot[1] + vp * dt); bump();
             G.anim = requestAnimationFrame(step);
           };
           stopRot(); G.anim = requestAnimationFrame(step);
@@ -1363,7 +1408,7 @@
         });
         new ResizeObserver(() => resize()).observe(host);
         return {
-          G, resize, setData, draw: want, frame, zoomBy,
+          G, resize, setData, draw: want, drawNow: draw, frame, zoomBy,
           set(code, kind, label = true) { G.states.set(code, { kind, label }); want(); },
           clear() { G.states.clear(); want(); },
           setLabels(v) { G.labels = !!v; want(); },
@@ -1374,7 +1419,7 @@
 
       /* ---------- the region wheel: a horizontal drum. Drag sideways, it loops, ticks like a real wheel and snaps ---------- */
       const REGIONS = [
-        { v: "all", label: "All" },
+        { v: "all", label: "All continents" },
         { v: "continental", label: "Continental" },
         { v: "AF", label: "Africa" }, { v: "AS", label: "Asia" }, { v: "EU", label: "Europe" },
         { v: "NA", label: "North America" }, { v: "SA", label: "South America" },
@@ -1726,6 +1771,15 @@ XKX|XK|Kosovo|EU`;
         }
         return true;
       }
+      /* a land route from a to b using only countries the player has named (green or yellow). Shortest if it is as short as it can be, a detour if not. */
+      function foundPath(r) {
+        const ok = new Set([r.a, r.b]); r.guesses.forEach((k, c) => { if (k !== "red") ok.add(c); });
+        const prev = { [r.a]: null }, q = [r.a];
+        while (q.length && !(r.b in prev)) { const x = q.shift(); ADJ[x].forEach((y) => { if (ok.has(y) && !(y in prev)) { prev[y] = x; q.push(y); } }); }
+        if (!(r.b in prev)) return null;
+        const path = []; for (let x = r.b; x !== null; x = prev[x]) path.unshift(x);
+        return path;
+      }
       /* the shortest path that contains the most countries the player already found */
       function bestPath(rt, greens) {
         let prev = [rt.a]; const best = { [rt.a]: { s: 0, from: null } };
@@ -1768,12 +1822,22 @@ XKX|XK|Kosovo|EU`;
         return [lo, di === 4 ? M : Math.max(lo, Math.floor((di + 1) * M / 5))];
       }
       let RECENT = []; try { RECENT = JSON.parse(lsGet("bg_recent", "[]")) || []; } catch (e) { RECENT = []; }
-      function pushRecent(a, b) { RECENT.push(a, b); RECENT = RECENT.slice(-60); lsSet("bg_recent", JSON.stringify(RECENT)); }
+      /* remember both ends AND the countries a shortest route runs through, so neither repeats too soon */
+      function pushRecent(a, b) {
+        const rt = makeRoute(a, b);
+        RECENT.push(a, b); rt.on.forEach((x) => RECENT.push("m:" + x));
+        RECENT = RECENT.slice(-220); lsSet("bg_recent", JSON.stringify(RECENT));
+      }
       function weightedPick(c, easy) {
-        if (c.length > 600) c = shuffle(c).slice(0, 600);
+        if (c.length > 140) c = shuffle(c.slice()).slice(0, 140);
         const cnt = {}; RECENT.forEach((x) => { cnt[x] = (cnt[x] || 0) + 1; });
         let tot = 0;
-        const w = c.map((p) => { const x = (1 / (1 + 2.5 * ((cnt[p.a] || 0) + (cnt[p.b] || 0)))) * (easy && p.n === 1 ? 3 : 1); tot += x; return x; });
+        const w = c.map((p) => {
+          const rt = makeRoute(p.a, p.b); let mids = 0, k = 0;
+          rt.on.forEach((x) => { mids += cnt["m:" + x] || 0; k++; });
+          const score = 1.6 * ((cnt[p.a] || 0) + (cnt[p.b] || 0)) + (k ? mids / Math.sqrt(k) : 0) * 0.5 + Math.random() * 0.4;
+          const x = Math.pow(1 / (1 + score), 1.7) * (easy && p.n === 1 ? 2 : 1); tot += x; return x;
+        });
         let r = Math.random() * tot;
         for (let i = 0; i < c.length; i++) { r -= w[i]; if (r <= 0) return c[i]; }
         return c[c.length - 1];
@@ -1788,7 +1852,7 @@ XKX|XK|Kosovo|EU`;
           if (scope === "all" && P.M < [0, 1, 3, 5, 7][di]) return;
           const [lo, hi] = bandFor(di, P.M);
           let c = P.pairs.filter((p) => p.n >= lo && p.n <= hi);
-          if (di === 0) { const f = c.filter((p) => FAMOUS.has(p.a) && FAMOUS.has(p.b)); if (f.length >= 6) c = f; }
+          if (di === 0) { const f = c.filter((p) => FAMOUS.has(p.a) && FAMOUS.has(p.b)); if (f.length >= 30) c = f; else { const h = c.filter((p) => FAMOUS.has(p.a) || FAMOUS.has(p.b)); if (h.length >= 12) c = h; } }
           else if (di === 1) { const f = c.filter((p) => FAMOUS.has(p.a) || FAMOUS.has(p.b)); if (f.length >= 10) c = f; }
           if (c.length) opts.push(c);
         });
@@ -1986,12 +2050,15 @@ XKX|XK|Kosovo|EU`;
         } else if (e.key === "Enter") {
           if (st.sel >= 0 && rows[st.sel]) pickGuess(p, st.items[Number(rows[st.sel].dataset.i)]);
           else if (PICKED[p]) guessPress(p, true);
-          else if (rows.length === 1) { pickGuess(p, st.items[Number(rows[0].dataset.i)]); guessPress(p, true); }
+          else if (rows.length === 1) pickGuess(p, st.items[Number(rows[0].dataset.i)]);
         } else if (e.key === "Escape") hideSugg(p);
       }
       function guessPress(p, enter) {
         const code = PICKED[p];
         if (!code) { if (!enter) giveUp(p); return; }
+        /* only ever guess what is actually written in the box */
+        const typed = fold($(p + "Input").value), cc = CT[code];
+        if (!cc || !COUNTRIES.find((c) => c.code === code).keys.includes(typed)) { PICKED[p] = null; updateBtn(p); return; }
         $(p + "Input").value = ""; resetSearch(p);
         playGuess(p, code);
       }
@@ -2007,9 +2074,12 @@ XKX|XK|Kosovo|EU`;
           r.found++; localStats((x) => { x.countries++; });
           srv(p === "solo" ? "bg_found" : "bg_duel_guess", p === "solo" ? {} : { kind: "found", secs: 0 });
           sfx("correct"); setMsg(p, "");
-          if (isComplete(r.rt, r.greens)) (p === "solo" ? soloEnd(true) : finishDuel(true));
+          const fp = foundPath(r);
+          if (fp) { r.finalPath = fp; r.detour = fp.length - 1 > r.rt.L; (p === "solo" ? soloEnd(true) : finishDuel(true)); }
         } else if (kind === "yellow") {
           sfx("advance"); setMsg(p, '<span class="y">A short detour.</span> It\'s close, but not on the shortest route.');
+          const fp = foundPath(r);
+          if (fp) { r.finalPath = fp; r.detour = fp.length - 1 > r.rt.L; (p === "solo" ? soloEnd(true) : finishDuel(true)); }
         } else {
           r.wrongs++; r.hearts--; localStats((x) => { x.wrong++; });
           srv(p === "solo" ? "bg_wrong" : "bg_duel_guess", p === "solo" ? {} : { kind: "wrong", secs: 0 });
@@ -2090,9 +2160,9 @@ XKX|XK|Kosovo|EU`;
       }
       function showSoloResult(correct, secs, streak, nextDiff, pending) {
         const r = R.solo, tok = S.token, secTxt = secs < 10 ? secs.toFixed(1) : Math.round(secs);
-        const path = bestPath(r.rt, r.greens);
+        const detour = correct && r.detour, path = correct && r.finalPath ? r.finalPath : bestPath(r.rt, r.greens);
         $("soloResult").innerHTML = correct
-          ? `<div class="res good strip"><div class="res-badges"><span class="stamp">ROUTE COMPLETE &middot; ${secTxt}S</span><span class="streak" id="soloStreakTxt">${FLAME_SVG} ${streak} in a row</span><span class="streak" id="soloPts">+${S.lastEst ? S.lastEst.toLocaleString() : "…"} pts</span>${nextDiff ? `<span class="streak">&#8593; ${LEVEL_NAMES[nextDiff]} next</span>` : ""}</div>${routeHTML(path)}
+          ? `<div class="res good strip"><div class="res-badges"><span class="stamp">${detour ? "DETOUR ROUTE" : "SHORTEST ROUTE"} &middot; ${secTxt}S</span><span class="streak" id="soloStreakTxt">${FLAME_SVG} ${streak} in a row</span><span class="streak" id="soloPts">+${S.lastEst ? S.lastEst.toLocaleString() : "…"} pts</span>${nextDiff ? `<span class="streak">&#8593; ${LEVEL_NAMES[nextDiff]} next</span>` : ""}</div>${detour ? '<div class="res-eyebrow">YOUR ROUTE (A DETOUR)</div>' : ""}${routeHTML(path)}${detour ? `<div class="res-eyebrow">THE SHORTEST ROUTE</div>${routeHTML(bestPath(r.rt, new Set()))}` : ""}
               <div class="res-actions"><button class="res-next" onclick="nextSolo()">Next</button></div><div class="cool"><i id="soloCool"></i></div></div>`
           : `<div class="res bad strip"><div class="res-badges"><span class="stamp">${r.hearts <= 0 ? "OUT OF HEARTS" : "GAVE UP"}</span><span class="streak" style="color:#9aa6a0">No score</span></div><div class="res-eyebrow">THE SHORTEST ROUTE</div>${routeHTML(path)}
               <div class="res-actions"><button class="res-next" onclick="nextSolo()">Try another</button></div><div class="cool"><i id="soloCool"></i></div></div>`;
@@ -2147,8 +2217,38 @@ XKX|XK|Kosovo|EU`;
       const supabaseClient = sb;
       const makeCode = () => Math.random().toString(36).slice(2, 8).toUpperCase().padEnd(6, "X");
       const send = (event, payload) => D.channel?.send({ type: "broadcast", event, payload });
-      const settingsText = () => D.settings ? `${D.settings.random ? "Random difficulty" : LEVEL_NAMES[D.settings.difficulty]} · ${regionLabel(D.settings.region)} · ${D.settings.total} rounds` : "";
+      const settingsText = () => D.settings ? `${D.settings.random ? "Random difficulty" : LEVEL_NAMES[D.settings.difficulty]} · ${regionLabel(D.settings.region)}${D.settings.timer ? " · " + timerName(D.settings.timer) + " timer" : ""} · ${D.settings.total} rounds` : "";
 
+      function toggleDD(e, id) {
+        e?.stopPropagation();
+        document.querySelectorAll(".dd.open").forEach((x) => { if (x.id !== id) x.classList.remove("open"); });
+        $(id).classList.toggle("open");
+      }
+      const TIMERS = [[0, "Off"], [15, "15 seconds"], [30, "30 seconds"], [45, "45 seconds"], [60, "60 seconds"], [90, "1.5 minutes"], [120, "2 minutes"], [180, "3 minutes"], [240, "4 minutes"], [300, "5 minutes"]];
+      let duelTimerSel = 0;
+      const timerName = (v) => (TIMERS.find((t) => t[0] === v) || [0, ""])[1];
+      function pickTimer(v) {
+        duelTimerSel = v;
+        $("timerLabel").textContent = timerName(v);
+        document.querySelectorAll("#timerMenu .dd-item").forEach((i) => i.classList.toggle("sel", Number(i.dataset.v) === v));
+        $("timerDD").classList.remove("open");
+      }
+      document.addEventListener("click", (e) => { document.querySelectorAll(".dd.open").forEach((x) => { if (!x.contains(e.target)) x.classList.remove("open"); }); });
+      /* optional per-round countdown for duels */
+      function paintTimer(left) { const t = $("duelTimer"); t.textContent = Math.floor(left / 60) + ":" + String(left % 60).padStart(2, "0"); t.classList.toggle("low", left <= 10); }
+      function stopDuelTimer() { clearInterval(D.tmr); D.tmr = 0; const t = $("duelTimer"); if (t) t.classList.remove("on", "low"); }
+      function startDuelTimer(sec) {
+        stopDuelTimer();
+        if (!sec) return;
+        const end = Date.now() + sec * 1000;
+        $("duelTimer").classList.add("on"); paintTimer(sec);
+        D.tmr = setInterval(() => {
+          if (D.locked || !D.inMatch) { stopDuelTimer(); return; }
+          const left = Math.max(0, Math.ceil((end - Date.now()) / 1000));
+          paintTimer(left);
+          if (left <= 0) { stopDuelTimer(); setMsg("duel", "Time's up!"); sfx("wrong"); finishDuel(false); }
+        }, 200);
+      }
       function setDuelRandom(v) { duelRandom = !!v; $("duelDiff").classList.toggle("off", duelRandom); }
 
       async function createDuel() {
@@ -2161,7 +2261,7 @@ XKX|XK|Kosovo|EU`;
           D.name = currentName();
           D.code = makeCode(); D.host = true; D.hostId = D.myId; D.started = false;
           D.players = [{ id: D.myId, name: D.name }];
-          D.settings = { difficulty: duelDiffSel, region: duelScope, total, random: duelRandom };
+          D.settings = { difficulty: duelDiffSel, region: duelScope, total, random: duelRandom, timer: duelTimerSel };
           D.total = total; D.score = { [D.myId]: 0 };
           loadAtlas().catch(() => {});
           await connectDuel();
@@ -2350,6 +2450,7 @@ XKX|XK|Kosovo|EU`;
         if (rid !== D.rid || !D.inMatch) return;
         setupRound("duel", a, b, D.roundDiff);
         D.locked = false;
+        startDuelTimer(D.settings.timer || 0);
       }
       function finishDuel(correct) {
         if (D.locked) return;
@@ -2825,9 +2926,10 @@ XKX|XK|Kosovo|EU`;
       /* ---------- init ---------- */
       $("soloStack").innerHTML = `<div class="reg-row"><div class="wheel-h" id="soloWheel"></div><button class="back" onclick="leaveGame()" aria-label="Back">${BACK_SVG}</button><button class="score-chip" onclick="openLb('score')" aria-label="Open leaderboard"><span id="soloScore">0</span><span class="rk" id="soloRank"></span></button></div>
         <div id="soloBody" class="game-body"><div class="diff" id="soloDiff"></div>${gameHTML("solo")}</div><div id="soloResult" style="display:none"></div>`;
-      $("duelStack").innerHTML = `<div class="duel-top"><button class="back" onclick="disconnectDuel()" aria-label="Back">${BACK_SVG}</button><span id="duelRound">Round 1 / 10</span><span class="score" id="duelScore">0</span></div>
+      $("duelStack").innerHTML = `<div class="duel-top"><button class="back" onclick="disconnectDuel()" aria-label="Back">${BACK_SVG}</button><span id="duelRound">Round 1 / 10</span><span class="duel-right"><span class="dtimer" id="duelTimer"></span><span class="score" id="duelScore">0</span></span></div>
         <div class="duel-wrap"><div id="duelBody" class="game-body">${gameHTML("duel")}</div><div id="duelWait" class="wait"><i></i>Waiting for the other players...</div></div>`;
       renderDiff("duelDiff", duelDiffSel, (l) => { duelDiffSel = l; });
+      $("timerMenu").innerHTML = TIMERS.map(([v, l]) => `<button type="button" class="dd-item${v === 0 ? " sel" : ""}" data-v="${v}" onclick="pickTimer(${v})">${l}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10" /></svg></button>`).join("");
       if (!REGIONS.some((r) => r.v === duelScope)) duelScope = "all";
       WHEEL.solo = makeWheel($("soloWheel"), REGIONS, S.scope, (v) => setScope(v));
       WHEEL.duel = makeWheel($("duelWheel"), REGIONS, duelScope, (v) => { duelScope = v; }, { calm: true });

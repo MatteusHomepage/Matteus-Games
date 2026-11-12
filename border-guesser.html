@@ -1233,12 +1233,16 @@
           o.beginPath(); o.arc(cx, cy, R, 0, 6.2832); o.strokeStyle = "rgba(190,225,205,0.16)"; o.lineWidth = 1; o.stroke();
         }
         /* a lighter copy of the detailed map (tiny wiggles dropped) used while you are turning or zooming in close */
-        function decimate(list, tol) {
+        function decimate(list, k) {
+          if (k <= 1) return list;
+          /* only long coastlines are thinned (every k-th point); small islands are left exactly as they are, so no shape can flip inside out */
           const ring = (r) => {
-            const out = [r[0]]; let last = r[0];
-            for (let i = 1; i < r.length - 1; i++) { const p = r[i]; if (Math.abs(p[0] - last[0]) > tol || Math.abs(p[1] - last[1]) > tol) { out.push(p); last = p; } }
+            if (r.length < 90) return r;
+            const out = []; for (let i = 0; i < r.length - 1; i += k) out.push(r[i]);
             out.push(r[r.length - 1]);
-            return out.length >= 4 ? out : r;
+            if (out.length < 4) return r;
+            const a1 = d3.geoArea({ type: "Polygon", coordinates: [r] }), a2 = d3.geoArea({ type: "Polygon", coordinates: [out] });
+            return Math.abs(a2 - a1) <= 0.05 * Math.max(a1, 1e-9) ? out : r;
           };
           return list.map((f) => {
             const g = f.geometry; if (!g) return f;
@@ -1246,6 +1250,23 @@
               : g.type === "MultiPolygon" ? { type: "MultiPolygon", coordinates: g.coordinates.map((poly) => poly.map(ring)) } : g;
             const m = { ...f, geometry }; m.__c = f.__c; m.__r = f.__r; m.__w = f.__w; return m;
           });
+        }
+        /* every separate piece of land (an island, a mainland) gets its own centre + radius, so pieces that are off screen cost nothing */
+        function polyList(list) {
+          const out = [];
+          list.forEach((f) => {
+            const g = f.geometry; if (!g) return;
+            const polys = g.type === "Polygon" ? [g.coordinates] : g.type === "MultiPolygon" ? g.coordinates : [];
+            polys.forEach((coords) => {
+              const geo = { type: "Polygon", coordinates: coords };
+              if (d3.geoArea(geo) > 2 * Math.PI) return;   /* a piece of land bigger than half the planet is a ring turned inside out: never draw it, it would flood the whole globe */
+              const c = d3.geoCentroid(geo); let r = 0;
+              coords[0].forEach((p) => { const d = d3.geoDistance(c, p); if (d > r) r = d; });
+              if (coords[0].some((p) => Math.abs(p[1]) > 89.5)) r = Math.PI;   /* wraps a pole: always keep */
+              out.push({ geo, c, r });
+            });
+          });
+          return out;
         }
         function draw() {
           G.raf = 0;
@@ -1257,30 +1278,26 @@
           layers(R, cx, cy);
           c2.save(); c2.setTransform(1, 0, 0, 1, 0, 0); c2.drawImage(under, 0, 0); c2.restore();
           /* land: slate green with fine light borders */
-          const useLow = !!LAND.low && G.zoom < 2.4;   /* the lighter map is plenty sharp until you zoom in close */
-          /* zoomed in, only as much detail as a pixel can show; and only the patch of globe that is actually on screen is processed */
-          const lv = G.zoom < 4 ? 0 : G.zoom < 6 ? 1 : 2, TOL = [0.1, 0.06, 0.035];
-          const useMid = !useLow;
-          if (useMid) { LAND.lv ||= []; if (!LAND.lv[lv]) { LAND.lv[lv] = decimate(LAND.high, TOL[lv]); LAND.lvF ||= []; LAND.lvF[lv] = new Map(); LAND.lv[lv].forEach((f) => { const c = featureCode(f); if (c) LAND.lvF[lv].set(c, f); }); } }
+          /* the same detailed map at every zoom: while turning, long coastlines are thinned to what a pixel can show (every island and border stays); at rest nothing is thinned */
+          const k = G.moving ? (G.zoom < 1.4 ? 4 : G.zoom < 2.2 ? 3 : G.zoom < 3.2 ? 2 : 1) : 1;
           const cap = Math.min(Math.PI / 2, Math.asin(Math.min(1, Math.hypot(G.w, G.h) / 2 / R)) + 0.08);
-          proj.clipAngle(cap >= 1.45 ? 90 : cap * 180 / Math.PI);   /* never above 90: a bigger circle folds the far side onto the near side */
+          LAND.lv ||= []; LAND.lvF ||= []; LAND.lvP ||= [];
+          if (!LAND.lv[k]) { LAND.lv[k] = decimate(LAND.high, k); LAND.lvF[k] = new Map(); LAND.lv[k].forEach((f) => { const c = featureCode(f); if (c) LAND.lvF[k].set(c, f); }); LAND.lvP[k] = polyList(LAND.lv[k]); }
+          proj.clipExtent([[-24, -24], [G.w + 24, G.h + 24]]);   /* only what is on screen is processed (a plain rectangle: no spherical tricks) */
           if (G.fc) {
-            const centre = proj.invert([cx, cy]), lim = cap, list = useLow ? LAND.low : LAND.lv[lv];
-            if (useLow && !list.__cull) cullInfo(list);
+            const centre = proj.invert([cx, cy]), lim = cap, list = LAND.lvP[k];
             proj.precision(G.moving ? 1.6 : 0.7);
-            projF.translate([cx, cy]).scale(R).rotate(G.rot).precision(G.moving ? 1.6 : 0.7);
-            const wrapped = [];
             c2.beginPath();
-            list.forEach((f) => { if (f.__w) { wrapped.push(f); return; } if (!centre || !f.__c || d3.geoDistance(f.__c, centre) < lim + f.__r) path(f); });
-            wrapped.forEach((f) => pathF(f));
+            list.forEach((p) => { if (p.r * R < 0.35) return; if (!centre || d3.geoDistance(p.c, centre) < lim + p.r) path(p.geo); });
             c2.fillStyle = "#2c3933"; c2.fill();
             c2.strokeStyle = "rgba(178,196,186,0.42)"; c2.lineWidth = Math.max(0.4, Math.min(0.9, R / 380)); c2.lineJoin = "round"; c2.stroke();
           }
           /* picked countries */
-          if (useLow && !G.featsLow) { G.featsLow = new Map(); LAND.low.forEach((f) => { const c = featureCode(f); if (c) G.featsLow.set(c, f); }); }
           G.states.forEach((st, code) => {
-            const f = (useLow && G.featsLow.get(code)) || (useMid && LAND.lvF[lv].get(code)) || G.feats.get(code); if (!f) return;
-            c2.beginPath(); (f.__w ? pathF : path)(f);
+            let f = LAND.lvF[k].get(code) || G.feats.get(code); if (!f) return;
+            if (f.__ok === undefined) f.__ok = d3.geoArea(f) < 2 * Math.PI;
+            if (!f.__ok) { f = G.feats.get(code); if (!f) return; if (f.__ok === undefined) f.__ok = d3.geoArea(f) < 2 * Math.PI; if (!f.__ok) return; }
+            c2.beginPath(); path(f);
             c2.fillStyle = STATE_COL[st.kind] || "#fff"; c2.globalAlpha = st.kind === "reveal" ? 0.8 : 1; c2.fill(); c2.globalAlpha = 1;
             c2.strokeStyle = "rgba(8,12,10,0.6)"; c2.lineWidth = 0.7; c2.stroke();
           });

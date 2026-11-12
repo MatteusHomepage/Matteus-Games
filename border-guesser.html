@@ -665,6 +665,22 @@
       .dtimer.low { color: #ff7b7b; border-color: #ff5a5a66; animation: tpulse 1s ease-in-out infinite; }
       @keyframes tpulse { 50% { background: #2a0f0f; } }
       .dd-menu.scroll { max-height: 226px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #1f3a2a transparent; }
+
+      .sheet.leave { width: min(380px, 100%); text-align: center; padding: 28px 22px 22px; border-color: #2a1d1a; }
+      .modal-back.open .sheet.leave { animation: lvPop 0.45s var(--ease); }
+      @keyframes lvPop { 0% { transform: translateY(22px) scale(0.94); } 60% { transform: translateY(-3px) scale(1.01); } 100% { transform: none; } }
+      .lv-ic { width: 54px; height: 54px; margin: 0 auto 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #2a1411; color: #ff7a63; border: 1.5px solid #5a2a22; }
+      .lv-ic svg { width: 26px; height: 26px; }
+      .sheet.leave h2 { margin: 0 0 6px; font: 800 23px "Outfit", sans-serif; }
+      .sheet.leave p { margin: 0; color: #a2afa7; font: 500 14.5px / 1.4 "Outfit", sans-serif; }
+      .lv-stats { display: flex; gap: 8px; margin: 18px 0 20px; }
+      .lv-stats span { flex: 1; display: flex; flex-direction: column; gap: 3px; padding: 10px 4px; border-radius: 11px; background: #0d1310; border: 1px solid #1d2822; }
+      .lv-stats small { font: 800 9.5px "Outfit", sans-serif; letter-spacing: 1.3px; color: #6f8d7c; }
+      .lv-stats b { font: 800 18px "Outfit", sans-serif; color: #e9f1ec; font-variant-numeric: tabular-nums; }
+      .lv-actions { display: flex; flex-direction: column; gap: 9px; }
+      .lv-actions .primary { width: 100%; padding: 14px 18px; font-size: 15px; }
+      .lv-go { width: 100%; padding: 13px 18px; border-radius: 12px; border: 1.5px solid #5a2a22; background: transparent; color: #ff8d78; font: 800 14.5px "Outfit", sans-serif; cursor: pointer; transition: background 0.2s, color 0.2s; }
+      .lv-go:hover { background: #ff6a3d; color: #1a0a05; border-color: #ff6a3d; }
     </style>
   <body>
     <div class="spot"><i class="tint"></i></div>
@@ -688,7 +704,7 @@
           <button class="menu-item" onclick="openLb()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z" /><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3" /></svg>Leaderboards</button>
         </div>
       </div>
-      <button class="brand" onclick="goHome()">
+      <button class="brand" onclick="tryHome()">
         <span class="brand-mark">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18" /></svg>
         </span>
@@ -811,6 +827,7 @@
         <section>
           <h3>Gameplay</h3>
           <div class="switch-row" style="padding-bottom:0"><span>Auto-advance difficulty<small>In solo, a completed route moves you up to the next difficulty (stops at Impossible).</small></span><label class="switch"><input type="checkbox" id="autoDiff" /><i></i></label></div>
+          <div class="switch-row" style="padding-bottom:0"><span>Auto-continue<small>In solo, move on to the next question by itself after a few seconds.</small></span><label class="switch"><input type="checkbox" id="autoNext" /><i></i></label></div>
           <div class="switch-row" style="padding-bottom:0"><span>Country names on the globe<small>Show name cards over every country you have guessed.</small></span><label class="switch"><input type="checkbox" id="showLabels" /><i></i></label></div>
         </section>
         <button class="primary full" onclick="saveSettings()">Done</button>
@@ -1026,6 +1043,7 @@
         VIEWS.forEach((v) => $(v).classList.remove("active"));
         void $(id).offsetWidth;
         $(id).classList.add("active");
+        if (id === "duelView") armBack(); else disarmBack();
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
       function goHome() {
@@ -2222,7 +2240,11 @@ XKX|XK|Kosovo|EU`;
         $("soloResult").style.display = "block";
         if (correct) confetti();
         const bar = $("soloCool");
-        S.cancel = runCooldown(correct ? 7000 : 8000, null, (k) => { bar.style.width = k * 100 + "%"; }, () => { S.cancel = null; if (tok === S.token) nextSolo(); });
+        if (lsGet("bg_autonext", "1") === "1") {
+          S.cancel = runCooldown(correct ? 7000 : 8000, null, (k) => { bar.style.width = k * 100 + "%"; }, () => { S.cancel = null; if (tok === S.token) nextSolo(); });
+        } else {
+          bar.parentNode.style.display = "none";
+        }
       }
       function nextSolo() {
         if (!R.solo || !R.solo.locked) return;
@@ -2927,6 +2949,7 @@ XKX|XK|Kosovo|EU`;
         $("tokenSwitch").hidden = true; authMsg("");
         $("sfxVol").value = sfxVol();
         $("autoDiff").checked = lsGet("bg_autodiff", "0") === "1";
+        $("autoNext").checked = lsGet("bg_autonext", "1") === "1";
         $("showLabels").checked = lsGet("bg_labels", "1") === "1";
         setRange("sfxVol", "sfxVolText");
         EDIT = false; renderAccount();
@@ -2937,10 +2960,12 @@ XKX|XK|Kosovo|EU`;
         if (EDIT) { await commitEdit(); if (EDIT) return; }
         lsSet("sg_sfx", $("sfxVol").value);
         lsSet("bg_autodiff", $("autoDiff").checked ? "1" : "0");
+        lsSet("bg_autonext", $("autoNext").checked ? "1" : "0");
         lsSet("bg_labels", $("showLabels").checked ? "1" : "0");
         closeSettings();
       }
       $("autoDiff").onchange = () => lsSet("bg_autodiff", $("autoDiff").checked ? "1" : "0");
+      $("autoNext").onchange = () => lsSet("bg_autonext", $("autoNext").checked ? "1" : "0");
       $("showLabels").onchange = () => { lsSet("bg_labels", $("showLabels").checked ? "1" : "0"); Object.values(GL).forEach((g) => g && g.setLabels($("showLabels").checked)); };
       $("sfxVol").oninput = () => setRange("sfxVol", "sfxVolText");
       $("sfxVol").onchange = () => { lsSet("sg_sfx", $("sfxVol").value); sfx("correct"); };
@@ -2969,9 +2994,49 @@ XKX|XK|Kosovo|EU`;
 
 
       /* ---------- init ---------- */
+function matchActive() {
+  return $("duelView").classList.contains("active") && D.inMatch && !D.finished;
+}
+document.body.insertAdjacentHTML("beforeend", `<div class="modal-back" id="leaveModal" role="dialog" aria-modal="true" aria-labelledby="leaveT" onclick="if (event.target === this) closeLeave(false)"><div class="sheet leave"><div class="lv-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2.5 20h19Z"/><path d="M12 10v4.5M12 17.6v.1"/></svg></div><h2 id="leaveT">Leave this match?</h2><p>You will lose your progress for this match.</p><div class="lv-stats" id="leaveStats"></div><div class="lv-actions"><button class="primary" id="leaveStay" onclick="closeLeave(false)">Keep playing</button><button class="lv-go" onclick="closeLeave(true)">Leave match</button></div></div></div>`);
+let leaveCb = null;
+function leaveStats() {
+  const mine = (D.score && D.score[D.myId]) || 0;
+  $("leaveStats").innerHTML = `<span><small>ROUND</small><b>${D.round} / ${D.total}</b></span><span><small>POINTS</small><b>${mine.toLocaleString()}</b></span><span><small>PLAYERS</small><b>${D.players.length}</b></span>`;
+}
+function openLeave(fn) {
+  if ($("leaveModal").classList.contains("open")) return;
+  leaveCb = fn; leaveStats(); $("leaveModal").classList.add("open");
+  setTimeout(() => { try { $("leaveStay").focus(); } catch (e) {} }, 60);
+}
+function closeLeave(go) {
+  $("leaveModal").classList.remove("open");
+  const f = leaveCb; leaveCb = null;
+  if (go && f) f();
+}
+let backArmed = false, backIgnore = 0;
+function armBack() { if (backArmed) return; backArmed = true; try { history.pushState({ lv: 1 }, ""); } catch (e) {} }
+function disarmBack() { if (!backArmed) return; backArmed = false; try { if (history.state && history.state.lv) { backIgnore++; history.back(); } } catch (e) {} }
+window.addEventListener("popstate", () => {
+  if (backIgnore) { backIgnore--; return; }
+  if (matchActive()) {
+    try { history.pushState({ lv: 1 }, ""); } catch (e) {}
+    openLeave(() => disconnectDuel());
+  } else backArmed = false;
+});
+function guardLeave(fn) { if (matchActive()) openLeave(fn); else fn(); }
+const tryHome = () => guardLeave(goHome);
+window.addEventListener("beforeunload", (e) => {
+  if (matchActive()) { e.preventDefault(); e.returnValue = "You will lose your progress for this match."; return e.returnValue; }
+});
+document.addEventListener("keydown", (e) => {
+  if (!$("leaveModal").classList.contains("open")) return;
+  if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); closeLeave(false); }
+  else if (e.key === "Enter") e.stopPropagation();
+}, true);
+
       $("soloStack").innerHTML = `<div class="reg-row"><div class="wheel-h" id="soloWheel"></div><button class="back" onclick="leaveGame()" aria-label="Back">${BACK_SVG}</button><button class="score-chip" onclick="openLb('score')" aria-label="Open leaderboard"><span id="soloScore">0</span><span class="rk" id="soloRank"></span></button></div>
         <div id="soloBody" class="game-body"><div class="diff" id="soloDiff"></div>${gameHTML("solo")}</div><div id="soloResult" style="display:none"></div>`;
-      $("duelStack").innerHTML = `<div class="duel-top"><button class="back" onclick="disconnectDuel()" aria-label="Back">${BACK_SVG}</button><span id="duelRound">Round 1 / 10</span><span class="duel-right"><span class="dtimer" id="duelTimer"></span><span class="score" id="duelScore">0</span></span></div>
+      $("duelStack").innerHTML = `<div class="duel-top"><button class="back" onclick="guardLeave(() => disconnectDuel())" aria-label="Back">${BACK_SVG}</button><span id="duelRound">Round 1 / 10</span><span class="duel-right"><span class="dtimer" id="duelTimer"></span><span class="score" id="duelScore">0</span></span></div>
         <div class="duel-wrap"><div id="duelBody" class="game-body">${gameHTML("duel")}</div><div id="duelWait" class="wait"><i></i>Waiting for the other players...</div></div>`;
       renderDiff("duelDiff", duelDiffSel, (l) => { duelDiffSel = l; });
       $("timerMenu").innerHTML = TIMERS.map(([v, l]) => `<button type="button" class="dd-item${v === 0 ? " sel" : ""}" data-v="${v}" onclick="pickTimer(${v})">${l}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10" /></svg></button>`).join("");

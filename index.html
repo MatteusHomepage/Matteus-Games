@@ -733,143 +733,6 @@
           border-radius: 18px;
         }
       }
-      .pn-list {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-      .pn-title {
-        font:
-          700 19px "Outfit",
-          sans-serif;
-        letter-spacing: -0.3px;
-        margin: 10px 0 0;
-        color: #f3f7f4;
-      }
-      .pn-title:first-child {
-        margin-top: 0;
-      }
-      .pn-text {
-        margin: 0;
-        color: #a9b5ad;
-        font-size: 13px;
-        line-height: 1.6;
-      }
-      .pn-divider {
-        height: 1px;
-        background: var(--line);
-        margin: 6px 0;
-        border: 0;
-      }
-      .pn-callout {
-        border: 1px solid #1d4a30;
-        background: #0b1c13;
-        color: #c6f5da;
-        border-radius: 12px;
-        padding: 12px 14px;
-        font-size: 13px;
-        line-height: 1.55;
-      }
-      .pn-card {
-        border: 1px solid var(--line);
-        background: #0a100c;
-        border-radius: 14px;
-        padding: 16px;
-      }
-      .pn-top {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-        margin-bottom: 8px;
-      }
-      .pn-ver {
-        font:
-          800 11px "DM Sans",
-          sans-serif;
-        letter-spacing: 0.6px;
-        color: #06100a;
-        background: var(--accent);
-        border-radius: 6px;
-        padding: 3px 7px;
-      }
-      .pn-game {
-        font:
-          800 10px "DM Sans",
-          sans-serif;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        color: #9fe9bf;
-        border: 1px solid #1d4a30;
-        border-radius: 6px;
-        padding: 2px 6px;
-      }
-      .pn-date {
-        margin-left: auto;
-        font-size: 11px;
-        color: #667369;
-      }
-      .pn-card h4 {
-        font:
-          700 17px "Outfit",
-          sans-serif;
-        margin: 0 0 6px;
-      }
-      .pn-card .pn-text {
-        margin-bottom: 8px;
-      }
-      .pn-items {
-        list-style: none;
-        margin: 8px 0 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 7px;
-      }
-      .pn-items li {
-        display: flex;
-        gap: 9px;
-        align-items: baseline;
-        font-size: 13px;
-        line-height: 1.5;
-        color: #d7e0d9;
-      }
-      .pn-kind {
-        flex: none;
-        min-width: 64px;
-        text-align: center;
-        font:
-          800 9.5px "DM Sans",
-          sans-serif;
-        letter-spacing: 0.9px;
-        text-transform: uppercase;
-        border-radius: 5px;
-        padding: 3px 6px;
-        color: #aab5ad;
-        background: #131a15;
-      }
-      .pn-kind.new {
-        color: #7df2b0;
-        background: #0f2c1c;
-      }
-      .pn-kind.improved {
-        color: #8cc2ff;
-        background: #10223a;
-      }
-      .pn-kind.fixed {
-        color: #ffd479;
-        background: #2e2410;
-      }
-      .pn-kind.removed {
-        color: #ff9a9a;
-        background: #301414;
-      }
-      .pn-empty {
-        color: var(--muted);
-        font-size: 13px;
-        text-align: center;
-        padding: 22px 0;
-      }
       .foot {
         position: relative;
         z-index: 1;
@@ -950,6 +813,91 @@
         main {
           width: calc(100% - 24px);
           padding-top: 18px;
+        }
+      }
+      .more {
+        position: fixed;
+        left: 50%;
+        bottom: max(22px, calc(env(safe-area-inset-bottom) + 14px));
+        width: 54px;
+        height: 54px;
+        margin-left: -27px;
+        padding: 0;
+        border: 1px solid rgba(25, 215, 123, 0.45);
+        border-radius: 50%;
+        background: #07100b;
+        box-shadow:
+          0 0 0 7px rgba(4, 9, 6, 0.9),
+          0 10px 28px rgba(0, 0, 0, 0.7);
+        color: var(--accent);
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        z-index: 30;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateY(calc((1 - var(--k, 1)) * 14px));
+        transition: visibility 0s linear 0.25s;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .more.show {
+        visibility: visible;
+        pointer-events: auto;
+        transition: visibility 0s;
+      }
+      .more:hover {
+        background: #0c1a12;
+        border-color: var(--accent);
+      }
+      .more:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 4px;
+      }
+      .more i {
+        position: absolute;
+        inset: -1px;
+        border: 1.5px solid var(--accent);
+        border-radius: 50%;
+        opacity: 0;
+        pointer-events: none;
+        animation: more-ring 2.7s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+      }
+      .more i:nth-child(2) {
+        animation-delay: 0.9s;
+      }
+      .more i:nth-child(3) {
+        animation-delay: 1.8s;
+      }
+      .more svg {
+        width: 22px;
+        height: 22px;
+        animation: more-nudge 2.7s ease-in-out infinite;
+      }
+      @keyframes more-ring {
+        0% {
+          transform: scale(1);
+          opacity: 0.7;
+        }
+        100% {
+          transform: scale(2.7);
+          opacity: 0;
+        }
+      }
+      @keyframes more-nudge {
+        0%,
+        100% {
+          transform: translateY(-2px);
+        }
+        50% {
+          transform: translateY(3px);
+        }
+      }
+      @media (max-width: 560px) {
+        .more {
+          width: 48px;
+          height: 48px;
+          margin-left: -24px;
         }
       }
       @media (prefers-reduced-motion: reduce) {
@@ -1193,21 +1141,6 @@
               /></svg
             >Trophies
           </button>
-          <button class="menu-item" onclick="openPatchNotes()">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path
-                d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"
-              />
-              <path d="M14 3v5h5M9 13h6M9 17h6" /></svg
-            >Patch notes
-          </button>
         </div>
       </div>
       <div class="brand">
@@ -1247,6 +1180,11 @@
       </div>
       <section class="games" id="games"></section>
     </main>
+
+    <button class="more" id="moreBtn" type="button" aria-label="Scroll down for more games">
+      <i></i><i></i><i></i>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" /></svg>
+    </button>
 
     <footer class="foot">Made by Matteus Aydin 2026</footer>
 
@@ -1353,35 +1291,6 @@
           <div class="auth-msg" id="authMsg"></div>
         </section>
         <button class="primary full" onclick="saveSettings()">Done</button>
-      </div>
-    </div>
-
-    <div
-      class="modal-back"
-      id="patchModal"
-      onclick="if (event.target === this) closePatchNotes();"
-    >
-      <div
-        class="sheet wide"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="patchT"
-      >
-        <div class="sheet-head">
-          <h2 id="patchT">Patch notes</h2>
-          <button class="x" onclick="closePatchNotes()" aria-label="Close">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.6"
-              stroke-linecap="round"
-            >
-              <path d="M6 6l12 12M18 6 6 18" />
-            </svg>
-          </button>
-        </div>
-        <div class="pn-list" id="patchList"></div>
       </div>
     </div>
 
@@ -1615,133 +1524,30 @@
       document
         .getElementById("gameSearch")
         .addEventListener("input", renderGames);
+      const moreBtn = document.getElementById("moreBtn");
+      function updateMore() {
+        const de = document.documentElement;
+        const left = de.scrollHeight - window.innerHeight - window.scrollY;
+        const lastTile = grid.lastElementChild;
+        const hidden = lastTile ? lastTile.getBoundingClientRect().bottom - window.innerHeight : 0;
+        const room = Math.max(0, Math.min(left, hidden + 24));
+        const k = Math.min(1, room / 140);
+        moreBtn.style.opacity = k.toFixed(3);
+        moreBtn.style.setProperty("--k", k.toFixed(3));
+        moreBtn.classList.toggle("show", k > 0.02 && !document.querySelector(".modal-back.open"));
+      }
+      window.addEventListener("scroll", updateMore, { passive: true });
+      window.addEventListener("resize", updateMore);
+      new MutationObserver(updateMore).observe(grid, { childList: true });
+      document.querySelectorAll(".modal-back").forEach((m) => new MutationObserver(updateMore).observe(m, { attributes: true, attributeFilter: ["class"] }));
+      grid.addEventListener("load", updateMore, true);
+      setTimeout(updateMore, 400);
+      setTimeout(updateMore, 2400);
+      moreBtn.addEventListener("click", () => {
+        window.scrollBy({ top: Math.round(window.innerHeight * 0.75), behavior: "smooth" });
+      });
+      updateMore();
       renderGames();
-      const PATCH_NOTES = [
-        { type: "title", text: "November 2026" },
-        {
-          type: "note",
-          version: "1.0",
-          game: "Graph Guesser",
-          date: "13 Nov 2026",
-          title: "Graph Guesser is out",
-          text: "A real graph shows its first part. Draw the rest, then watch the real line draw itself in green next to yours.",
-          items: [
-            ["new", "Live Wikipedia page-view graphs: games, shows, music, internet and sport"],
-            ["new", "Five difficulties, and live duels with friends"],
-            ["new", "Score from difficulty and how close your line is, plus leaderboards and trophies"],
-          ],
-        },
-        {
-          type: "note",
-          version: "1.4",
-          game: "Game Hub",
-          date: "13 Nov 2026",
-          title: "A new look, and Trophies",
-          items: [
-            [
-              "new",
-              "Redesigned home page with a player panel and numbered game rows",
-            ],
-            [
-              "new",
-              "Trophies in the menu: every game's crowns and medals in one place, tap a game for details",
-            ],
-            ["new", "A shortcut to the last game you played"],
-          ],
-        },
-        {
-          type: "note",
-          version: "1.1",
-          game: "Size Guesser",
-          date: "13 Nov 2026",
-          title: "Categories, rotate and a ruler line",
-          items: [
-            [
-              "new",
-              "Pick what you scale on the category wheel: Countries, Objects, Landmarks, Pop culture, Technology, People or All",
-            ],
-            [
-              "new",
-              "Over 420 items, and the ones you haven't seen in a while come up first",
-            ],
-            [
-              "new",
-              "Rotate button on the reference, plus a dashed green line to measure against",
-            ],
-            ["improved", "The reference is never tiny any more"],
-            ["improved", "Redrawn illustrations and re-checked difficulties"],
-          ],
-        },
-        {
-          type: "note",
-          version: "1.0",
-          game: "Size Guesser",
-          date: "13 Nov 2026",
-          title: "Size Guesser is out",
-          text: "Scale the white object to its real size, using the green reference as your guide. Get close enough and it counts.",
-          items: [
-            ["new", "Solo with five difficulties, and live duels with friends"],
-            [
-              "new",
-              "Over a hundred hand-drawn objects, from a coin to the Eiffel Tower",
-            ],
-            [
-              "new",
-              "Score from difficulty, speed and how close you got, plus a Closest match leaderboard",
-            ],
-          ],
-        },
-        {
-          type: "note",
-          version: "1.3",
-          game: "Game Hub",
-          date: "12 Nov 2026",
-          title: "Accounts and patch notes on the hub",
-          items: [
-            ["new", "Your name card and menu now live on the hub too"],
-            ["new", "Patch notes, right here"],
-            [
-              "new",
-              "New players get the Welcome screen when they open the hub",
-            ],
-            [
-              "improved",
-              "Game cards now sit four to a row, and adapt on small screens",
-            ],
-          ],
-        },
-        {
-          type: "note",
-          version: "1.3",
-          game: "Song Guesser & Border Guesser",
-          date: "12 Nov 2026",
-          title: "Leave warning and Auto-continue",
-          items: [
-            [
-              "new",
-              "Leaving a started duel now asks you to confirm first, including with the browser back button",
-            ],
-            [
-              "new",
-              "Auto-continue setting: in solo, the next question can start by itself or wait for you",
-            ],
-          ],
-        },
-        {
-          type: "note",
-          version: "1.0",
-          game: "Rare Guesser",
-          date: "12 Nov 2026",
-          title: "Rare Guesser is out",
-          text: "Answer a question with the rarest thing you know. Common answers barely score, rare ones are worth a fortune.",
-          items: [
-            ["new", "Solo matches and live duels with friends"],
-            ["new", "Five difficulties and six topics"],
-          ],
-        },
-        { type: "divider" },
-        { type: "callout", text: "Found a bug or have an idea? Tell Matteus." },
-      ];
       const $ = (id) => document.getElementById(id);
       const SUPABASE_URL = "https://mrrixocnhsfulglipvek.supabase.co";
       const SUPABASE_ANON_KEY =
@@ -1780,48 +1586,6 @@
         el.classList.add("show");
         clearTimeout(toastTimer);
         toastTimer = setTimeout(() => el.classList.remove("show"), 2800);
-      }
-      function renderPatchNotes() {
-        const kinds = {
-          new: "New",
-          improved: "Improved",
-          fixed: "Fixed",
-          removed: "Removed",
-        };
-        const out = PATCH_NOTES.map((b) => {
-          if (b.type === "title")
-            return `<h3 class="pn-title">${esc(b.text)}</h3>`;
-          if (b.type === "text") return `<p class="pn-text">${esc(b.text)}</p>`;
-          if (b.type === "callout")
-            return `<div class="pn-callout">${esc(b.text)}</div>`;
-          if (b.type === "divider") return `<hr class="pn-divider" />`;
-          if (b.type === "note") {
-            const top = [
-              b.version ? `<span class="pn-ver">v${esc(b.version)}</span>` : "",
-              b.game ? `<span class="pn-game">${esc(b.game)}</span>` : "",
-              b.date ? `<span class="pn-date">${esc(b.date)}</span>` : "",
-            ].join("");
-            const items = (b.items || [])
-              .map((it) => {
-                if (Array.isArray(it))
-                  return `<li><span class="pn-kind ${esc(it[0])}">${esc(kinds[it[0]] || it[0])}</span><span>${esc(it[1])}</span></li>`;
-                return `<li><span>${esc(it)}</span></li>`;
-              })
-              .join("");
-            return `<div class="pn-card">${top ? `<div class="pn-top">${top}</div>` : ""}${b.title ? `<h4>${esc(b.title)}</h4>` : ""}${b.text ? `<p class="pn-text">${esc(b.text)}</p>` : ""}${items ? `<ul class="pn-items">${items}</ul>` : ""}</div>`;
-          }
-          return "";
-        }).join("");
-        $("patchList").innerHTML =
-          out || '<div class="pn-empty">Nothing here yet.</div>';
-      }
-      function openPatchNotes() {
-        closeMenu();
-        renderPatchNotes();
-        $("patchModal").classList.add("open");
-      }
-      function closePatchNotes() {
-        $("patchModal").classList.remove("open");
       }
       function toggleMenu(e) {
         e.stopPropagation();
@@ -2310,7 +2074,6 @@
         if (e.key !== "Escape") return;
         if ($("trModal").classList.contains("open")) closeTrInfo();
         else if ($("trophiesModal").classList.contains("open")) closeTrophies();
-        else if ($("patchModal").classList.contains("open")) closePatchNotes();
         else if ($("settingsModal").classList.contains("open")) closeSettings();
         closeMenu();
       });

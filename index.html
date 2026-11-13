@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
     <meta name="theme-color" content="#030504" />
     <title>Game Hub</title>
     <link
@@ -58,10 +61,19 @@
         clip-path: polygon(36% 0, 64% 0, 76% 100%, 24% 100%);
       }
       .spot::before {
-        background: linear-gradient(180deg, #0f1812 0%, #0a110d 55%, #070c09 100%);
+        background: linear-gradient(
+          180deg,
+          #0f1812 0%,
+          #0a110d 55%,
+          #070c09 100%
+        );
       }
       .spot::after {
-        background: radial-gradient(ellipse at 50% 0%, rgba(25, 215, 123, 0.1), transparent 62%);
+        background: radial-gradient(
+          ellipse at 50% 0%,
+          rgba(25, 215, 123, 0.1),
+          transparent 62%
+        );
         animation: breathe 7s ease-in-out infinite;
       }
       @keyframes breathe {
@@ -616,7 +628,8 @@
         z-index: 60;
       }
       .mono {
-        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace !important;
+        font-family:
+          ui-monospace, "SF Mono", Menlo, Consolas, monospace !important;
         font-size: 12px !important;
         letter-spacing: 0;
         text-overflow: ellipsis;
@@ -869,13 +882,19 @@
   <body>
     <div class="spot"></div>
     <div id="intro" aria-hidden="true">
-      <span class="ib-by">MADE BY</span><span class="ib-name">Matteus Aydin</span>
+      <span class="ib-by">MADE BY</span
+      ><span class="ib-name">Matteus Aydin</span>
     </div>
 
     <header class="topbar">
       <div class="user-card">
         <span id="userName" class="uname">Player</span>
-        <button class="dots" onclick="toggleMenu(event)" aria-label="Menu" aria-haspopup="true">
+        <button
+          class="dots"
+          onclick="toggleMenu(event)"
+          aria-label="Menu"
+          aria-haspopup="true"
+        >
           <svg viewBox="0 0 24 24" fill="currentColor">
             <circle cx="12" cy="5" r="2" />
             <circle cx="12" cy="12" r="2" />
@@ -907,7 +926,9 @@
               stroke-linecap="round"
               stroke-linejoin="round"
             >
-              <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+              <path
+                d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"
+              />
               <path d="M14 3v5h5M9 13h6M9 17h6" /></svg
             >Patch notes
           </button>
@@ -915,7 +936,8 @@
       </div>
       <div class="brand">
         <span class="brand-mark"
-          ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
+          ><svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z" /></svg
         ></span>
         <span class="brand-text">GAME HUB</span>
       </div>
@@ -933,12 +955,22 @@
 
     <div class="toast" id="toast"></div>
 
-    <div class="modal-back" id="settingsModal" onclick="if (event.target === this) closeSettings();">
+    <div
+      class="modal-back"
+      id="settingsModal"
+      onclick="if (event.target === this) closeSettings();"
+    >
       <div class="sheet">
         <div class="sheet-head">
           <h2>Settings</h2>
           <button class="x" onclick="closeSettings()" aria-label="Close">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.6"
+              stroke-linecap="round"
+            >
               <path d="M6 6l12 12M18 6 6 18" />
             </svg>
           </button>
@@ -987,13 +1019,23 @@
             ></button>
           </div>
           <p class="hint">
-            This is your account. Keep it somewhere safe: it's the only way to get your progress back on another device,
-            and anyone who has it can play as you.
+            This is your account. Keep it somewhere safe: it's the only way to
+            get your progress back on another device, and anyone who has it can
+            play as you.
           </p>
-          <button class="link muted forgot" style="margin-top: 4px" onclick="toggleSwitch()">
+          <button
+            class="link muted forgot"
+            style="margin-top: 4px"
+            onclick="toggleSwitch()"
+          >
             Enter a different data token
           </button>
-          <div class="acc-field" id="tokenSwitch" hidden style="margin-top: 10px">
+          <div
+            class="acc-field"
+            id="tokenSwitch"
+            hidden
+            style="margin-top: 10px"
+          >
             <div class="acc-wrap">
               <input
                 id="tokenIn"
@@ -1017,12 +1059,27 @@
       </div>
     </div>
 
-    <div class="modal-back" id="patchModal" onclick="if (event.target === this) closePatchNotes();">
-      <div class="sheet wide" role="dialog" aria-modal="true" aria-labelledby="patchT">
+    <div
+      class="modal-back"
+      id="patchModal"
+      onclick="if (event.target === this) closePatchNotes();"
+    >
+      <div
+        class="sheet wide"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="patchT"
+      >
         <div class="sheet-head">
           <h2 id="patchT">Patch notes</h2>
           <button class="x" onclick="closePatchNotes()" aria-label="Close">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.6"
+              stroke-linecap="round"
+            >
               <path d="M6 6l12 12M18 6 6 18" />
             </svg>
           </button>
@@ -1044,9 +1101,14 @@
             spellcheck="false"
             onkeydown="if (event.key === 'Enter') createAccount();"
           />
-          <button class="primary full" id="wcCreate" onclick="createAccount()">Create account</button>
+          <button class="primary full" id="wcCreate" onclick="createAccount()">
+            Create account
+          </button>
           <p class="auth-switch">
-            Already have an account? <button class="link" onclick="wcShow('token')">Enter your data token</button>
+            Already have an account?
+            <button class="link" onclick="wcShow('token')">
+              Enter your data token
+            </button>
           </p>
         </div>
         <div id="wc_token" class="form" hidden>
@@ -1060,17 +1122,27 @@
             spellcheck="false"
             onkeydown="if (event.key === 'Enter') wcLoad();"
           />
-          <button class="primary full" id="wcLoad" onclick="wcLoad()">Load account</button>
-          <p class="auth-switch">New here? <button class="link" onclick="wcShow('new')">Create an account</button></p>
+          <button class="primary full" id="wcLoad" onclick="wcLoad()">
+            Load account
+          </button>
+          <p class="auth-switch">
+            New here?
+            <button class="link" onclick="wcShow('new')">
+              Create an account
+            </button>
+          </p>
         </div>
         <div id="wc_done" class="form" hidden>
           <div class="sheet-head"><h2>You're in!</h2></div>
           <p class="sub">
-            This is your data token. Save it somewhere safe: it's how you get back into your account on another device,
-            and anyone who has it can play as you. You can copy it again later in Settings.
+            This is your data token. Save it somewhere safe: it's how you get
+            back into your account on another device, and anyone who has it can
+            play as you. You can copy it again later in Settings.
           </p>
           <div class="acc-field">
-            <div class="acc-wrap"><input id="wcTokenOut" class="acc-input mono" readonly /></div>
+            <div class="acc-wrap">
+              <input id="wcTokenOut" class="acc-input mono" readonly />
+            </div>
             <button
               class="icon-btn"
               id="wcCopy"
@@ -1108,6 +1180,13 @@
           tag: "Trivia",
           icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 19 10l-7 10.5L5 10z" /><path d="M5 10h14M9.5 10 12 3.5 14.5 10M9.5 10 12 20.5 14.5 10" /></svg>',
         },
+        {
+          title: "Size Guesser",
+          desc: "Scale an object to its real size, using a familiar green reference as your guide. Get close to score, solo or against friends.",
+          url: "size-guesser/index.html",
+          tag: "Sense of scale",
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M11 5h8v8M13 19H5v-8" /></svg>',
+        },
       ];
       const grid = document.getElementById("games");
       GAMES.forEach((g, i) => {
@@ -1137,6 +1216,25 @@
         { type: "title", text: "November 2026" },
         {
           type: "note",
+          version: "1.0",
+          game: "Size Guesser",
+          date: "13 Nov 2026",
+          title: "Size Guesser is out",
+          text: "Scale the white object to its real size, using the green reference as your guide. Get close enough and it counts.",
+          items: [
+            ["new", "Solo with five difficulties, and live duels with friends"],
+            [
+              "new",
+              "Over a hundred hand-drawn objects, from a coin to the Eiffel Tower",
+            ],
+            [
+              "new",
+              "Score from difficulty, speed and how close you got, plus a Closest match leaderboard",
+            ],
+          ],
+        },
+        {
+          type: "note",
           version: "1.3",
           game: "Game Hub",
           date: "12 Nov 2026",
@@ -1144,8 +1242,14 @@
           items: [
             ["new", "Your name card and menu now live on the hub too"],
             ["new", "Patch notes, right here"],
-            ["new", "New players get the Welcome screen when they open the hub"],
-            ["improved", "Game cards now sit four to a row, and adapt on small screens"],
+            [
+              "new",
+              "New players get the Welcome screen when they open the hub",
+            ],
+            [
+              "improved",
+              "Game cards now sit four to a row, and adapt on small screens",
+            ],
           ],
         },
         {
@@ -1155,8 +1259,14 @@
           date: "12 Nov 2026",
           title: "Leave warning and Auto-continue",
           items: [
-            ["new", "Leaving a started duel now asks you to confirm first, including with the browser back button"],
-            ["new", "Auto-continue setting: in solo, the next question can start by itself or wait for you"],
+            [
+              "new",
+              "Leaving a started duel now asks you to confirm first, including with the browser back button",
+            ],
+            [
+              "new",
+              "Auto-continue setting: in solo, the next question can start by itself or wait for you",
+            ],
           ],
         },
         {
@@ -1176,7 +1286,8 @@
       ];
       const $ = (id) => document.getElementById(id);
       const SUPABASE_URL = "https://mrrixocnhsfulglipvek.supabase.co";
-      const SUPABASE_ANON_KEY = "sb_publishable_fIFvv3lqR66EOuclo_bscg_Qv8OKNt1";
+      const SUPABASE_ANON_KEY =
+        "sb_publishable_fIFvv3lqR66EOuclo_bscg_Qv8OKNt1";
       const TOKEN_KEY = "sg_token";
       let ME = null;
       const lsGet = (k, d) => {
@@ -1195,7 +1306,14 @@
       const esc = (v) =>
         String(v ?? "").replace(
           /[&<>"']/g,
-          (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c],
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
         );
       let toastTimer;
       function showToast(m) {
@@ -1206,11 +1324,18 @@
         toastTimer = setTimeout(() => el.classList.remove("show"), 2800);
       }
       function renderPatchNotes() {
-        const kinds = { new: "New", improved: "Improved", fixed: "Fixed", removed: "Removed" };
+        const kinds = {
+          new: "New",
+          improved: "Improved",
+          fixed: "Fixed",
+          removed: "Removed",
+        };
         const out = PATCH_NOTES.map((b) => {
-          if (b.type === "title") return `<h3 class="pn-title">${esc(b.text)}</h3>`;
+          if (b.type === "title")
+            return `<h3 class="pn-title">${esc(b.text)}</h3>`;
           if (b.type === "text") return `<p class="pn-text">${esc(b.text)}</p>`;
-          if (b.type === "callout") return `<div class="pn-callout">${esc(b.text)}</div>`;
+          if (b.type === "callout")
+            return `<div class="pn-callout">${esc(b.text)}</div>`;
           if (b.type === "divider") return `<hr class="pn-divider" />`;
           if (b.type === "note") {
             const top = [
@@ -1229,7 +1354,8 @@
           }
           return "";
         }).join("");
-        $("patchList").innerHTML = out || '<div class="pn-empty">Nothing here yet.</div>';
+        $("patchList").innerHTML =
+          out || '<div class="pn-empty">Nothing here yet.</div>';
       }
       function openPatchNotes() {
         closeMenu();
@@ -1252,9 +1378,14 @@
       let SBC = null;
       function sb() {
         if (!SBC) {
-          if (!window.supabase) throw new Error("Supabase library did not load. Reload the page.");
+          if (!window.supabase)
+            throw new Error("Supabase library did not load. Reload the page.");
           SBC = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-            auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+            auth: {
+              persistSession: false,
+              autoRefreshToken: false,
+              detectSessionInUrl: false,
+            },
           });
         }
         return SBC;
@@ -1262,8 +1393,10 @@
       const TOKEN_RE = /^[A-Za-z0-9]{20,128}$/;
       const NAME_RE = /^[A-Za-z0-9ÅÄÖåäö _.,!?'\-]{3,20}$/;
       function checkUsername(v) {
-        if (!NAME_RE.test(v)) return "Usernames are 3–20 characters: letters (A–Z, Å, Ä, Ö), numbers and . , ! ? ' - _";
-        if (v !== v.trim() || /\s{2,}/.test(v)) return "No extra spaces in usernames.";
+        if (!NAME_RE.test(v))
+          return "Usernames are 3–20 characters: letters (A–Z, Å, Ä, Ö), numbers and . , ! ? ' - _";
+        if (v !== v.trim() || /\s{2,}/.test(v))
+          return "No extra spaces in usernames.";
         return "";
       }
       const api = async (name, args) => {
@@ -1272,16 +1405,21 @@
         return data;
       };
       function apiMsg(e) {
-        const m = String((e && e.message) || e || "") + " " + String((e && (e.code || e.details)) || "");
+        const m =
+          String((e && e.message) || e || "") +
+          " " +
+          String((e && (e.code || e.details)) || "");
         if (/username_taken/.test(m)) return "That username is already taken.";
         if (/username_invalid/.test(m))
           return "Usernames are 3–20 characters: letters (A–Z, Å, Ä, Ö), numbers and . , ! ? ' - _";
-        if (/invalid_token/.test(m)) return "That data token doesn't match any account.";
+        if (/invalid_token/.test(m))
+          return "That data token doesn't match any account.";
         if (/could not find the function|schema cache|PGRST202|42883/i.test(m))
           return "The server isn't set up yet. Run supabase-setup.sql in Supabase first.";
         return "Couldn't reach the server. Check your connection and try again.";
       }
-      const currentName = () => (ME && ME.username) || lsGet("sg_name", "") || "Player";
+      const currentName = () =>
+        (ME && ME.username) || lsGet("sg_name", "") || "Player";
       const updateUserCard = () => {
         $("userName").textContent = currentName();
       };
@@ -1369,7 +1507,9 @@
         try {
           inp.focus();
           inp.select();
-          document.execCommand("copy") ? ok() : showToast("Select the token and copy it.");
+          document.execCommand("copy")
+            ? ok()
+            : showToast("Select the token and copy it.");
         } catch (e) {
           showToast("Select the token and copy it.");
         }
@@ -1515,7 +1655,9 @@
             lsSet("sg_name", "");
             updateUserCard();
             maybeWelcome();
-            showToast("That account wasn't found. Create a new one or enter another data token.");
+            showToast(
+              "That account wasn't found. Create a new one or enter another data token.",
+            );
           }
         } catch (e) {}
       }

@@ -1554,6 +1554,14 @@
           tag: "Sense of scale",
           icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M11 5h8v8M13 19H5v-8" /></svg>',
         },
+        {
+          title: "Graph Guesser",
+          desc: "See the start of a real graph, then draw how you think it continues. Live Wikipedia page-view data, solo or against friends.",
+          url: "graph-guesser/index.html",
+          img: "thumbs/graph-guesser.jpg",
+          tag: "Trends",
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4v16h18" /><path d="M7 15l4-5 3 3 5-6" /><path d="M16 7h3v3" /></svg>',
+        },
       ];
       const grid = document.getElementById("games");
       function renderGames() {
@@ -1610,6 +1618,19 @@
       renderGames();
       const PATCH_NOTES = [
         { type: "title", text: "November 2026" },
+        {
+          type: "note",
+          version: "1.0",
+          game: "Graph Guesser",
+          date: "13 Nov 2026",
+          title: "Graph Guesser is out",
+          text: "A real graph shows its first part. Draw the rest, then watch the real line draw itself in green next to yours.",
+          items: [
+            ["new", "Live Wikipedia page-view graphs: games, shows, music, internet and sport"],
+            ["new", "Five difficulties, and live duels with friends"],
+            ["new", "Score from difficulty and how close your line is, plus leaderboards and trophies"],
+          ],
+        },
         {
           type: "note",
           version: "1.4",
@@ -2034,6 +2055,20 @@
                   : num(p.closest),
               1,
             ),
+            duels: BOARD("Duels played", (p) => num(p.duels)),
+            wins: BOARD("Duels won", (p) => num(p.wins)),
+          },
+        },
+        {
+          game: 4,
+          table: "graph_stats",
+          cols: "id,username,high_score,matches,graphs,best_round,best_acc,duels,wins",
+          main: ["score"],
+          boards: {
+            score: BOARD("Score", (p) => num(p.high_score)),
+            matches: BOARD("Matches played", (p) => num(p.matches)),
+            best_round: BOARD("Best graph", (p) => num(p.best_round)),
+            best_acc: BOARD("Closest match", (p) => num(p.best_acc)),
             duels: BOARD("Duels played", (p) => num(p.duels)),
             wins: BOARD("Duels won", (p) => num(p.wins)),
           },

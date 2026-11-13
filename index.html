@@ -1,0 +1,2389 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#030504" />
+    <title>Game Hub</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%2319d77b'/%3E%3Cpath d='M13 9.5v13l10-6.5z' fill='%2306100a'/%3E%3C/svg%3E"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap");
+      :root {
+        color-scheme: dark;
+        --bg: #030504;
+        --line: #151e18;
+        --muted: #7f8b83;
+        --text: #f3f7f4;
+        --accent: #19d77b;
+        --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        background: var(--bg);
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+        min-height: 100vh;
+        min-height: 100dvh;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        -webkit-tap-highlight-color: transparent;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .spot {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .spot::before,
+      .spot::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        clip-path: polygon(36% 0, 64% 0, 76% 100%, 24% 100%);
+      }
+      .spot::before {
+        background: linear-gradient(
+          180deg,
+          #0f1812 0%,
+          #0a110d 55%,
+          #070c09 100%
+        );
+      }
+      .spot::after {
+        background: radial-gradient(
+          ellipse at 50% 0%,
+          rgba(25, 215, 123, 0.1),
+          transparent 62%
+        );
+        animation: breathe 7s ease-in-out infinite;
+      }
+      @keyframes breathe {
+        0%,
+        100% {
+          opacity: 0.55;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+      @media (max-width: 700px) {
+        .spot::before,
+        .spot::after {
+          clip-path: polygon(18% 0, 82% 0, 88% 100%, 12% 100%);
+        }
+      }
+      .topbar {
+        position: relative;
+        height: calc(68px + env(safe-area-inset-top));
+        padding: env(safe-area-inset-top) 16px 0;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        position: sticky;
+        top: 0;
+        z-index: 6;
+        padding-left: max(16px, calc((100% - 1240px) / 2));
+        background: linear-gradient(#030504d9, #03050400);
+        flex: none;
+      }
+      button,
+      input {
+        font: inherit;
+        touch-action: manipulation;
+      }
+      button {
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          border-color 0.2s,
+          color 0.2s,
+          transform 0.15s,
+          box-shadow 0.25s,
+          opacity 0.2s;
+      }
+      button:active:not(:disabled) {
+        transform: scale(0.97);
+      }
+      button:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        font-family: "Outfit", sans-serif;
+        font-size: 19px;
+        font-weight: 700;
+        letter-spacing: -0.45px;
+      }
+      .brand-mark {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: var(--accent);
+        display: grid;
+        place-items: center;
+        color: #06100a;
+      }
+      .brand-mark svg {
+        width: 19px;
+        height: 19px;
+      }
+      @media (max-width: 560px) {
+        .brand .brand-text {
+          display: none;
+        }
+      }
+      main {
+        position: relative;
+        z-index: 1;
+        width: min(1240px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 26px 0 40px;
+        flex: 1;
+      }
+      .eyebrow {
+        color: var(--accent);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+      }
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .shell {
+        display: grid;
+        grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+        gap: 56px;
+        align-items: start;
+        padding: 34px 0 56px;
+      }
+      .intro {
+        position: sticky;
+        top: 96px;
+        text-align: left;
+        animation: rise 0.6s var(--ease) both;
+      }
+      .intro h1 {
+        font:
+          700 clamp(40px, 5.4vw, 66px) / 1 "Outfit",
+          sans-serif;
+        letter-spacing: -2.4px;
+        margin: 14px 0 18px;
+      }
+      .lede {
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.6;
+        margin: 0 0 28px;
+        max-width: 420px;
+      }
+      .player {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: #070b09;
+        padding: 16px;
+        max-width: 420px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .pl-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+      }
+      .pl-av {
+        flex: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: #19d77b16;
+        color: var(--accent);
+        display: grid;
+        place-items: center;
+        font: 700 18px "Outfit", sans-serif;
+      }
+      .pl-top div {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .pl-top b {
+        font: 600 17px "Outfit", sans-serif;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .pl-top span.s {
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .pl-row {
+        display: flex;
+        gap: 8px;
+      }
+      .pl-count {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 9px 12px;
+        border-radius: 11px;
+        background: #0a100c;
+        border: 1px solid var(--line);
+        font-size: 12px;
+        color: var(--muted);
+        min-width: 0;
+      }
+      .pl-count b {
+        color: var(--text);
+        font: 700 16px "Outfit", sans-serif;
+      }
+      .pl-count .tr {
+        --s: 17px;
+        margin: 0;
+      }
+      .ghost {
+        border: 1px solid var(--line);
+        border-radius: 11px;
+        background: #0a100c;
+        color: #dfe8e1;
+        padding: 9px 14px;
+        font-weight: 700;
+        font-size: 13px;
+        white-space: nowrap;
+      }
+      .ghost:hover {
+        background: #0e2418;
+        border-color: #1d4a30;
+        color: #b9f3d1;
+      }
+      .resume {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 14px;
+        color: var(--accent);
+        font-weight: 700;
+        font-size: 13px;
+      }
+      .resume:hover {
+        text-decoration: underline;
+      }
+      .games {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .game-row {
+        position: relative;
+        display: grid;
+        grid-template-columns: 34px 54px minmax(0, 1fr) 40px;
+        align-items: center;
+        gap: 18px;
+        min-height: 112px;
+        padding: 18px 22px 18px 18px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: linear-gradient(145deg, #0b120e, #070b09);
+        overflow: hidden;
+        transition:
+          transform 0.2s,
+          border-color 0.2s,
+          background 0.2s,
+          box-shadow 0.25s;
+        animation: rise 0.6s calc(0.12s + var(--i, 0) * 0.08s) var(--ease) both;
+      }
+      .game-row::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 18px;
+        bottom: 18px;
+        width: 3px;
+        border-radius: 0 3px 3px 0;
+        background: var(--accent);
+        transform: scaleY(0);
+        transition: transform 0.25s var(--ease);
+      }
+      .game-row:hover,
+      .game-row:focus-visible {
+        transform: translateX(6px);
+        border-color: #19d77b55;
+        background: linear-gradient(145deg, #0f1b14, #080d0a);
+        box-shadow: 0 14px 40px #19d77b12;
+        outline: none;
+      }
+      .game-row:hover::before,
+      .game-row:focus-visible::before {
+        transform: scaleY(1);
+      }
+      .game-row:active {
+        transform: scale(0.99);
+      }
+      .row-n {
+        font: 700 13px "Outfit", sans-serif;
+        color: #3f4d44;
+        letter-spacing: 0.5px;
+        text-align: center;
+        transition: color 0.2s;
+      }
+      .game-row:hover .row-n {
+        color: var(--accent);
+      }
+      .game-icon {
+        width: 54px;
+        height: 54px;
+        border-radius: 14px;
+        background: #19d77b16;
+        color: var(--accent);
+        display: grid;
+        place-items: center;
+        transition:
+          background 0.2s,
+          color 0.2s;
+      }
+      .game-row:hover .game-icon {
+        background: var(--accent);
+        color: #06100a;
+      }
+      .game-icon svg {
+        width: 26px;
+        height: 26px;
+      }
+      .row-body {
+        min-width: 0;
+      }
+      .row-top {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 6px;
+      }
+      .game-row h2 {
+        font:
+          600 22px "Outfit",
+          sans-serif;
+        margin: 0;
+      }
+      .game-tag {
+        color: #5f6c64;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 10px;
+      }
+      .game-row p {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.5;
+        margin: 0;
+      }
+      .row-go {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 1px solid var(--line);
+        display: grid;
+        place-items: center;
+        color: var(--accent);
+        transition:
+          background 0.2s,
+          border-color 0.2s,
+          transform 0.25s var(--ease);
+      }
+      .row-go svg {
+        width: 18px;
+        height: 18px;
+      }
+      .game-row:hover .row-go {
+        background: #0e2418;
+        border-color: #1d4a30;
+        transform: translateX(3px);
+      }
+      @media (max-width: 900px) {
+        .shell {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 30px;
+          padding-top: 18px;
+        }
+        .intro {
+          position: static;
+        }
+        .intro h1 {
+          font-size: clamp(38px, 11vw, 56px);
+        }
+        .player,
+        .lede {
+          max-width: none;
+        }
+      }
+      @media (max-width: 520px) {
+        .game-row {
+          grid-template-columns: 48px minmax(0, 1fr) 34px;
+          gap: 14px;
+          padding: 16px;
+          min-height: 0;
+        }
+        .row-n {
+          display: none;
+        }
+        .game-icon {
+          width: 48px;
+          height: 48px;
+        }
+        .row-go {
+          width: 34px;
+          height: 34px;
+        }
+        .game-row:hover {
+          transform: none;
+        }
+        .game-row h2 {
+          font-size: 19px;
+        }
+      }
+      .user-card {
+        position: absolute;
+        right: max(16px, env(safe-area-inset-right), calc((100% - 1240px) / 2));
+        top: calc(14px + env(safe-area-inset-top));
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        background: #070b09;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 3px 3px 3px 13px;
+        max-width: min(340px, calc(50vw - 41px));
+        min-width: 0;
+        animation: rise 0.5s var(--ease) both;
+        z-index: 8;
+      }
+      .user-card .uname {
+        flex: 1 1 auto;
+        min-width: 0;
+        font-size: 13px;
+        font-weight: 700;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .dots {
+        flex: none;
+        width: 32px;
+        height: 32px;
+        border: 0;
+        border-radius: 9px;
+        background: transparent;
+        color: #aab5ad;
+        display: grid;
+        place-items: center;
+      }
+      .dots:hover {
+        background: #0e2418;
+        color: #b9f3d1;
+      }
+      .dots svg {
+        width: 16px;
+        height: 16px;
+      }
+      .menu-pop {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 8px);
+        min-width: 210px;
+        background: #070b09;
+        border: 1px solid #17261c;
+        border-radius: 14px;
+        padding: 6px;
+        opacity: 0;
+        transform: translateY(-6px) scale(0.97);
+        transform-origin: top right;
+        pointer-events: none;
+        transition: 0.22s var(--ease);
+        z-index: 20;
+        box-shadow: 0 18px 40px #000a;
+      }
+      .menu-pop.open {
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+      }
+      .menu-item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        border: 0;
+        background: transparent;
+        color: #dfe8e1;
+        padding: 11px 12px;
+        border-radius: 9px;
+        font-weight: 700;
+        font-size: 13px;
+        text-align: left;
+      }
+      .menu-item:hover {
+        background: #0e2418;
+        color: #b9f3d1;
+      }
+      .menu-item svg {
+        width: 17px;
+        height: 17px;
+        color: var(--accent);
+        flex: none;
+      }
+      @media (max-width: 440px) {
+        .user-card {
+          max-width: calc(100vw - 96px);
+        }
+      }
+      [hidden] {
+        display: none !important;
+      }
+      .forgot {
+        display: block;
+        text-align: center;
+        margin-top: 12px;
+      }
+      input {
+        width: 100%;
+        background: #080c0a;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        color: white;
+        padding: 13px 14px;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s,
+          background 0.2s;
+      }
+      input:focus {
+        border-color: #19d77b88;
+        box-shadow: 0 0 0 3px #19d77b14;
+      }
+      .primary {
+        border: 0;
+        border-radius: 12px;
+        background: var(--accent);
+        color: #05120a;
+        padding: 13px 18px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+      .primary:hover:not(:disabled) {
+        background: #4be59b;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 26px #19d77b30;
+      }
+      .primary.full {
+        width: 100%;
+      }
+      .toast {
+        position: fixed;
+        bottom: 22px;
+        left: 50%;
+        transform: translate(-50%, 20px);
+        background: #0c130f;
+        border: 1px solid #1f2d24;
+        color: white;
+        padding: 12px 17px;
+        border-radius: 11px;
+        font-size: 13px;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.3s var(--ease);
+        z-index: 70;
+        max-width: calc(100% - 32px);
+        text-align: center;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+      .modal-back {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        background: #000000b8;
+        backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 18px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+      }
+      .modal-back.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .sheet {
+        width: min(440px, 100%);
+        max-height: 92vh;
+        max-height: 92dvh;
+        overflow: auto;
+        background: #070b09;
+        border: 1px solid #141d17;
+        border-radius: 20px;
+        padding: 24px;
+        transform: translateY(18px) scale(0.96);
+        transition: transform 0.4s var(--ease);
+        box-shadow: 0 30px 80px #000c;
+      }
+      .modal-back.open .sheet {
+        transform: none;
+      }
+      .sheet.small {
+        width: min(400px, 100%);
+      }
+      .sheet.wide {
+        width: min(580px, 100%);
+      }
+      .sheet-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .sheet-head h2 {
+        font:
+          700 24px "Outfit",
+          sans-serif;
+        margin: 0;
+      }
+      .x {
+        width: 34px;
+        height: 34px;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        background: #0a0f0c;
+        color: #cfd8d1;
+        display: grid;
+        place-items: center;
+      }
+      .x:hover {
+        background: #0e2418;
+        border-color: #1d4a30;
+        color: #b9f3d1;
+        transform: rotate(90deg);
+      }
+      .x svg {
+        width: 14px;
+        height: 14px;
+      }
+      .sheet section {
+        margin-bottom: 22px;
+      }
+      .sheet h3 {
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin: 0 0 12px;
+      }
+      .sheet p.sub {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+        margin: -8px 0 16px;
+      }
+      .form {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+      }
+      .auth-msg {
+        display: none;
+        font-size: 12px;
+        color: #ff8e8e;
+        margin-top: 11px;
+        line-height: 1.45;
+        text-align: center;
+      }
+      .auth-msg.show {
+        display: block;
+      }
+      .auth-msg.good {
+        color: #70efa5;
+      }
+      .auth-switch {
+        font-size: 12px;
+        color: var(--muted);
+        text-align: center;
+        margin: 14px 0 0;
+      }
+      .link {
+        color: var(--accent);
+        font: inherit;
+        font-weight: 700;
+        background: none;
+        border: 0;
+        padding: 0;
+        cursor: pointer;
+      }
+      .link:hover {
+        text-decoration: underline;
+      }
+      .link.muted {
+        color: #9aa6a0;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .acc-label {
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 1.2px;
+        color: #8a978e;
+        margin: 12px 0 7px;
+      }
+      .acc-label:first-child {
+        margin-top: 0;
+      }
+      .acc-field {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .acc-wrap {
+        position: relative;
+        flex: 1;
+        min-width: 0;
+      }
+      .acc-input[readonly] {
+        background: #060908;
+        color: #7f8b83;
+        border-color: #101813;
+        cursor: default;
+      }
+      .acc-input.editing {
+        background: #080c0a;
+        color: #fff;
+        border-color: #19d77b88;
+      }
+      .icon-btn {
+        width: 44px;
+        height: 44px;
+        flex: none;
+        border: 1px solid var(--line);
+        background: #0a0f0c;
+        color: #cfd8d1;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+      }
+      .icon-btn:hover {
+        background: #0e2418;
+        border-color: #1d4a30;
+        color: #b9f3d1;
+      }
+      .icon-btn svg {
+        width: 16px;
+        height: 16px;
+      }
+      #welcomeModal {
+        z-index: 60;
+      }
+      .mono {
+        font-family:
+          ui-monospace, "SF Mono", Menlo, Consolas, monospace !important;
+        font-size: 12px !important;
+        letter-spacing: 0;
+        text-overflow: ellipsis;
+      }
+      .hint {
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.5;
+        margin: 10px 0 0;
+      }
+      @media (max-width: 480px) {
+        input {
+          font-size: 16px;
+        }
+        .sheet {
+          padding: 18px;
+          border-radius: 18px;
+        }
+      }
+      .pn-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .pn-title {
+        font:
+          700 19px "Outfit",
+          sans-serif;
+        letter-spacing: -0.3px;
+        margin: 10px 0 0;
+        color: #f3f7f4;
+      }
+      .pn-title:first-child {
+        margin-top: 0;
+      }
+      .pn-text {
+        margin: 0;
+        color: #a9b5ad;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+      .pn-divider {
+        height: 1px;
+        background: var(--line);
+        margin: 6px 0;
+        border: 0;
+      }
+      .pn-callout {
+        border: 1px solid #1d4a30;
+        background: #0b1c13;
+        color: #c6f5da;
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+      .pn-card {
+        border: 1px solid var(--line);
+        background: #0a100c;
+        border-radius: 14px;
+        padding: 16px;
+      }
+      .pn-top {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+      }
+      .pn-ver {
+        font:
+          800 11px "DM Sans",
+          sans-serif;
+        letter-spacing: 0.6px;
+        color: #06100a;
+        background: var(--accent);
+        border-radius: 6px;
+        padding: 3px 7px;
+      }
+      .pn-game {
+        font:
+          800 10px "DM Sans",
+          sans-serif;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #9fe9bf;
+        border: 1px solid #1d4a30;
+        border-radius: 6px;
+        padding: 2px 6px;
+      }
+      .pn-date {
+        margin-left: auto;
+        font-size: 11px;
+        color: #667369;
+      }
+      .pn-card h4 {
+        font:
+          700 17px "Outfit",
+          sans-serif;
+        margin: 0 0 6px;
+      }
+      .pn-card .pn-text {
+        margin-bottom: 8px;
+      }
+      .pn-items {
+        list-style: none;
+        margin: 8px 0 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+      }
+      .pn-items li {
+        display: flex;
+        gap: 9px;
+        align-items: baseline;
+        font-size: 13px;
+        line-height: 1.5;
+        color: #d7e0d9;
+      }
+      .pn-kind {
+        flex: none;
+        min-width: 64px;
+        text-align: center;
+        font:
+          800 9.5px "DM Sans",
+          sans-serif;
+        letter-spacing: 0.9px;
+        text-transform: uppercase;
+        border-radius: 5px;
+        padding: 3px 6px;
+        color: #aab5ad;
+        background: #131a15;
+      }
+      .pn-kind.new {
+        color: #7df2b0;
+        background: #0f2c1c;
+      }
+      .pn-kind.improved {
+        color: #8cc2ff;
+        background: #10223a;
+      }
+      .pn-kind.fixed {
+        color: #ffd479;
+        background: #2e2410;
+      }
+      .pn-kind.removed {
+        color: #ff9a9a;
+        background: #301414;
+      }
+      .pn-empty {
+        color: var(--muted);
+        font-size: 13px;
+        text-align: center;
+        padding: 22px 0;
+      }
+      .foot {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        padding: 14px 0 max(24px, env(safe-area-inset-bottom));
+        font-size: 12px;
+        color: #4f5c54;
+        letter-spacing: 0.4px;
+        flex: none;
+      }
+      #intro {
+        position: fixed;
+        top: max(14px, env(safe-area-inset-top));
+        left: 50%;
+        z-index: 100;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        border-radius: 3px;
+        background: #1f2721;
+        overflow: hidden;
+        pointer-events: none;
+        white-space: nowrap;
+        clip-path: inset(0 100% 0 0);
+        animation: introWipe 0.55s cubic-bezier(0.7, 0, 0.2, 1) 0.15s forwards;
+      }
+      #intro::before {
+        content: "";
+        align-self: stretch;
+        width: 4px;
+        background: #19d77b;
+      }
+      #intro .ib-by {
+        padding: 13px 0 13px 16px;
+        font:
+          700 11px "DM Sans",
+          sans-serif;
+        letter-spacing: 3px;
+        color: #7fae92;
+      }
+      #intro .ib-name {
+        padding: 12px 20px 12px 10px;
+        font:
+          800 18px "Outfit",
+          sans-serif;
+        color: #f1fff7;
+      }
+      #intro.out {
+        animation: introWipeOut 0.45s cubic-bezier(0.7, 0, 0.2, 1) forwards;
+      }
+      @keyframes introWipe {
+        to {
+          clip-path: inset(0 0 0 0);
+        }
+      }
+      @keyframes introWipeOut {
+        from {
+          clip-path: inset(0 0 0 0);
+        }
+        to {
+          clip-path: inset(0 0 0 100%);
+        }
+      }
+      @media (max-width: 440px) {
+        #intro {
+          top: 62px;
+        }
+      }
+      @keyframes fade {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @media (max-width: 420px) {
+        main {
+          width: calc(100% - 24px);
+          padding-top: 18px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+        #intro {
+          display: none !important;
+        }
+      }
+      .nm-rk {
+        display: inline-flex;
+        align-items: center;
+      }
+      .trophies {
+        display: inline-flex;
+        align-items: center;
+        flex: none;
+        margin: 0;
+        padding: 2px 3px 2px 0;
+        border: 0;
+        background: none;
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+        border-radius: 8px;
+      }
+      .trophies:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .tr {
+        --w: calc(var(--s, 1em) * 0.69);
+        display: inline-grid;
+        flex: none;
+        position: relative;
+        width: var(--w);
+        height: var(--s, 1em);
+        margin-left: calc(var(--w) * -0.52);
+        z-index: calc(30 - var(--i, 0));
+        filter: drop-shadow(1px 0 1px #000a);
+        transition: transform 0.18s var(--ease);
+      }
+      .tr:first-child {
+        margin-left: 0;
+      }
+      .tr.cr + .tr.md {
+        margin-left: calc(var(--s, 1em) * 0.28);
+      }
+      .tr.cr {
+        --w: calc(var(--s, 1em) * 1.03);
+        height: calc(var(--s, 1em) * 0.85);
+      }
+      .tr svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+        overflow: visible;
+      }
+      .tr svg * {
+        stroke: #050806;
+        stroke-width: 1.5;
+        stroke-linejoin: round;
+        paint-order: stroke;
+      }
+      .tg-card:hover .tr,
+      .trophies:hover .tr {
+        transform: translateY(-1px);
+      }
+      .tr.rk1 {
+        color: #ffd84d;
+      }
+      .tr.rk2 {
+        color: #d6dde3;
+      }
+      .tr.rk3 {
+        color: #e29a5f;
+      }
+      #trModal {
+        z-index: 70;
+      }
+      .tr-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin: 4px 0 16px;
+      }
+      .tr-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        background: #0a100c;
+        border: 1px solid var(--line);
+      }
+      .tr-item .tr {
+        --s: 26px;
+        margin: 0;
+        min-width: 22px;
+        justify-content: center;
+      }
+      .tr-item b {
+        display: block;
+        font-size: 14px;
+      }
+      .tr-item span.d {
+        color: var(--muted);
+        font-size: 12.5px;
+      }
+      .tr-note {
+        color: var(--muted);
+        font-size: 12.5px;
+        line-height: 1.55;
+        margin: 0;
+      }
+      .tr-who {
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        font:
+          700 21px "Outfit",
+          sans-serif;
+        margin: 0;
+        min-width: 0;
+      }
+      .tg-sub {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+        margin: -8px 0 16px;
+      }
+      .tg-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .tg-card {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 14px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: linear-gradient(145deg, #0b120e, #070b09);
+        color: var(--text);
+        text-align: left;
+      }
+      button.tg-card:hover {
+        border-color: #19d77b55;
+        background: linear-gradient(145deg, #0f1b14, #080d0a);
+      }
+      div.tg-card {
+        opacity: 0.9;
+      }
+      .tg-ico {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: #19d77b16;
+        color: var(--accent);
+        display: grid;
+        place-items: center;
+      }
+      .tg-ico svg {
+        width: 22px;
+        height: 22px;
+      }
+      .tg-card b {
+        display: block;
+        font: 600 17px "Outfit", sans-serif;
+      }
+      .tg-card .d {
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .tg-card .tr {
+        --s: 24px;
+      }
+      .tg-none {
+        color: #4d5a52;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="spot"></div>
+    <div id="intro" aria-hidden="true">
+      <span class="ib-by">MADE BY</span
+      ><span class="ib-name">Matteus Aydin</span>
+    </div>
+
+    <header class="topbar">
+      <div class="user-card">
+        <span id="userName" class="uname">Player</span>
+        <button
+          class="dots"
+          onclick="toggleMenu(event)"
+          aria-label="Menu"
+          aria-haspopup="true"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="5" r="2" />
+            <circle cx="12" cy="12" r="2" />
+            <circle cx="12" cy="19" r="2" />
+          </svg>
+        </button>
+        <div class="menu-pop" id="menuPop">
+          <button class="menu-item" onclick="openSettings()">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="3" />
+              <path
+                d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5h0a1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"
+              /></svg
+            >Settings
+          </button>
+          <button class="menu-item" onclick="openTrophies()">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3" /></svg
+            >Trophies
+          </button>
+          <button class="menu-item" onclick="openPatchNotes()">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"
+              />
+              <path d="M14 3v5h5M9 13h6M9 17h6" /></svg
+            >Patch notes
+          </button>
+        </div>
+      </div>
+      <div class="brand">
+        <span class="brand-mark"
+          ><svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z" /></svg
+        ></span>
+        <span class="brand-text">GAME HUB</span>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="intro">
+        <div class="eyebrow">GAME HUB</div>
+        <h1>What are we<br />playing?</h1>
+        <p class="lede">
+          Four quick games and one account. Duel your friends, climb the
+          leaderboards and collect crowns and medals.
+        </p>
+        <div class="player">
+          <div class="pl-top">
+            <span class="pl-av" id="plAv">P</span>
+            <div>
+              <b id="plName">Player</b>
+              <span class="s" id="plSub">Your account</span>
+            </div>
+          </div>
+          <div class="pl-row">
+            <div class="pl-count" id="plCount"><span>No trophies yet</span></div>
+            <button class="ghost" onclick="openTrophies()">Trophies</button>
+          </div>
+        </div>
+        <a class="resume" id="resume" hidden></a>
+      </section>
+      <section class="games" id="games"></section>
+    </main>
+
+    <footer class="foot">Made by Matteus Aydin 2026</footer>
+
+    <div class="toast" id="toast"></div>
+
+    <div
+      class="modal-back"
+      id="settingsModal"
+      onclick="if (event.target === this) closeSettings();"
+    >
+      <div class="sheet">
+        <div class="sheet-head">
+          <h2>Settings</h2>
+          <button class="x" onclick="closeSettings()" aria-label="Close">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.6"
+              stroke-linecap="round"
+            >
+              <path d="M6 6l12 12M18 6 6 18" />
+            </svg>
+          </button>
+        </div>
+        <section>
+          <h3>Account</h3>
+          <div class="acc-label">USERNAME</div>
+          <div class="acc-field">
+            <div class="acc-wrap">
+              <input
+                id="ac_username"
+                class="acc-input"
+                readonly
+                maxlength="20"
+                autocomplete="off"
+                spellcheck="false"
+                onkeydown="
+                  if (event.key === 'Enter') commitEdit();
+                  if (event.key === 'Escape') {
+                    event.stopPropagation();
+                    cancelEdit();
+                  }
+                "
+              />
+            </div>
+            <button class="icon-btn" id="ac_btn_username"></button>
+          </div>
+          <div class="acc-label">DATA TOKEN</div>
+          <div class="acc-field">
+            <div class="acc-wrap">
+              <input
+                id="ac_token"
+                class="acc-input mono"
+                readonly
+                autocomplete="off"
+                spellcheck="false"
+                aria-label="Your data token"
+              />
+            </div>
+            <button
+              class="icon-btn"
+              id="ac_btn_copy"
+              onclick="copyToken()"
+              aria-label="Copy data token"
+              title="Copy"
+            ></button>
+          </div>
+          <p class="hint">
+            This is your account. Keep it somewhere safe: it's the only way to
+            get your progress back on another device, and anyone who has it can
+            play as you.
+          </p>
+          <button
+            class="link muted forgot"
+            style="margin-top: 4px"
+            onclick="toggleSwitch()"
+          >
+            Enter a different data token
+          </button>
+          <div
+            class="acc-field"
+            id="tokenSwitch"
+            hidden
+            style="margin-top: 10px"
+          >
+            <div class="acc-wrap">
+              <input
+                id="tokenIn"
+                class="acc-input editing mono"
+                placeholder="Paste a data token"
+                autocomplete="off"
+                spellcheck="false"
+                onkeydown="if (event.key === 'Enter') commitSwitch();"
+              />
+            </div>
+            <button
+              class="icon-btn"
+              id="ac_btn_switch"
+              onclick="commitSwitch()"
+              aria-label="Load this account"
+            ></button>
+          </div>
+          <div class="auth-msg" id="authMsg"></div>
+        </section>
+        <button class="primary full" onclick="saveSettings()">Done</button>
+      </div>
+    </div>
+
+    <div
+      class="modal-back"
+      id="patchModal"
+      onclick="if (event.target === this) closePatchNotes();"
+    >
+      <div
+        class="sheet wide"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="patchT"
+      >
+        <div class="sheet-head">
+          <h2 id="patchT">Patch notes</h2>
+          <button class="x" onclick="closePatchNotes()" aria-label="Close">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.6"
+              stroke-linecap="round"
+            >
+              <path d="M6 6l12 12M18 6 6 18" />
+            </svg>
+          </button>
+        </div>
+        <div class="pn-list" id="patchList"></div>
+      </div>
+    </div>
+
+    <div
+      class="modal-back"
+      id="trophiesModal"
+      onclick="if (event.target === this) closeTrophies();"
+    >
+      <div
+        class="sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="tgTitle"
+      >
+        <div class="sheet-head">
+          <h2 id="tgTitle">Trophies</h2>
+          <button class="x" onclick="closeTrophies()" aria-label="Close">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.6"
+              stroke-linecap="round"
+            >
+              <path d="M6 6l12 12M18 6 6 18" />
+            </svg>
+          </button>
+        </div>
+        <p class="tg-sub" id="tgSub"></p>
+        <div class="tg-list" id="tgList"></div>
+      </div>
+    </div>
+
+    <div
+      class="modal-back"
+      id="trModal"
+      onclick="if (event.target === this) closeTrInfo();"
+    >
+      <div
+        class="sheet small"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="trWho"
+      >
+        <div class="sheet-head">
+          <h2 class="tr-who" id="trWho"></h2>
+          <button class="x" onclick="closeTrInfo()" aria-label="Close">
+            <svg
+              viewBox="0 0 24 24"
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+            >
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
+        <div class="tr-list" id="trList"></div>
+        <p class="tr-note">
+          <b style="color: #dfe8e1">Crowns</b> come from the Score leaderboard.
+          <b style="color: #dfe8e1">Medals</b> come from the Statistics
+          leaderboards. Gold is 1st place, silver 2nd, bronze 3rd.
+        </p>
+      </div>
+    </div>
+
+    <div class="modal-back" id="welcomeModal">
+      <div class="sheet small">
+        <div id="wc_new" class="form">
+          <div class="sheet-head"><h2>Welcome!</h2></div>
+          <p class="sub">Pick a username to create your account.</p>
+          <input
+            id="wcName"
+            placeholder="Username"
+            maxlength="20"
+            autocomplete="off"
+            spellcheck="false"
+            onkeydown="if (event.key === 'Enter') createAccount();"
+          />
+          <button class="primary full" id="wcCreate" onclick="createAccount()">
+            Create account
+          </button>
+          <p class="auth-switch">
+            Already have an account?
+            <button class="link" onclick="wcShow('token')">
+              Enter your data token
+            </button>
+          </p>
+        </div>
+        <div id="wc_token" class="form" hidden>
+          <div class="sheet-head"><h2>Enter data token</h2></div>
+          <p class="sub">Paste the data token from your account's settings.</p>
+          <input
+            id="wcToken"
+            class="mono"
+            placeholder="Data token"
+            autocomplete="off"
+            spellcheck="false"
+            onkeydown="if (event.key === 'Enter') wcLoad();"
+          />
+          <button class="primary full" id="wcLoad" onclick="wcLoad()">
+            Load account
+          </button>
+          <p class="auth-switch">
+            New here?
+            <button class="link" onclick="wcShow('new')">
+              Create an account
+            </button>
+          </p>
+        </div>
+        <div id="wc_done" class="form" hidden>
+          <div class="sheet-head"><h2>You're in!</h2></div>
+          <p class="sub">
+            This is your data token. Save it somewhere safe: it's how you get
+            back into your account on another device, and anyone who has it can
+            play as you. You can copy it again later in Settings.
+          </p>
+          <div class="acc-field">
+            <div class="acc-wrap">
+              <input id="wcTokenOut" class="acc-input mono" readonly />
+            </div>
+            <button
+              class="icon-btn"
+              id="wcCopy"
+              onclick="copyText($('wcTokenOut').value, $('wcTokenOut'))"
+              aria-label="Copy data token"
+            ></button>
+          </div>
+          <button class="primary full" onclick="wcDone()">Continue</button>
+        </div>
+        <div class="auth-msg" id="wcMsg"></div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      const GAMES = [
+        {
+          title: "Song Guesser",
+          desc: "Hear a short clip, guess the song. Play solo or battle your friends in a live multiplayer duel.",
+          url: "song-guesser/index.html",
+          tag: "Music",
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 10v4M8 6v12M12 3v18M16 7v10M20 10v4" /></svg>',
+        },
+        {
+          title: "Border Guesser",
+          desc: "Two countries, one shortest route. Name every country in between on a spinning globe, solo or against friends.",
+          url: "border-guesser/index.html",
+          tag: "Geography",
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18" /></svg>',
+        },
+        {
+          title: "Rare Guesser",
+          desc: "Answer a question with the rarest thing you know. Common answers barely score, rare ones are worth a fortune. Beat your high score or duel friends.",
+          url: "rare-guesser/index.html",
+          tag: "Trivia",
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 19 10l-7 10.5L5 10z" /><path d="M5 10h14M9.5 10 12 3.5 14.5 10M9.5 10 12 20.5 14.5 10" /></svg>',
+        },
+        {
+          title: "Size Guesser",
+          desc: "Scale an object to its real size, using a familiar green reference as your guide. Get close to score, solo or against friends.",
+          url: "size-guesser/index.html",
+          tag: "Sense of scale",
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M11 5h8v8M13 19H5v-8" /></svg>',
+        },
+      ];
+      const ARROW =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>';
+      const grid = document.getElementById("games");
+      GAMES.forEach((g, i) => {
+        const a = document.createElement("a");
+        a.className = "game-row";
+        a.href = g.url;
+        a.style.setProperty("--i", i);
+        a.addEventListener("click", () => {
+          try {
+            localStorage.setItem("hub_last", String(i));
+          } catch (e) {}
+        });
+        const n = document.createElement("span");
+        n.className = "row-n";
+        n.textContent = String(i + 1).padStart(2, "0");
+        const icon = document.createElement("span");
+        icon.className = "game-icon";
+        icon.innerHTML = g.icon || "";
+        const body = document.createElement("span");
+        body.className = "row-body";
+        const top = document.createElement("span");
+        top.className = "row-top";
+        const h = document.createElement("h2");
+        h.textContent = g.title;
+        const tag = document.createElement("span");
+        tag.className = "game-tag";
+        tag.textContent = g.tag || "";
+        top.append(h, tag);
+        const p = document.createElement("p");
+        p.textContent = g.desc;
+        body.append(top, p);
+        const go = document.createElement("span");
+        go.className = "row-go";
+        go.innerHTML = ARROW;
+        a.append(n, icon, body, go);
+        grid.appendChild(a);
+      });
+      (function resume() {
+        let i = -1;
+        try {
+          i = Number(localStorage.getItem("hub_last"));
+        } catch (e) {}
+        const g = GAMES[i];
+        if (!g) return;
+        const el = document.getElementById("resume");
+        el.href = g.url;
+        el.textContent = "Continue with " + g.title + " →";
+        el.hidden = false;
+      })();
+      const PATCH_NOTES = [
+        { type: "title", text: "November 2026" },
+        {
+          type: "note",
+          version: "1.4",
+          game: "Game Hub",
+          date: "13 Nov 2026",
+          title: "A new look, and Trophies",
+          items: [
+            ["new", "Redesigned home page with a player panel and numbered game rows"],
+            ["new", "Trophies in the menu: every game's crowns and medals in one place, tap a game for details"],
+            ["new", "A shortcut to the last game you played"],
+          ],
+        },
+        {
+          type: "note",
+          version: "1.1",
+          game: "Size Guesser",
+          date: "13 Nov 2026",
+          title: "Categories, rotate and a ruler line",
+          items: [
+            ["new", "Pick what you scale on the category wheel: Countries, Objects, Landmarks, Pop culture, Technology, People or All"],
+            ["new", "Over 390 items, and the ones you haven't seen in a while come up first"],
+            ["new", "Rotate button on the reference, plus a dashed green line to measure against"],
+            ["improved", "The reference is never tiny any more"],
+            ["improved", "Redrawn illustrations and re-checked difficulties"],
+          ],
+        },
+        {
+          type: "note",
+          version: "1.0",
+          game: "Size Guesser",
+          date: "13 Nov 2026",
+          title: "Size Guesser is out",
+          text: "Scale the white object to its real size, using the green reference as your guide. Get close enough and it counts.",
+          items: [
+            ["new", "Solo with five difficulties, and live duels with friends"],
+            [
+              "new",
+              "Over a hundred hand-drawn objects, from a coin to the Eiffel Tower",
+            ],
+            [
+              "new",
+              "Score from difficulty, speed and how close you got, plus a Closest match leaderboard",
+            ],
+          ],
+        },
+        {
+          type: "note",
+          version: "1.3",
+          game: "Game Hub",
+          date: "12 Nov 2026",
+          title: "Accounts and patch notes on the hub",
+          items: [
+            ["new", "Your name card and menu now live on the hub too"],
+            ["new", "Patch notes, right here"],
+            [
+              "new",
+              "New players get the Welcome screen when they open the hub",
+            ],
+            [
+              "improved",
+              "Game cards now sit four to a row, and adapt on small screens",
+            ],
+          ],
+        },
+        {
+          type: "note",
+          version: "1.3",
+          game: "Song Guesser & Border Guesser",
+          date: "12 Nov 2026",
+          title: "Leave warning and Auto-continue",
+          items: [
+            [
+              "new",
+              "Leaving a started duel now asks you to confirm first, including with the browser back button",
+            ],
+            [
+              "new",
+              "Auto-continue setting: in solo, the next question can start by itself or wait for you",
+            ],
+          ],
+        },
+        {
+          type: "note",
+          version: "1.0",
+          game: "Rare Guesser",
+          date: "12 Nov 2026",
+          title: "Rare Guesser is out",
+          text: "Answer a question with the rarest thing you know. Common answers barely score, rare ones are worth a fortune.",
+          items: [
+            ["new", "Solo matches and live duels with friends"],
+            ["new", "Five difficulties and six topics"],
+          ],
+        },
+        { type: "divider" },
+        { type: "callout", text: "Found a bug or have an idea? Tell Matteus." },
+      ];
+      const $ = (id) => document.getElementById(id);
+      const SUPABASE_URL = "https://mrrixocnhsfulglipvek.supabase.co";
+      const SUPABASE_ANON_KEY =
+        "sb_publishable_fIFvv3lqR66EOuclo_bscg_Qv8OKNt1";
+      const TOKEN_KEY = "sg_token";
+      let ME = null;
+      const lsGet = (k, d) => {
+        try {
+          const v = localStorage.getItem(k);
+          return v === null ? d : v;
+        } catch (e) {
+          return d;
+        }
+      };
+      const lsSet = (k, v) => {
+        try {
+          localStorage.setItem(k, v);
+        } catch (e) {}
+      };
+      const esc = (v) =>
+        String(v ?? "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      let toastTimer;
+      function showToast(m) {
+        const el = $("toast");
+        el.textContent = m;
+        el.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.classList.remove("show"), 2800);
+      }
+      function renderPatchNotes() {
+        const kinds = {
+          new: "New",
+          improved: "Improved",
+          fixed: "Fixed",
+          removed: "Removed",
+        };
+        const out = PATCH_NOTES.map((b) => {
+          if (b.type === "title")
+            return `<h3 class="pn-title">${esc(b.text)}</h3>`;
+          if (b.type === "text") return `<p class="pn-text">${esc(b.text)}</p>`;
+          if (b.type === "callout")
+            return `<div class="pn-callout">${esc(b.text)}</div>`;
+          if (b.type === "divider") return `<hr class="pn-divider" />`;
+          if (b.type === "note") {
+            const top = [
+              b.version ? `<span class="pn-ver">v${esc(b.version)}</span>` : "",
+              b.game ? `<span class="pn-game">${esc(b.game)}</span>` : "",
+              b.date ? `<span class="pn-date">${esc(b.date)}</span>` : "",
+            ].join("");
+            const items = (b.items || [])
+              .map((it) => {
+                if (Array.isArray(it))
+                  return `<li><span class="pn-kind ${esc(it[0])}">${esc(kinds[it[0]] || it[0])}</span><span>${esc(it[1])}</span></li>`;
+                return `<li><span>${esc(it)}</span></li>`;
+              })
+              .join("");
+            return `<div class="pn-card">${top ? `<div class="pn-top">${top}</div>` : ""}${b.title ? `<h4>${esc(b.title)}</h4>` : ""}${b.text ? `<p class="pn-text">${esc(b.text)}</p>` : ""}${items ? `<ul class="pn-items">${items}</ul>` : ""}</div>`;
+          }
+          return "";
+        }).join("");
+        $("patchList").innerHTML =
+          out || '<div class="pn-empty">Nothing here yet.</div>';
+      }
+      function openPatchNotes() {
+        closeMenu();
+        renderPatchNotes();
+        $("patchModal").classList.add("open");
+      }
+      function closePatchNotes() {
+        $("patchModal").classList.remove("open");
+      }
+      function toggleMenu(e) {
+        e.stopPropagation();
+        $("menuPop").classList.toggle("open");
+      }
+      function closeMenu() {
+        $("menuPop").classList.remove("open");
+      }
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest(".user-card")) closeMenu();
+      });
+      let SBC = null;
+      function sb() {
+        if (!SBC) {
+          if (!window.supabase)
+            throw new Error("Supabase library did not load. Reload the page.");
+          SBC = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: {
+              persistSession: false,
+              autoRefreshToken: false,
+              detectSessionInUrl: false,
+            },
+          });
+        }
+        return SBC;
+      }
+      const TOKEN_RE = /^[A-Za-z0-9]{20,128}$/;
+      const NAME_RE = /^[A-Za-z0-9ÅÄÖåäö _.,!?'\-]{3,20}$/;
+      function checkUsername(v) {
+        if (!NAME_RE.test(v))
+          return "Usernames are 3–20 characters: letters (A–Z, Å, Ä, Ö), numbers and . , ! ? ' - _";
+        if (v !== v.trim() || /\s{2,}/.test(v))
+          return "No extra spaces in usernames.";
+        return "";
+      }
+      const api = async (name, args) => {
+        const { data, error } = await sb().rpc(name, args);
+        if (error) throw error;
+        return data;
+      };
+      function apiMsg(e) {
+        const m =
+          String((e && e.message) || e || "") +
+          " " +
+          String((e && (e.code || e.details)) || "");
+        if (/username_taken/.test(m)) return "That username is already taken.";
+        if (/username_invalid/.test(m))
+          return "Usernames are 3–20 characters: letters (A–Z, Å, Ä, Ö), numbers and . , ! ? ' - _";
+        if (/invalid_token/.test(m))
+          return "That data token doesn't match any account.";
+        if (/could not find the function|schema cache|PGRST202|42883/i.test(m))
+          return "The server isn't set up yet. Run supabase-setup.sql in Supabase first.";
+        return "Couldn't reach the server. Check your connection and try again.";
+      }
+      const currentName = () =>
+        (ME && ME.username) || lsGet("sg_name", "") || "Player";
+      const updateUserCard = () => {
+        const n = currentName();
+        $("userName").textContent = n;
+        $("plName").textContent = n;
+        $("plAv").textContent = (n.trim().charAt(0) || "P").toUpperCase();
+        $("plSub").textContent = ME && ME.token ? "Signed in" : "Not signed in";
+      };
+      function applyState(st) {
+        ME = { ...(ME || {}), id: st.id, username: st.username };
+        if (st.token) ME.token = st.token;
+        lsSet("sg_name", st.username);
+        updateUserCard();
+        renderAccount();
+        TROPHIES = null;
+        loadTrophies();
+      }
+      const wcMsg = (t) => {
+        const m = $("wcMsg");
+        m.textContent = t || "";
+        m.className = "auth-msg" + (t ? " show" : "");
+      };
+      function wcShow(which) {
+        ["new", "token", "done"].forEach((k) => {
+          $("wc_" + k).hidden = k !== which;
+        });
+        wcMsg("");
+      }
+      function maybeWelcome() {
+        if (!lsGet(TOKEN_KEY, "")) {
+          wcShow("new");
+          $("welcomeModal").classList.add("open");
+        }
+      }
+      async function createAccount() {
+        const name = $("wcName").value.trim(),
+          bad = checkUsername(name);
+        if (bad) {
+          wcMsg(bad);
+          return;
+        }
+        const btn = $("wcCreate");
+        btn.disabled = true;
+        try {
+          const st = await api("create_player", { u: name });
+          lsSet(TOKEN_KEY, st.token);
+          ME = { token: st.token };
+          applyState(st);
+          $("wcTokenOut").value = st.token;
+          wcShow("done");
+        } catch (e) {
+          wcMsg(apiMsg(e));
+        } finally {
+          btn.disabled = false;
+        }
+      }
+      async function loadToken(raw) {
+        const t = String(raw || "").replace(/\s/g, "");
+        if (!TOKEN_RE.test(t)) throw new Error("invalid_token");
+        const st = await api("get_player", { t });
+        if (!st || !st.id) throw new Error("invalid_token");
+        lsSet(TOKEN_KEY, t);
+        ME = { token: t };
+        applyState(st);
+      }
+      async function wcLoad() {
+        const btn = $("wcLoad");
+        btn.disabled = true;
+        try {
+          await loadToken($("wcToken").value);
+          $("welcomeModal").classList.remove("open");
+          showToast("Welcome back, " + ME.username + "!");
+        } catch (e) {
+          wcMsg(apiMsg(e));
+        } finally {
+          btn.disabled = false;
+        }
+      }
+      function wcDone() {
+        $("welcomeModal").classList.remove("open");
+      }
+      function copyText(v, inp) {
+        const ok = () => showToast("Data token copied.");
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard
+            .writeText(v)
+            .then(ok)
+            .catch(() => fallbackCopy(inp, ok));
+        } else fallbackCopy(inp, ok);
+      }
+      function fallbackCopy(inp, ok) {
+        try {
+          inp.focus();
+          inp.select();
+          document.execCommand("copy")
+            ? ok()
+            : showToast("Select the token and copy it.");
+        } catch (e) {
+          showToast("Select the token and copy it.");
+        }
+      }
+      const copyToken = () => copyText($("ac_token").value, $("ac_token"));
+      const PEN =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';
+      const CHECK =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 5 5 9-11"/></svg>';
+      const COPY =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>';
+      $("wcCopy").innerHTML = COPY;
+      const CROWN_I =
+        '<svg viewBox="2 3.5 20 16.5" fill="currentColor"><path d="M3 8l4 4 5-7 5 7 4-4-2 11H5z"/></svg>';
+      const MEDAL_I =
+        '<svg viewBox="4.8 1 14.4 21" fill="currentColor"><path d="M6.5 2h4.2l1.6 6.2-3.4 1.6zM17.5 2h-4.2l-1.6 6.2 3.4 1.6z" fill-opacity="0.65"/><circle cx="12" cy="15.2" r="6.6"/><circle cx="12" cy="15.2" r="4" fill="none" stroke="#000" stroke-opacity="0.3" stroke-width="1.5"/></svg>';
+      const RANK_WORD = { 1: "1st", 2: "2nd", 3: "3rd" };
+      const num = (v) => Number(v);
+      const fmtN = (v) => v.toLocaleString();
+      const acc = (good, bad) => (num(good) + num(bad) >= 10 ? num(good) / (num(good) + num(bad)) : null);
+      const BOARD = (label, val, dir = -1) => ({ label, val, dir });
+      const TROPHY_GAMES = [
+        {
+          game: 0,
+          table: "stats",
+          cols: "id,username,score_type,score_click,correct,wrong,best_streak,duels,wins",
+          main: ["type", "click"],
+          boards: {
+            type: BOARD("Type answer (score)", (p) => num(p.score_type)),
+            click: BOARD("Click answer (score)", (p) => num(p.score_click)),
+            correct: BOARD("Songs guessed", (p) => num(p.correct)),
+            accuracy: BOARD("Accuracy", (p) => acc(p.correct, p.wrong)),
+            streak: BOARD("Best streak", (p) => num(p.best_streak)),
+            duels: BOARD("Duels played", (p) => num(p.duels)),
+            wins: BOARD("Duels won", (p) => num(p.wins)),
+          },
+        },
+        {
+          game: 1,
+          table: "border_stats",
+          cols: "id,username,score,routes,countries,wrong,best_streak,duels,wins",
+          main: ["score"],
+          boards: {
+            score: BOARD("Score", (p) => num(p.score)),
+            routes: BOARD("Routes solved", (p) => num(p.routes)),
+            countries: BOARD("Countries found", (p) => num(p.countries)),
+            accuracy: BOARD("Accuracy", (p) => acc(p.countries, p.wrong)),
+            streak: BOARD("Best streak", (p) => num(p.best_streak)),
+            duels: BOARD("Duels played", (p) => num(p.duels)),
+            wins: BOARD("Duels won", (p) => num(p.wins)),
+          },
+        },
+        {
+          game: 2,
+          table: "rare_stats",
+          cols: "id,username,high_score,matches,answers,best_round,rarest,duels,wins",
+          main: ["score"],
+          boards: {
+            score: BOARD("Score", (p) => num(p.high_score)),
+            matches: BOARD("Matches played", (p) => num(p.matches)),
+            best_round: BOARD("Best round", (p) => num(p.best_round)),
+            rarest: BOARD("Rarest find", (p) => num(p.rarest)),
+            duels: BOARD("Duels played", (p) => num(p.duels)),
+            wins: BOARD("Duels won", (p) => num(p.wins)),
+          },
+        },
+        {
+          game: 3,
+          table: "size_stats",
+          cols: "id,username,score,matched,missed,best_streak,duels,wins,closest",
+          main: ["score"],
+          boards: {
+            score: BOARD("Score", (p) => num(p.score)),
+            matched: BOARD("Sizes matched", (p) => num(p.matched)),
+            accuracy: BOARD("Accuracy", (p) => acc(p.matched, p.missed)),
+            streak: BOARD("Best streak", (p) => num(p.best_streak)),
+            closest: BOARD("Closest match", (p) => (p.closest === null || p.closest === undefined ? null : num(p.closest)), 1),
+            duels: BOARD("Duels played", (p) => num(p.duels)),
+            wins: BOARD("Duels won", (p) => num(p.wins)),
+          },
+        },
+      ];
+      let TROPHIES = null;
+      let trLoading = false;
+      function trophiesFor(def, rows, name) {
+        const me = String(name).toLowerCase(),
+          out = [];
+        Object.keys(def.boards).forEach((key) => {
+          const b = def.boards[key];
+          const list = rows
+            .map((p) => ({ p, v: b.val(p) }))
+            .filter((r) => r.v !== null && Number.isFinite(r.v) && r.v > 0);
+          list.sort(
+            (x, y) =>
+              b.dir * (x.v - y.v) ||
+              String(x.p.username).localeCompare(String(y.p.username)),
+          );
+          let rank = 0,
+            prev = null;
+          list.forEach((r, i) => {
+            if (prev === null || r.v !== prev) rank = i + 1;
+            r.rank = rank;
+            prev = r.v;
+          });
+          const mine = list.find((r) => String(r.p.username).toLowerCase() === me);
+          if (mine && mine.rank <= 3)
+            out.push({ rank: mine.rank, key, label: b.label, kind: def.main.includes(key) ? "crown" : "medal" });
+        });
+        const by = (x, y) => x.rank - y.rank;
+        return [
+          ...out.filter((x) => x.kind === "crown").sort(by),
+          ...out.filter((x) => x.kind === "medal").sort(by),
+        ];
+      }
+      const trIcon = (x, i) =>
+        `<i class="tr ${x.kind === "crown" ? "cr" : "md"} rk${x.rank}" style="--i:${i}">${x.kind === "crown" ? CROWN_I : MEDAL_I}</i>`;
+      async function loadTrophies() {
+        if (trLoading) return;
+        const name = ME && ME.token ? currentName() : "";
+        if (!name) {
+          TROPHIES = null;
+          renderTrophyPanel();
+          return;
+        }
+        trLoading = true;
+        try {
+          const res = await Promise.all(
+            TROPHY_GAMES.map(async (def) => {
+              try {
+                const { data, error } = await sb().from(def.table).select(def.cols).limit(5000);
+                if (error || !Array.isArray(data)) return null;
+                return trophiesFor(def, data, name);
+              } catch (e) {
+                return null;
+              }
+            }),
+          );
+          TROPHIES = res;
+        } catch (e) {
+          TROPHIES = null;
+        }
+        trLoading = false;
+        renderTrophyPanel();
+      }
+      function renderTrophyPanel() {
+        const el = $("plCount");
+        if (!TROPHIES) {
+          el.innerHTML = `<span>${ME && ME.token ? "Loading trophies…" : "Sign in to earn trophies"}</span>`;
+        } else {
+          const all = TROPHIES.flatMap((x) => x || []);
+          const c = all.filter((x) => x.kind === "crown").length,
+            m = all.length - c;
+          el.innerHTML = all.length
+            ? `<i class="tr cr rk1" style="--i:0">${CROWN_I}</i><b>${c}</b><i class="tr md rk1" style="--i:0">${MEDAL_I}</i><b>${m}</b>`
+            : "<span>No trophies yet</span>";
+        }
+        if ($("trophiesModal").classList.contains("open")) renderTrophyCards();
+      }
+      function renderTrophyCards() {
+        const loaded = !!TROPHIES;
+        $("tgSub").textContent = !(ME && ME.token)
+          ? "Create an account or load your data token to earn trophies."
+          : loaded
+            ? "Reach the top 3 of a leaderboard to earn a crown or medal. Tap a game to see which ones you have."
+            : "Loading your trophies…";
+        $("tgList").innerHTML = GAMES.map((g, i) => {
+          const list = (TROPHIES && TROPHIES[i]) || [];
+          const head = `<span class="tg-ico">${g.icon}</span><span><b>${esc(g.title)}</b><span class="d">${esc(g.tag)}</span></span>`;
+          if (!list.length)
+            return `<div class="tg-card">${head}<span class="tg-none">${loaded ? (TROPHIES[i] === null ? "Unavailable" : "No trophies yet") : "…"}</span></div>`;
+          const size = list.length <= 2 ? 24 : list.length <= 4 ? 21 : 18;
+          return `<button type="button" class="tg-card" data-g="${i}" aria-label="${esc(g.title)}: ${list.length} trophies. Show details">${head}<span class="trophies" style="--s:${size}px">${list.map(trIcon).join("")}</span></button>`;
+        }).join("");
+      }
+      function openTrophies() {
+        closeMenu();
+        renderTrophyCards();
+        $("trophiesModal").classList.add("open");
+        loadTrophies();
+      }
+      function closeTrophies() {
+        $("trophiesModal").classList.remove("open");
+      }
+      function showTrInfo(i) {
+        const list = (TROPHIES && TROPHIES[i]) || [];
+        $("trWho").textContent = GAMES[i].title;
+        $("trList").innerHTML = list.length
+          ? list
+              .map(
+                (x) =>
+                  `<div class="tr-item">${trIcon(x, 0)}<div><b>${RANK_WORD[x.rank]} place &middot; ${x.kind === "crown" ? "Crown" : "Medal"}</b><span class="d">${esc(x.label)} leaderboard</span></div></div>`,
+              )
+              .join("")
+          : '<div class="tr-note">No trophies right now.</div>';
+        $("trModal").classList.add("open");
+      }
+      function closeTrInfo() {
+        $("trModal").classList.remove("open");
+      }
+      document.addEventListener("click", (e) => {
+        const b = e.target.closest && e.target.closest("button.tg-card");
+        if (b) showTrInfo(Number(b.dataset.g));
+      });
+      let EDIT = false;
+      const authMsg = (t, good) => {
+        const m = $("authMsg");
+        m.textContent = t || "";
+        m.className = "auth-msg" + (t ? " show" : "") + (good ? " good" : "");
+      };
+      function setEditBtn(editing) {
+        const b = $("ac_btn_username");
+        b.innerHTML = editing ? CHECK : PEN;
+        b.setAttribute("aria-label", editing ? "Confirm" : "Edit username");
+        b.onclick = () => (editing ? commitEdit() : startEdit());
+      }
+      function resetField() {
+        const i = $("ac_username");
+        i.readOnly = true;
+        i.classList.remove("editing");
+        i.value = (ME && ME.username) || currentName();
+        setEditBtn(false);
+      }
+      function renderAccount() {
+        if (!EDIT) resetField();
+        $("ac_token").value = (ME && ME.token) || "";
+        $("ac_btn_copy").innerHTML = COPY;
+        $("ac_btn_switch").innerHTML = CHECK;
+      }
+      function startEdit() {
+        if (!ME || !ME.token) {
+          authMsg("Create or load an account first.");
+          return;
+        }
+        EDIT = true;
+        authMsg("");
+        const i = $("ac_username");
+        i.readOnly = false;
+        i.classList.add("editing");
+        setEditBtn(true);
+        i.focus();
+      }
+      function cancelEdit() {
+        if (!EDIT) return;
+        EDIT = false;
+        resetField();
+      }
+      async function commitEdit() {
+        if (!EDIT) return;
+        const v = $("ac_username").value.trim(),
+          bad = checkUsername(v);
+        if (bad) {
+          authMsg(bad);
+          return;
+        }
+        if (ME && v === ME.username) {
+          cancelEdit();
+          return;
+        }
+        try {
+          const st = await api("set_username", { t: ME.token, u: v });
+          EDIT = false;
+          applyState(st);
+          authMsg("");
+          showToast("Username updated.");
+        } catch (e) {
+          authMsg(apiMsg(e));
+        }
+      }
+      function toggleSwitch() {
+        const b = $("tokenSwitch");
+        b.hidden = !b.hidden;
+        if (!b.hidden) $("tokenIn").focus();
+        authMsg("");
+      }
+      async function commitSwitch() {
+        const v = $("tokenIn").value.replace(/\s/g, "");
+        if (!v) {
+          authMsg("Paste a data token first.");
+          return;
+        }
+        if (ME && v === ME.token) {
+          $("tokenSwitch").hidden = true;
+          $("tokenIn").value = "";
+          return;
+        }
+        try {
+          await loadToken(v);
+          $("tokenIn").value = "";
+          $("tokenSwitch").hidden = true;
+          authMsg("");
+          showToast("Switched to " + ME.username + ".");
+        } catch (e) {
+          authMsg(apiMsg(e));
+        }
+      }
+      function openSettings() {
+        closeMenu();
+        $("tokenSwitch").hidden = true;
+        authMsg("");
+        EDIT = false;
+        renderAccount();
+        $("settingsModal").classList.add("open");
+      }
+      function closeSettings() {
+        cancelEdit();
+        $("tokenSwitch").hidden = true;
+        $("settingsModal").classList.remove("open");
+      }
+      async function saveSettings() {
+        if (EDIT) {
+          await commitEdit();
+          if (EDIT) return;
+        }
+        closeSettings();
+      }
+      document.addEventListener("keydown", (e) => {
+        if (e.key !== "Escape") return;
+        if ($("trModal").classList.contains("open")) closeTrInfo();
+        else if ($("trophiesModal").classList.contains("open")) closeTrophies();
+        else if ($("patchModal").classList.contains("open")) closePatchNotes();
+        else if ($("settingsModal").classList.contains("open")) closeSettings();
+        closeMenu();
+      });
+      async function initAccount() {
+        updateUserCard();
+        const t = lsGet(TOKEN_KEY, "");
+        if (!t) return;
+        ME = { token: t, username: lsGet("sg_name", "") };
+        if (!window.supabase) return;
+        try {
+          const st = await api("get_player", { t });
+          if (st && st.id) applyState(st);
+          else {
+            ME = null;
+            lsSet(TOKEN_KEY, "");
+            lsSet("sg_name", "");
+            updateUserCard();
+            maybeWelcome();
+            showToast(
+              "That account wasn't found. Create a new one or enter another data token.",
+            );
+          }
+        } catch (e) {}
+      }
+      renderAccount();
+      initAccount();
+      (function intro() {
+        const el = document.getElementById("intro");
+        setTimeout(() => el.classList.add("out"), 2800);
+        setTimeout(() => el.remove(), 3300);
+        maybeWelcome();
+      })();
+    </script>
+  </body>
+</html>

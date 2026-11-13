@@ -1926,6 +1926,7 @@ function showSoloResult(kind, info, secs) {
     $("gameView").classList.add("diveon");
     $("soloAction").style.display = "none";
     $("soloResult").style.display = "block";
+    window.__resAt = Date.now();
     playDive(
       $("soloScene"),
       {
@@ -1961,6 +1962,7 @@ function showSoloResult(kind, info, secs) {
   }
   $("soloAction").style.display = "none";
   $("soloResult").style.display = "block";
+  window.__resAt = Date.now();
   startCool();
 }
 function nextSolo() {
@@ -3634,6 +3636,27 @@ recomputeRanks();
 updateUserCard();
 updateScoreChip();
 initAccount();
+document.addEventListener("keydown", (e) => {
+  if (
+    e.repeat ||
+    e.ctrlKey ||
+    e.metaKey ||
+    e.altKey ||
+    (e.key !== "Enter" && e.key !== " ")
+  )
+    return;
+  const r = document.getElementById("soloResult"),
+    b = r && r.style.display === "block" && r.querySelector(".res-next");
+  if (
+    !b ||
+    r.classList.contains("hold") ||
+    document.querySelector(".modal-back.open") ||
+    Date.now() - (window.__resAt || 0) < 450
+  )
+    return;
+  e.preventDefault();
+  b.click();
+});
 (function intro() {
   const el = document.getElementById("intro");
   let seen = false;
@@ -3643,8 +3666,14 @@ initAccount();
   } catch (e) {}
   if (seen) el.remove();
   else {
-    setTimeout(() => el.classList.add("out"), 2200);
-    setTimeout(() => el.remove(), 2800);
+    [..."Matteus Aydin"].forEach((ch, i) => {
+      const s = document.createElement("span");
+      s.textContent = ch === " " ? "\u00a0" : ch;
+      s.style.setProperty("--i", i);
+      document.getElementById("introName").appendChild(s);
+    });
+    setTimeout(() => el.classList.add("out"), 3000);
+    setTimeout(() => el.remove(), 3550);
   }
   maybeWelcome();
 })();

@@ -183,11 +183,11 @@
       }
       .head {
         display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 24px;
-        flex-wrap: wrap;
-        margin-bottom: 22px;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 22px;
+        margin-bottom: 30px;
         animation: rise 0.6s var(--ease) both;
       }
       .head h1 {
@@ -199,7 +199,7 @@
       }
       .search {
         position: relative;
-        width: min(300px, 100%);
+        width: min(360px, 100%);
       }
       .search svg {
         position: absolute;
@@ -214,31 +214,6 @@
       .search input {
         padding-left: 38px;
         font-size: 14px;
-      }
-      .chips {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        margin-bottom: 26px;
-        animation: rise 0.6s 0.06s var(--ease) both;
-      }
-      .chip {
-        border: 1px solid var(--line);
-        background: #070b09;
-        color: #9aa59d;
-        border-radius: 999px;
-        padding: 8px 15px;
-        font-size: 13px;
-        font-weight: 700;
-      }
-      .chip:hover {
-        border-color: #1d4a30;
-        color: #dfe8e1;
-      }
-      .chip.on {
-        background: var(--accent);
-        border-color: var(--accent);
-        color: #05120a;
       }
       .games {
         display: grid;
@@ -275,13 +250,24 @@
         display: grid;
         place-items: center;
         color: var(--accent);
-        background-color: #0a100c;
-        background-image:
-          linear-gradient(#0f1913 1px, transparent 1px),
-          linear-gradient(90deg, #0f1913 1px, transparent 1px);
-        background-size: 22px 22px;
+        background: #0a100c;
         border-bottom: 1px solid var(--line);
         overflow: hidden;
+      }
+      .tile-pic {
+        position: absolute;
+        inset: -14px;
+        width: calc(100% + 28px);
+        height: calc(100% + 28px);
+        object-fit: cover;
+        filter: blur(8px) brightness(0.85);
+        transition:
+          transform 0.4s var(--ease),
+          filter 0.3s;
+      }
+      .tile:hover .tile-pic {
+        transform: scale(1.06);
+        filter: blur(6px) brightness(1);
       }
       .tile-ico {
         position: relative;
@@ -306,21 +292,6 @@
         transform: scale(1.08);
         background: var(--accent);
         color: #06100a;
-      }
-      .tile-tag {
-        position: absolute;
-        z-index: 1;
-        left: 12px;
-        top: 12px;
-        color: #7f8b83;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-size: 10px;
-        background: #070b09cc;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        padding: 4px 9px;
       }
       .tile-body {
         display: flex;
@@ -382,9 +353,6 @@
         .tile-ico svg {
           width: 26px;
           height: 26px;
-        }
-        .tile-tag {
-          display: none;
         }
         .tile-body {
           padding: 14px 16px;
@@ -1154,7 +1122,9 @@
       }
       .tg-card b {
         display: block;
-        font: 600 17px "Outfit", sans-serif;
+        font:
+          600 17px "Outfit",
+          sans-serif;
       }
       .tg-card .d {
         color: var(--muted);
@@ -1218,7 +1188,9 @@
               stroke-linecap="round"
               stroke-linejoin="round"
             >
-              <path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3" /></svg
+              <path
+                d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3"
+              /></svg
             >Trophies
           </button>
           <button class="menu-item" onclick="openPatchNotes()">
@@ -1254,7 +1226,16 @@
           <h1>Pick a game.</h1>
         </div>
         <label class="search">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            stroke-linecap="round"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="M20 20l-3.5-3.5" />
+          </svg>
           <input
             id="gameSearch"
             type="search"
@@ -1264,7 +1245,6 @@
           />
         </label>
       </div>
-      <div class="chips" id="chips"></div>
       <section class="games" id="games"></section>
     </main>
 
@@ -1546,6 +1526,7 @@
           title: "Song Guesser",
           desc: "Hear a short clip, guess the song. Play solo or battle your friends in a live multiplayer duel.",
           url: "song-guesser/index.html",
+          img: "thumbs/song-guesser.jpg",
           tag: "Music",
           icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 10v4M8 6v12M12 3v18M16 7v10M20 10v4" /></svg>',
         },
@@ -1553,6 +1534,7 @@
           title: "Border Guesser",
           desc: "Two countries, one shortest route. Name every country in between on a spinning globe, solo or against friends.",
           url: "border-guesser/index.html",
+          img: "thumbs/border-guesser.jpg",
           tag: "Geography",
           icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18" /></svg>',
         },
@@ -1560,6 +1542,7 @@
           title: "Rare Guesser",
           desc: "Answer a question with the rarest thing you know. Common answers barely score, rare ones are worth a fortune. Beat your high score or duel friends.",
           url: "rare-guesser/index.html",
+          img: "thumbs/rare-guesser.jpg",
           tag: "Trivia",
           icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 19 10l-7 10.5L5 10z" /><path d="M5 10h14M9.5 10 12 3.5 14.5 10M9.5 10 12 20.5 14.5 10" /></svg>',
         },
@@ -1567,20 +1550,21 @@
           title: "Size Guesser",
           desc: "Scale an object to its real size, using a familiar green reference as your guide. Get close to score, solo or against friends.",
           url: "size-guesser/index.html",
+          img: "thumbs/size-guesser.jpg",
           tag: "Sense of scale",
           icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M11 5h8v8M13 19H5v-8" /></svg>',
         },
       ];
       const grid = document.getElementById("games");
-      const chipBox = document.getElementById("chips");
-      let FILTER = "All";
-      const tags = ["All", ...new Set(GAMES.map((g) => g.tag))];
       function renderGames() {
-        const q = document.getElementById("gameSearch").value.trim().toLowerCase();
+        const q = document
+          .getElementById("gameSearch")
+          .value.trim()
+          .toLowerCase();
         const list = GAMES.filter(
           (g) =>
-            (FILTER === "All" || g.tag === FILTER) &&
-            (!q || (g.title + " " + g.desc + " " + g.tag).toLowerCase().includes(q)),
+            !q ||
+            (g.title + " " + g.desc + " " + g.tag).toLowerCase().includes(q),
         );
         grid.innerHTML = "";
         if (!list.length) {
@@ -1597,13 +1581,15 @@
           a.style.setProperty("--i", i);
           const art = document.createElement("span");
           art.className = "tile-art";
-          const tag = document.createElement("span");
-          tag.className = "tile-tag";
-          tag.textContent = g.tag || "";
+          const pic = document.createElement("img");
+          pic.className = "tile-pic";
+          pic.src = g.img;
+          pic.alt = "";
+          pic.loading = "lazy";
           const ico = document.createElement("span");
           ico.className = "tile-ico";
           ico.innerHTML = g.icon || "";
-          art.append(tag, ico);
+          art.append(pic, ico);
           const body = document.createElement("span");
           body.className = "tile-body";
           const h = document.createElement("h2");
@@ -1618,24 +1604,9 @@
           grid.appendChild(a);
         });
       }
-      function renderChips() {
-        chipBox.innerHTML = "";
-        chipBox.hidden = tags.length < 3;
-        tags.forEach((t) => {
-          const b = document.createElement("button");
-          b.type = "button";
-          b.className = "chip" + (t === FILTER ? " on" : "");
-          b.textContent = t;
-          b.addEventListener("click", () => {
-            FILTER = t;
-            renderChips();
-            renderGames();
-          });
-          chipBox.appendChild(b);
-        });
-      }
-      document.getElementById("gameSearch").addEventListener("input", renderGames);
-      renderChips();
+      document
+        .getElementById("gameSearch")
+        .addEventListener("input", renderGames);
       renderGames();
       const PATCH_NOTES = [
         { type: "title", text: "November 2026" },
@@ -1646,8 +1617,14 @@
           date: "13 Nov 2026",
           title: "A new look, and Trophies",
           items: [
-            ["new", "Redesigned home page with a player panel and numbered game rows"],
-            ["new", "Trophies in the menu: every game's crowns and medals in one place, tap a game for details"],
+            [
+              "new",
+              "Redesigned home page with a player panel and numbered game rows",
+            ],
+            [
+              "new",
+              "Trophies in the menu: every game's crowns and medals in one place, tap a game for details",
+            ],
             ["new", "A shortcut to the last game you played"],
           ],
         },
@@ -1658,9 +1635,18 @@
           date: "13 Nov 2026",
           title: "Categories, rotate and a ruler line",
           items: [
-            ["new", "Pick what you scale on the category wheel: Countries, Objects, Landmarks, Pop culture, Technology, People or All"],
-            ["new", "Over 420 items, and the ones you haven't seen in a while come up first"],
-            ["new", "Rotate button on the reference, plus a dashed green line to measure against"],
+            [
+              "new",
+              "Pick what you scale on the category wheel: Countries, Objects, Landmarks, Pop culture, Technology, People or All",
+            ],
+            [
+              "new",
+              "Over 420 items, and the ones you haven't seen in a while come up first",
+            ],
+            [
+              "new",
+              "Rotate button on the reference, plus a dashed green line to measure against",
+            ],
             ["improved", "The reference is never tiny any more"],
             ["improved", "Redrawn illustrations and re-checked difficulties"],
           ],
@@ -1982,7 +1968,8 @@
       const RANK_WORD = { 1: "1st", 2: "2nd", 3: "3rd" };
       const num = (v) => Number(v);
       const fmtN = (v) => v.toLocaleString();
-      const acc = (good, bad) => (num(good) + num(bad) >= 10 ? num(good) / (num(good) + num(bad)) : null);
+      const acc = (good, bad) =>
+        num(good) + num(bad) >= 10 ? num(good) / (num(good) + num(bad)) : null;
       const BOARD = (label, val, dir = -1) => ({ label, val, dir });
       const TROPHY_GAMES = [
         {
@@ -2039,7 +2026,14 @@
             matched: BOARD("Sizes matched", (p) => num(p.matched)),
             accuracy: BOARD("Accuracy", (p) => acc(p.matched, p.missed)),
             streak: BOARD("Best streak", (p) => num(p.best_streak)),
-            closest: BOARD("Closest match", (p) => (p.closest === null || p.closest === undefined ? null : num(p.closest)), 1),
+            closest: BOARD(
+              "Closest match",
+              (p) =>
+                p.closest === null || p.closest === undefined
+                  ? null
+                  : num(p.closest),
+              1,
+            ),
             duels: BOARD("Duels played", (p) => num(p.duels)),
             wins: BOARD("Duels won", (p) => num(p.wins)),
           },
@@ -2067,9 +2061,16 @@
             r.rank = rank;
             prev = r.v;
           });
-          const mine = list.find((r) => String(r.p.username).toLowerCase() === me);
+          const mine = list.find(
+            (r) => String(r.p.username).toLowerCase() === me,
+          );
           if (mine && mine.rank <= 3)
-            out.push({ rank: mine.rank, key, label: b.label, kind: def.main.includes(key) ? "crown" : "medal" });
+            out.push({
+              rank: mine.rank,
+              key,
+              label: b.label,
+              kind: def.main.includes(key) ? "crown" : "medal",
+            });
         });
         const by = (x, y) => x.rank - y.rank;
         return [
@@ -2092,7 +2093,10 @@
           const res = await Promise.all(
             TROPHY_GAMES.map(async (def) => {
               try {
-                const { data, error } = await sb().from(def.table).select(def.cols).limit(5000);
+                const { data, error } = await sb()
+                  .from(def.table)
+                  .select(def.cols)
+                  .limit(5000);
                 if (error || !Array.isArray(data)) return null;
                 return trophiesFor(def, data, name);
               } catch (e) {

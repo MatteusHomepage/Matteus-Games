@@ -19,6 +19,20 @@
       },
     ],
     hearts: null,
+    reveal: () => {
+      const t = R.solo && TOPIC[R.solo.g.id];
+      return t ? `<div class="rg-reveal-q">${esc(t.n)}</div>` : "";
+    },
+    settle: () =>
+      new Promise((resolve) => {
+        const t0 = Date.now();
+        const tick = () => {
+          if (!R.solo || !R.solo.animating || Date.now() - t0 > 9000)
+            return setTimeout(resolve, 1200);
+          setTimeout(tick, 150);
+        };
+        tick();
+      }),
     css: `
       html.embedded #soloDots, html.embedded #soloRound, html.embedded #soloMatchBox, html.embedded #soloDiff { display: none !important; }
     `,

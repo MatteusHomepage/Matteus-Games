@@ -38,7 +38,19 @@
     css: `
       html.embedded #soloDiff, html.embedded .score-chip, html.embedded #scoreChip { display: none !important; }
     `,
+    revealSel: ["reveal"],
+    reveal: () => (S.track ? revealHTML(S.track) : ""),
     prepare: (s) => loadTracks(s.diff).catch(() => {}),
+    pick: async (s) => {
+      FORCED = null;
+      await loadTracks(s.diff);
+      const track = pickTrack(s.diff);
+      if (!track) return null;
+      return {
+        track,
+        options: s.mode === "click" ? makeOptions(track, s.diff) : null,
+      };
+    },
     stop() {
       S.token++;
       closeSoloResult();
@@ -50,14 +62,31 @@
       if (s.fresh) S.ls = {};
       S.diff = s.diff;
       S.pendingLoad = false;
+      FORCED = s.pick || null;
       startSolo(s.mode);
     },
   });
 
+  let FORCED = null;
+
   (() => {
+    const pickTrack0 = pickTrack;
+    window.pickTrack = (level) => {
+      if (!FORCED) return pickTrack0(level);
+      markRecent(FORCED.track);
+      return FORCED.track;
+    };
+    const makeOptions0 = makeOptions;
+    window.makeOptions = (track, level) => {
+      if (!FORCED || !FORCED.options) return makeOptions0(track, level);
+      const options = FORCED.options;
+      FORCED = null;
+      return options;
+    };
     const newRound = newSoloRound;
     window.newSoloRound = () => {
       newRound();
+      FORCED = null;
       if (S.mode === "click" && S.track) {
         S.lives = AGE.def.lives;
         setLives("solo", S.lives);

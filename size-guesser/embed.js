@@ -19,6 +19,8 @@
       closeSoloResult();
       stopAnim("solo");
     },
+    revealSel: ["rv-item", "sz-art"],
+    reveal: () => (R.solo ? itemRevealHTML({ t: R.solo.ti }) : ""),
     play(s) {
       ME = AGE.account(s.player);
       if (s.fresh) S.ls = {};

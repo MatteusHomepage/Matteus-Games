@@ -17,6 +17,9 @@
       html.embedded #soloDiff, html.embedded .score-chip, html.embedded #scoreChip { display: none !important; }
     `,
     prepare: () => ensureGlobe("solo").catch(() => {}),
+    revealSel: ["reveal", "route-line", "rl-c", "arr", "bg-flag", "sm"],
+    reveal: () =>
+      R.solo ? routeRevealHTML(bestPath(R.solo.rt, new Set())) : "",
     stop() {
       S.token++;
       closeSoloResult();

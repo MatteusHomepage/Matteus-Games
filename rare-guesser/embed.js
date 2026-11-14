@@ -22,6 +22,21 @@
     css: `
       html.embedded #soloDots, html.embedded #soloRound, html.embedded #soloMatchBox, html.embedded #soloDiff { display: none !important; }
     `,
+    reveal: () =>
+      R.solo
+        ? `<div class="rg-reveal-q">${esc(R.solo.it.q)}</div>` +
+          answerRevealHTML(R.solo.it)
+        : "",
+    settle: () =>
+      new Promise((resolve) => {
+        const t0 = Date.now();
+        const tick = () => {
+          const hold = $("soloResult").classList.contains("hold");
+          if (!hold || Date.now() - t0 > 14000) return setTimeout(resolve, 900);
+          setTimeout(tick, 150);
+        };
+        tick();
+      }),
     stop() {
       S.token++;
       stopRoundTimer("solo");

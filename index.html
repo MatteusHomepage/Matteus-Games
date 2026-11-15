@@ -1,3 +1,5 @@
+<!--
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -2157,6 +2159,393 @@
         setTimeout(() => el.remove(), 3300);
         maybeWelcome();
       })();
+    </script>
+  </body>
+</html>
+
+-->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Matteus Games has moved</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Outfit:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: #030504;
+      }
+      body {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 14px;
+        font-family: "DM Sans", sans-serif;
+        color: #e8efe9;
+        background:
+          radial-gradient(
+            ellipse 70% 50% at 50% 0%,
+            rgba(255, 210, 63, 0.16),
+            transparent 70%
+          ),
+          radial-gradient(
+            ellipse 60% 40% at 50% 100%,
+            rgba(25, 215, 123, 0.14),
+            transparent 70%
+          ),
+          #030504;
+      }
+      .card {
+        width: 100%;
+        max-width: 480px;
+        background: #0a110d;
+        border: 1px solid rgba(255, 210, 63, 0.55);
+        border-radius: 22px;
+        padding: 18px 18px 14px;
+        box-shadow:
+          0 0 0 1px rgba(255, 210, 63, 0.15),
+          0 0 40px rgba(255, 210, 63, 0.12);
+      }
+      h1 {
+        font-family: "Outfit", sans-serif;
+        font-weight: 800;
+        font-size: 34px;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        margin: 0 0 6px;
+        color: #ffd23f;
+      }
+      .sub {
+        margin: 0 0 12px;
+        font-size: 14px;
+        color: #9aa6a0;
+      }
+      .go {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        text-decoration: none;
+        padding: 12px 14px 12px 16px;
+        border: 2px solid #19d77b;
+        border-radius: 14px;
+        background: rgba(25, 215, 123, 0.1);
+        animation: pulse 2s infinite;
+      }
+      .go:hover {
+        background: rgba(25, 215, 123, 0.18);
+      }
+      .url {
+        font-family: "Outfit", sans-serif;
+        font-weight: 700;
+        font-size: 24px;
+        color: #19d77b;
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 5px;
+        word-break: break-all;
+      }
+      .out {
+        flex: none;
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: #19d77b;
+        color: #05120a;
+        font-size: 18px;
+        font-weight: 800;
+      }
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(25, 215, 123, 0.5);
+        }
+        70%,
+        100% {
+          box-shadow: 0 0 0 12px rgba(25, 215, 123, 0);
+        }
+      }
+      .label {
+        margin: 14px 0 6px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #ffd23f;
+      }
+      .tokenbox {
+        display: flex;
+        gap: 8px;
+      }
+      .tokenbox input {
+        flex: 1;
+        min-width: 0;
+        font-family: ui-monospace, Menlo, Consolas, monospace;
+        font-size: 13px;
+        padding: 11px 12px;
+        border-radius: 12px;
+        border: 1px solid #2a3a31;
+        background: #060b08;
+        color: #e8efe9;
+      }
+      .copy {
+        font: inherit;
+        font-weight: 700;
+        font-size: 14px;
+        padding: 0 16px;
+        border-radius: 12px;
+        border: 0;
+        background: #ffd23f;
+        color: #1a1400;
+        cursor: pointer;
+        min-width: 82px;
+      }
+      .copy.done {
+        background: #19d77b;
+        color: #05120a;
+      }
+      .warn {
+        margin: 6px 0 0;
+        font-size: 12px;
+        color: #7f8b83;
+      }
+      .empty {
+        margin: 0;
+        padding: 11px 12px;
+        font-size: 13px;
+        border-radius: 12px;
+        background: #101a14;
+        color: #9aa6a0;
+      }
+      .steps {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .step {
+        display: flex;
+        flex-direction: column;
+      }
+      .step p {
+        min-height: 52px;
+        margin: 0 0 6px;
+        font-size: 12.5px;
+        line-height: 1.35;
+        color: #cdd6d0;
+      }
+      .step b {
+        color: #fff;
+      }
+      .n {
+        display: inline-grid;
+        place-items: center;
+        width: 18px;
+        height: 18px;
+        margin-right: 5px;
+        border-radius: 50%;
+        background: #ffd23f;
+        color: #1a1400;
+        font-weight: 800;
+        font-size: 11px;
+      }
+      .mock {
+        flex: 1;
+        background: #0a110d;
+        border: 1px solid #25332b;
+        border-radius: 12px;
+        padding: 10px 10px 8px;
+        pointer-events: none;
+      }
+      .mock h3 {
+        margin: 0 0 3px;
+        font-family: "Outfit", sans-serif;
+        font-weight: 800;
+        font-size: 14px;
+      }
+      .mock small {
+        display: block;
+        font-size: 8.5px;
+        color: #7f8b83;
+        margin-bottom: 6px;
+      }
+      .field {
+        height: 22px;
+        border: 1px solid #26352c;
+        border-radius: 6px;
+        background: #060b08;
+        font-size: 8.5px;
+        color: #7f8b83;
+        padding: 6px 7px;
+        margin-bottom: 5px;
+        font-family: ui-monospace, Menlo, Consolas, monospace;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      .field.on {
+        color: #e8efe9;
+        border-color: #19d77b;
+      }
+      .btn {
+        height: 22px;
+        border-radius: 7px;
+        background: #19d77b;
+        color: #05120a;
+        font-weight: 700;
+        font-size: 9.5px;
+        display: grid;
+        place-items: center;
+        margin-bottom: 6px;
+      }
+      .btn.hl {
+        outline: 2px solid #ffd23f;
+        outline-offset: 2px;
+        animation: ring 1.4s infinite;
+      }
+      .alt {
+        text-align: center;
+        font-size: 8.5px;
+        color: #7f8b83;
+      }
+      .alt span {
+        color: #19d77b;
+        font-weight: 700;
+      }
+      .alt span.hl {
+        display: inline-block;
+        margin-top: 3px;
+        white-space: nowrap;
+        padding: 1px 5px;
+        border: 1.5px solid #ffd23f;
+        border-radius: 5px;
+        animation: ring 1.4s infinite;
+      }
+      @keyframes ring {
+        50% {
+          opacity: 0.55;
+        }
+      }
+      .foot {
+        margin: 12px 0 0;
+        text-align: center;
+        font-size: 11px;
+        color: #5d6962;
+      }
+      [hidden] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>New website.</h1>
+      <p class="sub">
+        Matteus Games lives at a new address. This old page won't be updated
+        anymore.
+      </p>
+      <a class="go" href="https://matteus-aydin.se">
+        <span class="url">matteus-aydin.se</span>
+        <span class="out">↗</span>
+      </a>
+
+      <div id="hasToken" hidden>
+        <p class="label">Your data token: copy it first</p>
+        <div class="tokenbox">
+          <input
+            id="tok"
+            readonly
+            spellcheck="false"
+            aria-label="Your data token"
+          />
+          <button class="copy" id="copyBtn" type="button">Copy</button>
+        </div>
+        <p class="warn">
+          Keep it private. Anyone with it can use your account.
+        </p>
+      </div>
+      <div id="noToken" hidden>
+        <p class="label">Your account</p>
+        <p class="empty">
+          No account on this device, so there is nothing to move. Just open the
+          new site.
+        </p>
+      </div>
+
+      <p class="label">Get your account back</p>
+      <div class="steps">
+        <div class="step">
+          <p>
+            <span class="n">1</span>On the new site, press
+            <b>Enter your data token</b>
+          </p>
+          <div class="mock">
+            <h3>Welcome!</h3>
+            <small>Pick a username to create your account.</small>
+            <div class="field">Username</div>
+            <div class="btn">Create account</div>
+            <div class="alt">
+              Already have an account?<br />
+              <span class="hl">Enter your data token</span>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <p><span class="n">2</span>Paste it and press <b>Load account</b></p>
+          <div class="mock">
+            <h3>Enter data token</h3>
+            <small>Paste the data token from your account's settings.</small>
+            <div class="field on">aB3xK9Lm2Pq7Rt5Vw8…</div>
+            <div class="btn hl">Load account</div>
+            <div class="alt">New here? <span>Create an account</span></div>
+          </div>
+        </div>
+      </div>
+      <p class="foot">Made by Matteus Aydin 2026</p>
+    </div>
+
+    <script>
+      const tok = document.getElementById("tok");
+      const btn = document.getElementById("copyBtn");
+      let token = "";
+      try {
+        token = localStorage.getItem("sg_token") || "";
+      } catch (e) {}
+      document.getElementById(token ? "hasToken" : "noToken").hidden = false;
+      tok.value = token;
+      btn.addEventListener("click", () => {
+        const ok = () => {
+          btn.textContent = "Copied";
+          btn.classList.add("done");
+          setTimeout(() => {
+            btn.textContent = "Copy";
+            btn.classList.remove("done");
+          }, 2000);
+        };
+        const fallback = () => {
+          tok.focus();
+          tok.select();
+          tok.setSelectionRange(0, token.length);
+          try {
+            document.execCommand("copy") && ok();
+          } catch (e) {}
+        };
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(token).then(ok, fallback);
+        } else {
+          fallback();
+        }
+      });
     </script>
   </body>
 </html>
